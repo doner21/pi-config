@@ -1,0 +1,1 @@
+const fs=require("fs");const plan=fs.readFileSync("C:/Users/doner/.pi/agent/nenflow-v3/runs/RUN_20260430-011845/ATT_0_INTAKE.md","utf8").slice(0,50);console.log(plan);

@@ -1,0 +1,26 @@
+# Secrets
+auth.json
+
+# Session history
+sessions/
+
+# Binary tools
+bin/
+
+# Dependencies
+extensions/node_modules/
+node_modules/
+
+# Runtime state
+verbosity-state.json
+*.disabled
+
+# Health check
+.nenflow_context_health.json
+
+# Lock files
+*.lock
+
+# OS
+.DS_Store
+Thumbs.db
