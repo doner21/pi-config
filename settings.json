@@ -1,11 +1,10 @@
 {
-  "defaultModel": "deepseek-v4-pro",
+  "defaultModel": "deepseek-v4-flash",
   "defaultProvider": "deepseek",
   "defaultThinkingLevel": "high",
   "hideThinkingBlock": false,
-  "lastChangelogVersion": "0.70.6",
+  "lastChangelogVersion": "0.73.0",
   "packages": [
-    "..\\..\\capati-memory-system\\pi-package",
     "npm:@ollama/pi-web-search"
   ]
 }

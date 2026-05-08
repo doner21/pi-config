@@ -1,0 +1,426 @@
+## Invariants
+
+- ||moss_audio test/starman|| — read-only lyrics.
+- ||moss_audio test/starman_vocal_16k.wav|| — read-only audio.
+- ||karaoke_player/karaoke.html|| — unmodified, consumes existing ||timing.json|| schema.
+- ||alignment_engine/STARS/|| — already patched, do not modify STARS source further.
+- ||karaoke_player/timing.json|| schema: ||{stanzas: [{words: [{start, end, duration, word}]}]}||.
+- All new code goes in ||alignment_engine/|| directory.
+- Existing backup in ||karaoke_player/backups/|| must be preserved (copy current timing.json there before overwriting).
+- STARS model files in ||alignment_engine/STARS/checkpoints/|| are read-only.
+- CPU inference only (no GPU, ||CUDA_VISIBLE_DEVICES=''||).
+- Existing ||run_stars_full.py|| must remain functional as-is (do not modify it).
+- The new pipeline writes to a separate work directory so existing ||stars_full_work/|| is preserved.
+
+## Success Criteria
+
+1. Zero words have duration ≤0.017s (single-frame artifacts) in output ||timing.json||.
+2. Median word duration ≥ 0.15s.
+3. Short-word ratio (≤0.08s) ≤ 25% (target: get as low as feasible; ≤10% is ideal).
+4. No segment in ||diagnose_boundary_compression.py --mode all|| shows >20% single-frame words.
+5. No inter-stanza gap > 3.0s between consecutive words at stanza transitions.
+6. The karaoke player renders correct highlighting from start to finish.
+7. ||diagnose_boundary_compression.py --mode analyze|| reports Quality: PASS.
+
+## Implementation Steps
+
+### Step 1 — Backup current timing.json
+
+```bash
+cp C:/Users/doner/moss_audio/karaoke_player/timing.json \
+   C:/Users/doner/moss_audio/karaoke_player/backups/timing_pre_stanza_fix.json
+```
+
+### Step 2 — Create the two-pass pipeline script
+
+**File:** ||C:/Users/doner/moss_audio/alignment_engine/run_stars_stanza.py||
+
+This is a NEW file. Build it with these components (detailed below).
+
+#### 2a. Reuse shared utilities from ||run_stars_full.py||
+
+Copy the following functions from ||run_stars_full.py|| (they are correct and do not need changes):
+
+- ||load_phone_set()|| — loads phone set JSON (line 45-47)
+- ||load_lyrics()|| — reads ||starman|| lyrics file (line 50-52)
+- ||clean_lyrics()|| — expand contractions, lowercase, strip punctuation (lines 55-60)
+- ||lyrics_to_phonemes()|| — convert to ARPABET via g2p_en (lines 78-91)
+- ||preprocess_audio()|| — resample 16kHz→24kHz to work dir (lines 63-75)
+- ||run_stars_segment()|| — run STARS CLI on one audio+lyrics segment (lines 119-163)
+
+All global constants (||SCRIPT_DIR||, ||STARS_DIR||, ||PHONE_SET||, ||CONFIG||, ||CKPT||,
+||VOCAL_WAV||, ||LYRICS_TXT||, ||OUTPUT_JSON||, ||SR_TARGET=24000||, ||CONTRACTIONS||) are
+identical to ||run_stars_full.py||. Change only:
+
+```python
+WORK_DIR = os.path.join(SCRIPT_DIR, "stars_stanza_work")
+SEGMENT_DURATION = 30.0  # kept for Pass 1 fallback only
+```
+
+#### 2b. Add stanza parsing and word-to-stanza mapping
+
+**New function: ||parse_stanzas(lyrics_raw)||**
+
+Parse raw lyrics into a list of stanzas (list of line-lists). A stanza is a block of
+non-empty lines separated by one or more blank lines.
+
+Pseudo-logic: Split raw lyrics by newline. Iterate lines. Non-empty → add to current
+stanza. Empty → if current stanza non-empty, append to result and reset. After loop,
+append final stanza if non-empty.
+
+Returns: ||List[List[str]]|| — e.g., ||[["Hey now, now", "Goodbye, love"], ["Didn't know what time...", ...], ...]||
+
+**New function: ||build_stanza_word_map(stanzas)||**
+
+Map each word index to its stanza index using cumulative word counts.
+
+```python
+stanza_word_counts = [len(clean_lyrics('\n'.join(s)).split()) for s in stanzas]
+offsets = [sum(stanza_word_counts[:i]) for i in range(len(stanzas)+1)]
+stanza_of_word = []
+for s_idx in range(len(stanzas)):
+    stanza_of_word.extend([s_idx] * stanza_word_counts[s_idx])
+return stanza_of_word
+```
+
+Returns: ||List[int]|| of length N (total valid words) — stanza index for each word.
+
+#### 2c. Add Pass 1 — approximate timing via even-split
+
+**New function: ||pass1_even_split(words, phones, ph2words, wav_24k, duration)||**
+
+Reuse existing ||timing.json|| if it matches word count, otherwise run fresh even-split.
+
+```python
+def pass1_even_split(words, phones, ph2words, wav_24k, duration):
+    existing_path = OUTPUT_JSON
+    if os.path.exists(existing_path):
+        with open(existing_path) as f:
+            tj = json.load(f)
+        existing_words = tj['stanzas'][0]['words']
+        if len(existing_words) == len(words):
+            print(f"Pass 1: Reusing existing timing.json ({len(existing_words)} words)")
+            return existing_words
+    # Otherwise run even-split
+    print("Pass 1: Running even-split alignment...")
+    num_segments = max(1, math.ceil(duration / SEGMENT_DURATION))
+    segments = split_into_segments(words, phones, ph2words, duration, num_segments)
+    results = []
+    for seg_idx, seg in enumerate(segments):
+        start_sec = seg_idx * SEGMENT_DURATION
+        end_sec = min(start_sec + SEGMENT_DURATION, duration)
+        result = run_stars_segment(wav_24k, seg, seg_idx, start_sec, end_sec)
+        results.append(result)
+    return merge_segments(results)
+```
+
+Note: ||split_into_segments()|| and ||merge_segments()|| must be copied from ||run_stars_full.py||.
+
+Returns: ||List[dict]|| — ||[{start, end, duration, word}, ...]|| with approximate timings.
+
+#### 2d. Add stanza time-range estimation and segment building
+
+**New function: ||build_stanza_segments(word_timings, stanza_of_word, all_words, all_phones, all_ph2words, audio_duration, padding=2.5)||**
+
+Given Pass 1 approximate word timings and stanza assignments, compute audio time ranges
+per stanza and cluster them into segments.
+
+Algorithm:
+
+1. For each stanza s, find all word indices i where ||stanza_of_word[i] == s||:
+   - ||min_time[s] = min(word_timings[i]['start'])||
+   - ||max_time[s] = max(word_timings[i]['end'])||
+
+2. Cluster consecutive stanzas into segments using greedy accumulation:
+   - ||MAX_SEG = 45.0|| (safe CPU limit)
+   - Start segment with stanza 0. Accumulate stanzas.
+   - Add next stanza if combined range (+ 2×padding) < MAX_SEG, gap ≤ 8s, not la-la-la.
+   - When limit exceeded, finalize segment and start new.
+
+3. La-la-la stanzas (indices 10-21, 149 words): group into 3 segments of ~4 stanzas each:
+   - seg_la1: stanzas 10-13, seg_la2: stanzas 14-17, seg_la3: stanzas 18-21
+
+4. For each segment with stanzas [s_start..s_end]:
+   - ||audio_start = max(0, min_time[s_start] - padding)||
+   - ||audio_end = min(audio_duration, max_time[s_end] + padding)||
+   - Collect words, phones, ph2words for those stanzas
+   - Store ||word_global_indices|| for overlap resolution
+
+Returns: ||List[dict]|| — each with keys ||start_sec, end_sec, words, phones, ph2words, stanza_indices, word_global_indices||
+
+**Constants:**
+```python
+MAX_SEGMENT_DURATION = 45.0
+PADDING_SECONDS = 2.5
+LALALA_GROUP_SIZE = 4
+LALALA_START_STANZA = 10
+```
+
+#### 2e. Add Pass 2 — stanza-aligned STARS inference
+
+**New function: ||pass2_stanza_align(wav_24k, stanza_segments)||**
+
+Runs ||run_stars_segment()|| for each stanza-aligned segment.
+
+```python
+def pass2_stanza_align(wav_24k, stanza_segments):
+    results = []
+    for seg_idx, seg in enumerate(stanza_segments):
+        result = run_stars_segment(
+            wav_24k, seg, seg_idx,
+            seg['start_sec'], seg['end_sec']
+        )
+        results.append(result)
+        print(f"  Pass 2 progress: {seg_idx+1}/{len(stanza_segments)} segments done")
+    return results
+```
+
+Returns: ||List[dict]|| — raw STARS output items.
+
+#### 2f. Add overlap-resolving merge
+
+**New function: ||merge_stanza_segments(segment_results, stanza_segments, padding=2.5)||**
+
+Merges Pass 2 results with overlap arbitration. Key differences from ||merge_segments||:
+1. Segments overlap due to padding; same word may appear in two segments.
+2. Prefer timings from segment centers (farther from edges = more reliable).
+
+Algorithm:
+
+1. For each segment result r at index i:
+   - ||seg = stanza_segments[i]||
+   - ||seg_dur = seg['end_sec'] - seg['start_sec']||
+   - Walk ||word_durs|| and ||word_list|| (skip ||<SP>||/||<AP>||, ADD their duration to t)
+   - For each real word w at time offset t:
+     - ||abs_time = seg['start_sec'] + t||
+     - ||center_dist = abs(t - seg_dur/2)||
+     - ||confidence = 1.0 - (center_dist / (seg_dur/2))||, clamped to [0, 1]
+     - Store candidate ||(abs_start, abs_end, duration, word, confidence, seg_idx, global_word_idx)||
+
+2. Group candidates by ||global_word_idx||.
+   - Single candidate: use it.
+   - Multiple candidates: choose highest confidence.
+
+3. Sort chosen entries by start time.
+   - Gaps > 0.5s: keep (instrumental pauses).
+   - Overlaps > 0.02s: adjust start to ||prev_word.end + 0.005s||.
+
+4. Return merged ||word_entries|| list.
+
+Returns: ||List[dict]|| — ||[{start, end, duration, word}, ...]|| chronological.
+
+#### 2g. Add main() orchestrator
+
+```python
+def main():
+    print("=" * 60)
+    print("STARS Two-Pass Stanza-Aware Alignment for Starman")
+    print("=" * 60)
+
+    # 1. Parse stanzas
+    lyrics_raw = load_lyrics()
+    stanzas = parse_stanzas(lyrics_raw)
+    print(f"Parsed {len(stanzas)} stanzas from lyrics")
+
+    # 2. Clean and phonemize
+    cleaned = clean_lyrics(lyrics_raw)
+    phone_lookup = load_phone_set()
+    g2p = G2p()
+    words, phones, ph2words = lyrics_to_phonemes(cleaned, g2p, phone_lookup)
+    print(f"Lyrics: {len(words)} words, {len(phones)} phonemes")
+    stanza_of_word = build_stanza_word_map(stanzas)
+
+    # 3. Preprocess audio
+    wav_24k, duration = preprocess_audio()
+
+    # 4. Pass 1: approximate timing
+    pass1_timings = pass1_even_split(words, phones, ph2words, wav_24k, duration)
+
+    # 5. Build stanza-aligned segments
+    stanza_segments = build_stanza_segments(
+        pass1_timings, stanza_of_word,
+        words, phones, ph2words, duration,
+        padding=PADDING_SECONDS
+    )
+    print(f"Built {len(stanza_segments)} stanza-aligned segments")
+
+    # 6. Pass 2: stanza-aligned inference
+    print("\nRunning Pass 2 — stanza-aligned STARS inference...")
+    results = pass2_stanza_align(wav_24k, stanza_segments)
+
+    # 7. Merge with overlap resolution
+    word_entries = merge_stanza_segments(results, stanza_segments, padding=PADDING_SECONDS)
+    if not word_entries:
+        print("ERROR: No words extracted!")
+        sys.exit(1)
+
+    # 8. Quality check
+    durations = [w['duration'] for w in word_entries]
+    median_dur = sorted(durations)[len(durations)//2]
+    short_count = sum(1 for d in durations if d <= 0.08)
+    sf_count = sum(1 for d in durations if d <= 0.017)
+    short_ratio = short_count / len(durations)
+    coverage = sum(durations) / duration
+
+    print(f"\nQuality Report:")
+    print(f"  Words: {len(word_entries)}")
+    print(f"  Median duration: {median_dur:.3f}s")
+    print(f"  Single-frame (<=0.017s): {sf_count} ({100*sf_count/len(durations):.1f}%)")
+    print(f"  Short words (<=0.08s): {short_count} ({short_ratio*100:.1f}%)")
+    print(f"  Coverage: {coverage*100:.1f}%")
+    quality = "pass" if short_ratio <= 0.25 and median_dur >= 0.15 else "fail"
+    print(f"  Quality: {quality.upper()}")
+
+    # 9. Write timing.json
+    timing_json = {
+        "stanzas": [{"label": "Starman (STARS two-pass stanza alignment)", "words": word_entries}],
+        "metadata": {
+            "engine": "STARS (two-pass stanza-aware)",
+            "quality_status": quality,
+            "median_duration": round(median_dur, 3),
+            "short_ratio": round(short_ratio, 3),
+            "single_frame_count": sf_count,
+            "coverage": round(coverage, 3),
+            "total_words": len(word_entries)
+        }
+    }
+
+    os.makedirs(os.path.dirname(OUTPUT_JSON), exist_ok=True)
+    with open(OUTPUT_JSON, 'w') as f:
+        json.dump(timing_json, f, indent=2)
+    print(f"\nOutput: {OUTPUT_JSON}")
+    print("Done!")
+```
+
+### Step 3 — Establish baseline with diagnostic
+
+Before running the new pipeline, confirm the current state:
+
+```bash
+cd C:/Users/doner/moss_audio
+venv_align/Scripts/python alignment_engine/diagnose_boundary_compression.py --mode all
+```
+
+Expected: Quality FAIL with ~22.6% single-frame words.
+
+### Step 4 — Run the two-pass pipeline
+
+```bash
+cd C:/Users/doner/moss_audio
+venv_align/Scripts/python alignment_engine/run_stars_stanza.py
+```
+
+Expected runtime: ~80-90s CPU (Pass 1 ~40s + Pass 2 ~40-50s, or ~45s if reusing existing Pass 1).
+
+### Step 5 — Validate output
+
+```bash
+venv_align/Scripts/python alignment_engine/diagnose_boundary_compression.py --mode all
+```
+
+Executor validation checklist:
+- [ ] Single-frame words (≤0.017s): 0
+- [ ] Short words (≤0.08s): ≤ 25%
+- [ ] Median duration ≥ 0.15s
+- [ ] Quality report: PASS
+- [ ] No segment has >20% single-frame words
+- [ ] No inter-stanza gap > 3.0s
+
+### Step 6 — Manual spot-check
+
+Open ||karaoke_player/karaoke.html|| in browser. Verify:
+- Stanza 1 ("Hey now, now / Goodbye, love") highlights correctly
+- Stanza 2 ("Didn't know what time...") highlights through full verse
+- Chorus highlights correctly
+- Bridge stanzas do not flash/compress
+- La-la-la outro has reasonable timing (exact la timing is low priority)
+
+### Step 7 — Fallback: la-la-la RMS-energy segmentation
+
+If la-la-la stanzas (13 identical stanzas with repeated lyrics) cause STARS confusion
+(misaligned or arbitrary placement due to identical phoneme sequences), try
+RMS-energy-based segmentation for the la-la-la region only:
+
+```python
+import librosa
+y, sr = librosa.load(wav_24k, sr=24000, offset=estimated_la_start, duration=80.0)
+intervals = librosa.effects.split(y, top_db=25, frame_length=2048, hop_length=512)
+# Map intervals to la-la-la stanzas by count
+```
+
+If this also fails, note in the Execution Report and treat la-la-la as lower priority
+(user's primary concern is main song stanzas).
+
+## Handoff Notes
+
+### Key File Paths
+
+| File | Purpose |
+|------|---------|
+| ||alignment_engine/run_stars_stanza.py|| | **NEW** — two-pass stanza pipeline (build this) |
+| ||alignment_engine/run_stars_full.py|| | Existing even-split pipeline (read-only reference) |
+| ||alignment_engine/diagnose_boundary_compression.py|| | Validation script (run, do not modify) |
+| ||alignment_engine/stars_full_work/|| | Existing workdir (preserve; new work in ||stars_stanza_work/||) |
+| ||karaoke_player/timing.json|| | Output target (overwrite after backup) |
+| ||karaoke_player/backups/|| | Backup directory (place copy here before overwrite) |
+| ||moss_audio test/starman|| | Lyrics source (read-only) |
+| ||moss_audio test/starman_vocal_16k.wav|| | Audio source (read-only) |
+
+### Reuse Strategy
+
+Copy shared utility functions from ||run_stars_full.py|| into the new script.
+Do NOT import from ||run_stars_full.py|| (module-level code would execute on import).
+Keep ||run_stars_full.py|| untouched as a working fallback.
+
+### STARS CLI Invocation
+
+Identical to ||run_stars_full.py||:
+```
+python STARS/inference/stars.py --ckpt CKPT --config CONFIG --phset PHONE_SET
+    --metadata seg_meta.json -o out_dir --ds_workers 0 --bsz 1 --max_tokens 50000
+```
+Environment: ||PYTHONPATH=STARS_DIR||, ||CUDA_VISIBLE_DEVICES=''||.
+
+### Overlap Arbitration Key Detail
+
+STARS output ||word_list|| includes ||<SP>|| tokens. The time-offset tracker ||t|| MUST
+add ||<SP>|| durations even though ||<SP>|| entries are not written to the output word
+list. This pattern exists in ||merge_segments()|| in ||run_stars_full.py|| — replicate it
+exactly.
+
+### Unknowns for the Executor
+
+1. **Pass 1 reuse check:** Verify ||len(existing_words) == len(valid_words)||. If mismatch,
+   re-run even-split. The existing ||timing.json|| has 412 words — this should match.
+
+2. **Stanza clustering table (expected layout):**
+
+   | Segment | Stanzas | Words | Est. Time |
+   |---------|---------|-------|-----------|
+   | 0 | 0-1 (intro+verse1) | 47 | [8-50s] |
+   | 1 | 2 (chorus1) | 43 | [48-82s] |
+   | 2 | 3+4 (bridge1+verse2) | 57 | [80-130s] |
+   | 3 | 5 (chorus2) | 43 | [128-162s] |
+   | 4 | 6+7 (bridge2+outro_ch) | 58 | [160-210s] |
+   | 5 | 8+9 (outro_br) + la group1 | ~50 | [208-252s] |
+   | 6-8 | la-la-la groups 2-4 | ~33 each | [240-257s] |
+
+   The Executor should adjust based on actual Pass 1 timings.
+
+3. **Segment size safety:** 45s max ensures well under ||--max_tokens 50000|| limit.
+   If a segment exceeds 45s due to padding on a long stanza, reduce padding to 1.5s
+   for that segment rather than splitting mid-stanza.
+
+4. **g2p_en missing words:** Acceptable. The karaoke player simply will not highlight
+   words that g2p_en cannot phonemize.
+
+### What NOT to Do
+
+- Do NOT modify ||stars.py|| or any file in ||alignment_engine/STARS/||
+- Do NOT modify ||run_stars_full.py|| (keep as reference/fallback)
+- Do NOT change the ||timing.json|| schema
+- Do NOT delete ||stars_full_work/|| directory
+- Do NOT modify the karaoke player HTML
+
+[PLANNER CONTEXT — END]
+self_estimate: ~14%

@@ -21,6 +21,18 @@ verbosity-state.json
 # Lock files
 *.lock
 
+# Temporary search results
+tmp_search*.json
+
+# Backups
+backups/
+
+# Test bundles
+graphify-test-bundle.js
+
+# Misspelled old directory
+neflow-v3/
+
 # OS
 .DS_Store
 Thumbs.db
