@@ -442,6 +442,7 @@ export default function subagentExtension(pi: ExtensionAPI) {
 					content: [{ type: "text", text: error?.message || `Subagent ${agent.name} failed` }],
 					isError: true,
 					details: { agent: agent.name, sourceFile: agent.sourceFile },
+				metadata: { agent: agent.name, sourceFile: agent.sourceFile },
 				};
 			}
 		},
