@@ -1,5 +1,5 @@
 {
-  "defaultModel": "deepseek-v4-flash",
+  "defaultModel": "deepseek-v4-pro",
   "defaultProvider": "deepseek",
   "defaultThinkingLevel": "high",
   "hideThinkingBlock": false,
