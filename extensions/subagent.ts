@@ -74,8 +74,7 @@ const agencyProfiles = {
 type AgencyLevel = keyof typeof agencyProfiles;
 
 function ensureCliPath(): string {
-	if (existsSync(cliPath)) return cliPath;
-	throw new Error(`Pi CLI not found at ${cliPath}`);
+	return resolveCliPath();
 }
 
 function parseFrontmatter(content: string): { data: Record<string, string>; body: string } | null {
