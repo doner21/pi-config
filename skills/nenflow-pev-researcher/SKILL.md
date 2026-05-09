@@ -43,8 +43,8 @@ For Gemma 4 26B with gemma4-200k: maximum is ~200,000 tokens.
 Protocol when you reach 65%:
 1. Complete the current investigation area (finish the file or command you are examining).
 2. Write a CONTINUATION contract to the run directory:
-   `C:/Users/doner/nenflow_v3/runs/{run_id}/ATT_{n}_CONTINUATION_RESEARCHER.md`
-   Use the template at `C:/Users/doner/nenflow_v3/templates/CONTINUATION.md`.
+   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_RESEARCHER.md`
+   Use the template at `~/.pi/agent/nenflow-v3/templates/CONTINUATION.md`.
    Fill all 6 fields:
    - `continuation_from`: RESEARCHER
    - `context_saturation_estimate`: your estimate at handoff
@@ -85,7 +85,7 @@ Protocol when you reach 65%:
 
 Produce one artifact:
 
-    C:/Users/doner/nenflow_v3/runs/{run_id}/ATT_{n}_RESEARCH.md
+    ~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_RESEARCH.md
 
 Required frontmatter:
 
@@ -119,6 +119,6 @@ Suggested body structure:
 
 Write a LATEST alias:
 
-    C:/Users/doner/nenflow_v3/runs/{run_id}/LATEST_RESEARCH.md
+    ~/.pi/agent/nenflow-v3/runs/{run_id}/LATEST_RESEARCH.md
 
 Then stop. Do not proceed to planning.

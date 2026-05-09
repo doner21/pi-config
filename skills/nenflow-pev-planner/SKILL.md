@@ -63,8 +63,8 @@ Before writing, print your estimate:
 Protocol when you reach 65%:
 1. Complete the current atomic planning unit (finish the section you are writing).
 2. Write a CONTINUATION contract to the run directory:
-   `C:/Users/doner/nenflow_v3/runs/{run_id}/ATT_{n}_CONTINUATION_PLANNER.md`
-   Use the template at `C:/Users/doner/nenflow_v3/templates/CONTINUATION.md`.
+   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_PLANNER.md`
+   Use the template at `~/.pi/agent/nenflow-v3/templates/CONTINUATION.md`.
    Fill all 6 fields:
    - `continuation_from`: PLANNER
    - `context_saturation_estimate`: your estimate at handoff
@@ -96,7 +96,7 @@ Keep the Plan concise. The Executor needs enough to act, not a novel.
 
 Produce one artifact:
 
-    C:/Users/doner/nenflow_v3/runs/{run_id}/ATT_{n}_PLAN.md
+    ~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_PLAN.md
 
 Required frontmatter (v3 minimum):
 
@@ -129,7 +129,7 @@ be able to act on your Plan without asking questions.
 
 Write a LATEST alias:
 
-    C:/Users/doner/nenflow_v3/runs/{run_id}/LATEST_PLAN.md
+    ~/.pi/agent/nenflow-v3/runs/{run_id}/LATEST_PLAN.md
 
 Print your final context estimate:
 

@@ -58,8 +58,8 @@ Before starting, print your estimate:
 Protocol when you reach 65%:
 1. Complete verification of the current criterion (do not stop mid-check).
 2. Write a CONTINUATION contract to the run directory:
-   `C:/Users/doner/nenflow_v3/runs/{run_id}/ATT_{n}_CONTINUATION_VERIFIER.md`
-   Use the template at `C:/Users/doner/nenflow_v3/templates/CONTINUATION.md`.
+   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_VERIFIER.md`
+   Use the template at `~/.pi/agent/nenflow-v3/templates/CONTINUATION.md`.
    Fill all 6 fields:
    - `continuation_from`: VERIFIER
    - `context_saturation_estimate`: your estimate at handoff
@@ -99,7 +99,7 @@ This classification goes in the Verification Report and is read by the Orchestra
 
 Produce one artifact:
 
-    C:/Users/doner/nenflow_v3/runs/{run_id}/ATT_{n}_VERIFICATION.md
+    ~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_VERIFICATION.md
 
 Required frontmatter:
 
@@ -132,7 +132,7 @@ If FAIL: include which criteria failed and the failure classification for each.
 
 Also write a LATEST alias:
 
-    C:/Users/doner/nenflow_v3/runs/{run_id}/LATEST_VERIFICATION.md
+    ~/.pi/agent/nenflow-v3/runs/{run_id}/LATEST_VERIFICATION.md
 
 ---
 

@@ -22,13 +22,13 @@ Important operating mode:
 
 Use this global NenFlow runtime home:
 
-- `C:/Users/doner/.pi/agent/nenflow-v3/`
+- `~/.pi/agent/nenflow-v3/`
 
 Key paths:
-- Validator: `C:/Users/doner/.pi/agent/nenflow-v3/validator.js`
-- Continuation template: `C:/Users/doner/.pi/agent/nenflow-v3/templates/CONTINUATION.md`
-- Runs dir: `C:/Users/doner/.pi/agent/nenflow-v3/runs/`
-- Shared health file: `C:/Users/doner/.pi/agent/nenflow-v3/.nenflow_context_health.json`
+- Validator: `~/.pi/agent/nenflow-v3/validator.js`
+- Continuation template: `~/.pi/agent/nenflow-v3/templates/CONTINUATION.md`
+- Runs dir: `~/.pi/agent/nenflow-v3/runs/`
+- Shared health file: `~/.pi/agent/nenflow-v3/.nenflow_context_health.json`
 
 All run artifacts should be written under the global runs dir.
 
@@ -66,8 +66,8 @@ For every NenFlow run:
 
 When invoked:
 - generate a new run id in the form `RUN_YYYYMMDD-HHMMSS`
-- create `C:/Users/doner/.pi/agent/nenflow-v3/runs/{run_id}/`
-- maintain/update `C:/Users/doner/.pi/agent/nenflow-v3/.nenflow_context_health.json`
+- create `~/.pi/agent/nenflow-v3/runs/{run_id}/`
+- maintain/update `~/.pi/agent/nenflow-v3/.nenflow_context_health.json`
 
 Minimum health file fields:
 ```json
@@ -100,13 +100,13 @@ After each artifact is created, validate it with the validator when applicable.
 Use:
 
 ```bash
-node C:/Users/doner/.pi/agent/nenflow-v3/validator.js <artifact-path> <ROLE> [ARTIFACT_TYPE]
+node ~/.pi/agent/nenflow-v3/validator.js <artifact-path> <ROLE> [ARTIFACT_TYPE]
 ```
 
 Examples:
 ```bash
-node C:/Users/doner/.pi/agent/nenflow-v3/validator.js <plan> PLANNER PLAN
-node C:/Users/doner/.pi/agent/nenflow-v3/validator.js <verification> VERIFIER VERIFICATION_REPORT
+node ~/.pi/agent/nenflow-v3/validator.js <plan> PLANNER PLAN
+node ~/.pi/agent/nenflow-v3/validator.js <verification> VERIFIER VERIFICATION_REPORT
 ```
 
 ## INTAKE Format

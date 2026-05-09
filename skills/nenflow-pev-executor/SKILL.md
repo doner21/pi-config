@@ -58,8 +58,8 @@ Protocol when you reach 65%:
 1. Complete the current atomic unit of work (finish the current file write or command —
    do not leave a file half-written).
 2. Write a CONTINUATION contract to the run directory:
-   `C:/Users/doner/nenflow_v3/runs/{run_id}/ATT_{n}_CONTINUATION_EXECUTOR.md`
-   Use the template at `C:/Users/doner/nenflow_v3/templates/CONTINUATION.md`.
+   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_EXECUTOR.md`
+   Use the template at `~/.pi/agent/nenflow-v3/templates/CONTINUATION.md`.
    Fill all 6 fields:
    - `continuation_from`: EXECUTOR
    - `context_saturation_estimate`: your estimate at handoff
@@ -102,7 +102,7 @@ Produce two artifacts:
 
 **1. Execution Report:**
 
-    C:/Users/doner/nenflow_v3/runs/{run_id}/ATT_{n}_EXECUTION.md
+    ~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_EXECUTION.md
 
 Required frontmatter:
 
@@ -118,7 +118,7 @@ Note any deviations from the Plan and why they were necessary.
 
 **2. Verifier Brief:**
 
-    C:/Users/doner/nenflow_v3/runs/{run_id}/ATT_{n}_VERIFIER_BRIEF.md
+    ~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_VERIFIER_BRIEF.md
 
 For each Success Criterion from the Plan, provide:
 - The criterion text
