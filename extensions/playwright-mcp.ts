@@ -26,6 +26,7 @@ import { Type } from "@sinclair/typebox";
 import { execSync } from "node:child_process";
 import { existsSync, readdirSync, rmSync } from "node:fs";
 import { env } from "node:process";
+import { homedir } from "node:os";
 import { join } from "node:path";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -34,7 +35,7 @@ import { registerMcpServer, unregisterMcpServer } from "./mcp-status.js";
 // ─── Lock recovery helpers ────────────────────────────────────────────────────
 
 const MCP_PROFILES_DIR = join(
-  env["LOCALAPPDATA"] ?? "C:/Users/doner/AppData/Local",
+  env["LOCALAPPDATA"] ?? join(homedir(), "AppData", "Local"),
   "ms-playwright"
 );
 

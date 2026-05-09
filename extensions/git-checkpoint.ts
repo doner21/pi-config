@@ -20,7 +20,7 @@ export default function gitCheckpointExtension(pi: ExtensionAPI) {
     const cwd = ctx.cwd;
 
     try {
-      execSync("git add -A", { cwd, stdio: "pipe" });
+      execSync("git add -u", { cwd, stdio: "pipe" });
       execSync('git commit -m "checkpoint: pre-op auto-commit [pi]" --allow-empty', { cwd, stdio: "pipe" });
     } catch (e) {
       console.warn("[git-checkpoint] git commit skipped:", (e as Error).message?.split("\n")[0]);
