@@ -16,7 +16,7 @@ import { join, relative } from "node:path";
 
 const GENERATOR_SCRIPT = join(
   process.env.HOME || process.env.USERPROFILE || "~",
-  ".pi", "tools", "generate_wiki.py"
+  ".pi", "extensions", "generate_wiki.py"
 );
 
 export default function (pi: ExtensionAPI) {

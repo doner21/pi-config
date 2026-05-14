@@ -46,28 +46,37 @@ If your task provides a shared context health file path, read it before starting
 Estimate your context usage as a percentage of your model's maximum context window.
 For Gemma 4 26B with gemma4-200k: maximum is ~200,000 tokens.
 
-Before starting, print your estimate:
+Before starting, read the task-provided `RUN_CONFIG.json` if present. Use `context_handoff.handoff_threshold_percent` as the authoritative `context_handoff_threshold_percent`; if the config is missing or unreadable, use the task-provided threshold; if neither exists, fall back to 65%. Record `threshold_source` as `user_prompt`, `intake`, `default`, or `fallback`.
+
+Print your context-threshold status before substantive work:
 
     [EXECUTOR CONTEXT — START]
     self_estimate: ~X%
+    context_handoff_threshold_percent: X
+    threshold_source: user_prompt / intake / default / fallback
     health: HEALTHY / WARNING / HARD_RISK
 
-**At ~65% self-estimated saturation:** stop executing and emit a CONTINUATION contract.
+When your self-estimated saturation reaches or exceeds `context_handoff_threshold_percent`, stop executing and emit a CONTINUATION contract. The threshold is configurable per run; do not hard-code any single percentage.
 
-Protocol when you reach 65%:
-1. Complete the current atomic unit of work (finish the current file write or command —
-   do not leave a file half-written).
-2. Write a CONTINUATION contract to the run directory:
-   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_EXECUTOR.md`
+Protocol when you reach the configured threshold:
+1. Complete the current atomic unit of work (finish the current file write or command; do not leave a file half-written).
+2. Write a CONTINUATION contract to the exact continuation path provided in your task. If no exact path was provided, use the canonical run-dir path:
+   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_EXECUTOR_1.md`
    Use the template at `~/.pi/agent/nenflow-v3/templates/CONTINUATION.md`.
-   Fill all 6 fields:
-   - `continuation_from`: EXECUTOR
+   Fill all required frontmatter and sections:
+   - `artifact_type: CONTINUATION_CONTRACT`
+   - `role: EXECUTOR`
+   - `run_id`: the active run id
+   - `continuation_from: EXECUTOR`
    - `context_saturation_estimate`: your estimate at handoff
-   - `work_completed`: list of files created, commands run, changes made
-   - `work_remaining`: list of files still to create and steps still to take
-   - `critical_context`: key decisions, file paths, discovered constraints, command outputs
-   - `resume_instruction`: exact instruction for the continuation Executor agent
-3. Stop. Do not produce the Execution Report. The Orchestrator will spawn a fresh Executor.
+   - `context_handoff_threshold_percent`: the configured threshold you used
+   - `threshold_source`: where the threshold came from
+   - `measured_at`: current ISO-8601 timestamp
+   - `Work Completed`: concrete completed work and evidence
+   - `Work Remaining`: concrete remaining work
+   - `Critical Context`: key constraints, file paths, decisions, failures, and command outputs
+   - `Resume Instruction`: exact instruction for a fresh continuation Executor; mention the role, run id, continuation contract path, and remaining work
+3. Stop. Do not produce the normal Executor artifact in the same response. The Orchestrator will validate the contract and spawn a fresh Executor.
 
 ---
 

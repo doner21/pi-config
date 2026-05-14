@@ -47,27 +47,37 @@ If your task provides a shared context health file path, read it before starting
 Estimate your context usage as a percentage of your model's maximum context window.
 For Gemma 4 26B with gemma4-200k: maximum is ~200,000 tokens.
 
-Before starting, print your estimate:
+Before starting, read the task-provided `RUN_CONFIG.json` if present. Use `context_handoff.handoff_threshold_percent` as the authoritative `context_handoff_threshold_percent`; if the config is missing or unreadable, use the task-provided threshold; if neither exists, fall back to 65%. Record `threshold_source` as `user_prompt`, `intake`, `default`, or `fallback`.
+
+Print your context-threshold status before substantive work:
 
     [VERIFIER CONTEXT — START]
     self_estimate: ~X%
+    context_handoff_threshold_percent: X
+    threshold_source: user_prompt / intake / default / fallback
     health: HEALTHY / WARNING / HARD_RISK
 
-**At ~65% self-estimated saturation:** stop verifying and emit a CONTINUATION contract.
+When your self-estimated saturation reaches or exceeds `context_handoff_threshold_percent`, stop verifying and emit a CONTINUATION contract. The threshold is configurable per run; do not hard-code any single percentage.
 
-Protocol when you reach 65%:
-1. Complete verification of the current criterion (do not stop mid-check).
-2. Write a CONTINUATION contract to the run directory:
-   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_VERIFIER.md`
+Protocol when you reach the configured threshold:
+1. Complete the current success-criterion check (do not stop mid-check).
+2. Write a CONTINUATION contract to the exact continuation path provided in your task. If no exact path was provided, use the canonical run-dir path:
+   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_VERIFIER_1.md`
    Use the template at `~/.pi/agent/nenflow-v3/templates/CONTINUATION.md`.
-   Fill all 6 fields:
-   - `continuation_from`: VERIFIER
+   Fill all required frontmatter and sections:
+   - `artifact_type: CONTINUATION_CONTRACT`
+   - `role: VERIFIER`
+   - `run_id`: the active run id
+   - `continuation_from: VERIFIER`
    - `context_saturation_estimate`: your estimate at handoff
-   - `work_completed`: which success criteria have been verified with their results (PASS/FAIL)
-   - `work_remaining`: which criteria still need verification
-   - `critical_context`: any failures found so far, file paths, command outputs
-   - `resume_instruction`: exact instruction for the continuation Verifier agent
-3. Stop. Do not produce the Verification Report yet. The Orchestrator will spawn a fresh Verifier.
+   - `context_handoff_threshold_percent`: the configured threshold you used
+   - `threshold_source`: where the threshold came from
+   - `measured_at`: current ISO-8601 timestamp
+   - `Work Completed`: concrete completed work and evidence
+   - `Work Remaining`: concrete remaining work
+   - `Critical Context`: key constraints, file paths, decisions, failures, and command outputs
+   - `Resume Instruction`: exact instruction for a fresh continuation Verifier; mention the role, run id, continuation contract path, and remaining work
+3. Stop. Do not produce the normal Verifier artifact in the same response. The Orchestrator will validate the contract and spawn a fresh Verifier.
 
 ---
 

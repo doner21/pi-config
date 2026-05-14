@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "run_id": "RUN_20990101-0000777",
+  "context_handoff": {
+    "handoff_threshold_percent": 100,
+    "warning_threshold_percent": 0,
+    "hard_risk_threshold_percent": 105,
+    "threshold_source": "bad"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "run_id": "RUN_20260512-163845",
+  "sandbox_root": "C:\\Users\\doner\\.pi\\agent\\nenflow-v3\\runs\\RUN_20260512-163845\\sandbox-tests\\attempt-2",
+  "product_root": "C:/Users/doner/.pi/agent",
+  "total": 14,
+  "passed": 14,
+  "failed": 0,
+  "results": [
+    {
+      "name": "existing validator smoke passes representative PLAN artifact",
+      "file": "normal-flow-smoke.test.js",
+      "status": "PASS",
+      "duration_ms": 45
+    },
+    {
+      "name": "existing validator smoke passes representative EXECUTION_REPORT artifact",
+      "file": "normal-flow-smoke.test.js",
+      "status": "PASS",
+      "duration_ms": 47
+    },
+    {
+      "name": "existing validator smoke passes representative VERIFICATION_REPORT artifact",
+      "file": "normal-flow-smoke.test.js",
+      "status": "PASS",
+      "duration_ms": 44
+    },
+    {
+      "name": "thresholds 65,45,35,20,40 parse and propagate into RUN_CONFIG shape",
+      "file": "parser-config.test.js",
+      "status": "PASS",
+      "duration_ms": 5
+    },
+    {
+      "name": "explicit invalid, signed, negative, malformed, empty, and unrelated percentages reject/default safely",
+      "file": "parser-config.test.js",
+      "status": "PASS",
+      "duration_ms": 1
+    },
+    {
+      "name": "RUN_CONFIG read/write/default behavior, clean string values, and invalid config rejection",
+      "file": "parser-config.test.js",
+      "status": "PASS",
+      "duration_ms": 3
+    },
+    {
+      "name": "intake frontmatter threshold fields accept clean values and reject signed or malformed fields",
+      "file": "parser-config.test.js",
+      "status": "PASS",
+      "duration_ms": 0
+    },
+    {
+      "name": "Route D simulation finds valid continuation when normal artifact is missing",
+      "file": "route-d-simulation.test.js",
+      "status": "PASS",
+      "duration_ms": 4
+    },
+    {
+      "name": "Route D builds same-role minimal continuation prompt with exact current and next paths",
+      "file": "route-d-simulation.test.js",
+      "status": "PASS",
+      "duration_ms": 3
+    },
+    {
+      "name": "active Pi orchestrator skill includes Route D, RUN_CONFIG, threshold propagation, and resume helper",
+      "file": "static-propagation.test.js",
+      "status": "PASS",
+      "duration_ms": 0
+    },
+    {
+      "name": "role skills use configured threshold and exact continuation path instead of hard-coded At ~65% language",
+      "file": "static-propagation.test.js",
+      "status": "PASS",
+      "duration_ms": 1
+    },
+    {
+      "name": "continuation validator accepts complete valid contract through policy and CLI",
+      "file": "validator-continuation.test.js",
+      "status": "PASS",
+      "duration_ms": 46
+    },
+    {
+      "name": "continuation validator rejects missing sections and placeholders",
+      "file": "validator-continuation.test.js",
+      "status": "PASS",
+      "duration_ms": 3
+    },
+    {
+      "name": "continuation validator rejects role/run mismatch, bad name/path, invalid percentages, and stale/future cases",
+      "file": "validator-continuation.test.js",
+      "status": "PASS",
+      "duration_ms": 6
+    }
+  ],
+  "completed_at": "2026-05-12T17:44:37.361Z"
+}

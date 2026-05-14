@@ -1,6 +1,6 @@
 {
   "providers": {
-    "ollama": {
+    "llama-tq3-vulkan": {
       "api": "openai-completions",
       "apiKey": "ollama",
       "baseUrl": "http://localhost:11434/v1",
@@ -18,13 +18,43 @@
             "input": 0,
             "output": 0
           },
-          "id": "gemma4:26b-200k",
+          "id": "gemma4_tq3",
           "input": [
             "text",
             "image"
           ],
-          "maxTokens": 32768,
-          "name": "Local Gemma 4 26B (200k, Thinking)",
+          "maxTokens": 16384,
+          "name": "Local Gemma 4 26B A4B Q4_K_M (llama-tq3-vulkan, 200k, Ollama backend)",
+          "reasoning": true
+        }
+      ],
+      "type": "openai"
+    },
+    "ollama": {
+      "api": "openai-completions",
+      "apiKey": "ollama",
+      "baseUrl": "http://localhost:11434/v1",
+      "compat": {
+        "maxTokensField": "max_tokens",
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false
+      },
+      "models": [
+        {
+          "contextWindow": 32768,
+          "cost": {
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "input": 0,
+            "output": 0
+          },
+          "id": "gemma4:26b",
+          "input": [
+            "text",
+            "image"
+          ],
+          "maxTokens": 8192,
+          "name": "Local Gemma 4 26B A4B Q4_K_M (Ollama, 32k)",
           "reasoning": true
         },
         {
@@ -35,12 +65,30 @@
             "input": 0,
             "output": 0
           },
-          "id": "gemma4:31b-it-q4_K_M",
+          "id": "gemma4:26b-128k",
           "input": [
             "text",
             "image"
           ],
-          "name": "Local Gemma 4 31B Q4 Instruct",
+          "maxTokens": 8192,
+          "name": "Local Gemma 4 26B A4B Q4_K_M (Ollama, 128k)",
+          "reasoning": true
+        },
+        {
+          "contextWindow": 204800,
+          "cost": {
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "input": 0,
+            "output": 0
+          },
+          "id": "gemma4:26b-200k-q8kv",
+          "input": [
+            "text",
+            "image"
+          ],
+          "maxTokens": 8192,
+          "name": "Local Gemma 4 26B A4B Q4_K_M (Ollama, 200k, q8 KV cache via server)",
           "reasoning": true
         },
         {

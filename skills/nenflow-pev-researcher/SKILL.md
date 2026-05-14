@@ -38,21 +38,37 @@ If your task provides a shared context health file path, read it before starting
 Estimate your context usage as a percentage of your model's maximum context window.
 For Gemma 4 26B with gemma4-200k: maximum is ~200,000 tokens.
 
-**At ~65% self-estimated saturation:** stop investigating and emit a CONTINUATION contract.
+Before starting, read the task-provided `RUN_CONFIG.json` if present. Use `context_handoff.handoff_threshold_percent` as the authoritative `context_handoff_threshold_percent`; if the config is missing or unreadable, use the task-provided threshold; if neither exists, fall back to 65%. Record `threshold_source` as `user_prompt`, `intake`, `default`, or `fallback`.
 
-Protocol when you reach 65%:
+Print your context-threshold status before substantive work:
+
+    [RESEARCHER CONTEXT — START]
+    self_estimate: ~X%
+    context_handoff_threshold_percent: X
+    threshold_source: user_prompt / intake / default / fallback
+    health: HEALTHY / WARNING / HARD_RISK
+
+When your self-estimated saturation reaches or exceeds `context_handoff_threshold_percent`, stop researching and emit a CONTINUATION contract. The threshold is configurable per run; do not hard-code any single percentage.
+
+Protocol when you reach the configured threshold:
 1. Complete the current investigation area (finish the file or command you are examining).
-2. Write a CONTINUATION contract to the run directory:
-   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_RESEARCHER.md`
+2. Write a CONTINUATION contract to the exact continuation path provided in your task. If no exact path was provided, use the canonical run-dir path:
+   `~/.pi/agent/nenflow-v3/runs/{run_id}/ATT_{n}_CONTINUATION_RESEARCHER_1.md`
    Use the template at `~/.pi/agent/nenflow-v3/templates/CONTINUATION.md`.
-   Fill all 6 fields:
-   - `continuation_from`: RESEARCHER
+   Fill all required frontmatter and sections:
+   - `artifact_type: CONTINUATION_CONTRACT`
+   - `role: RESEARCHER`
+   - `run_id`: the active run id
+   - `continuation_from: RESEARCHER`
    - `context_saturation_estimate`: your estimate at handoff
-   - `work_completed`: list of areas investigated with key findings
-   - `work_remaining`: list of areas not yet covered
-   - `critical_context`: most important findings, file paths, patterns, constraints discovered
-   - `resume_instruction`: exact instruction for the continuation Researcher agent
-3. Stop. The Orchestrator will spawn a fresh Researcher to cover remaining areas.
+   - `context_handoff_threshold_percent`: the configured threshold you used
+   - `threshold_source`: where the threshold came from
+   - `measured_at`: current ISO-8601 timestamp
+   - `Work Completed`: concrete completed work and evidence
+   - `Work Remaining`: concrete remaining work
+   - `Critical Context`: key constraints, file paths, decisions, failures, and command outputs
+   - `Resume Instruction`: exact instruction for a fresh continuation Researcher; mention the role, run id, continuation contract path, and remaining work
+3. Stop. Do not produce the normal Researcher artifact in the same response. The Orchestrator will validate the contract and spawn a fresh Researcher.
 
 ---
 

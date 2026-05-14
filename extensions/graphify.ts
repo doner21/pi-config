@@ -623,6 +623,9 @@ function openInObsidian(): boolean {
 //  Extension
 // ──────────────────────────────────────────────
 export default function (pi: ExtensionAPI) {
+  // ── Graphify Gate State ────────────────────────────────────
+  let graphifyConsulted = false;
+
   // ── /graphify ────────────────────────────────────────────────
   pi.registerCommand("graphify", {
     description:
@@ -720,6 +723,7 @@ export default function (pi: ExtensionAPI) {
 
   // ── Ensure brain index on every startup ─────────────────────
   pi.on("session_start", async () => {
+    graphifyConsulted = false;
     ensureBrainDir();
     rebuildBrainIndex();
     try { heatTracker.decayTemperatures(); } catch { /* non-critical */ }
@@ -739,6 +743,65 @@ export default function (pi: ExtensionAPI) {
         "Prefer them for architecture and dependency questions before broad file reading.\n\n" +
         brainCtx,
     };
+  });
+
+  // ── Graphify Gate: block exploratory reads until graph consulted ──
+  pi.on("tool_call", async (event, ctx) => {
+    const cwd = ctx.cwd ?? process.cwd();
+    const wikiIndex = path.join(cwd, "graphify-out", "wiki", "_INDEX.md");
+    const reportPath = path.join(cwd, "graphify-out", "GRAPH_REPORT.md");
+    const hasGraphify = fs.existsSync(wikiIndex) || fs.existsSync(reportPath);
+
+    // No graphify artifacts — silently pass through
+    if (!hasGraphify) return undefined;
+
+    // Auto-detect: if agent reads graphify artifacts, mark consulted
+    if (event.toolName === "read") {
+      const readPath = event.input.path as string;
+      if (readPath.includes("graphify-out")) {
+        graphifyConsulted = true;
+        return undefined;
+      }
+    }
+
+    // Already consulted this session — pass through
+    if (graphifyConsulted) return undefined;
+
+    // Block exploratory source reads
+    if (event.toolName === "read") {
+      const readPath = event.input.path as string;
+      const isExploratory =
+        /(^|[\\/])(src|server|electron)([\\/]|$)/.test(readPath) ||
+        /\.(jsx?|tsx?|py)$/.test(readPath);
+      if (isExploratory) {
+        return {
+          block: true,
+          reason:
+            `⛔ GRAPHIFY GATE: Graphify knowledge graph available but not consulted.\n` +
+            `   Required first read: graphify-out/wiki/_INDEX.md\n` +
+            `   (This gate auto-lifts once you read any graphify-out/ artifact.)`,
+        };
+      }
+    }
+
+    // Block exploratory bash commands
+    if (event.toolName === "bash") {
+      const command = (event.input.command as string) || "";
+      const isExploratory =
+        /\b(find|grep|rg)\b/.test(command) ||
+        /\b(ls|wc|head|tail|sort)\b.*\b(src|server|electron)\b/.test(command);
+      if (isExploratory) {
+        return {
+          block: true,
+          reason:
+            `⛔ GRAPHIFY GATE: Graphify knowledge graph available but not consulted.\n` +
+            `   Required first read: graphify-out/wiki/_INDEX.md\n` +
+            `   (This gate auto-lifts once you read any graphify-out/ artifact.)`,
+        };
+      }
+    }
+
+    return undefined;
   });
 }
 

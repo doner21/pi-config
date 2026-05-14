@@ -4,6 +4,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { validateContinuationContract } = require("./context-policy.js");
 
 const [, , filePath, expectedRole, expectedArtifactType] = process.argv;
 
@@ -62,6 +63,14 @@ if (actualArtifactType === "VERIFICATION_REPORT") {
   }
   if (!/^VERDICT:\s*(PASS|FAIL)\s*$/mi.test(content)) {
     console.error('FAIL: VERIFICATION_REPORT body must end with a VERDICT: PASS|FAIL line');
+    process.exit(1);
+  }
+}
+
+if (actualArtifactType === "CONTINUATION_CONTRACT") {
+  const result = validateContinuationContract(filePath, { expectedRole: expectRole });
+  if (!result.ok) {
+    console.error(`FAIL: CONTINUATION_CONTRACT invalid — ${result.errors.join("; ")}`);
     process.exit(1);
   }
 }

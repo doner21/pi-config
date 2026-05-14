@@ -1,0 +1,4 @@
+--- ollama rm gemma4:26b-200k ---
+[?2026h[?25l[1G⠙ [K[?25h[?2026l[?25l[?2026h[?25l[1G[K[?25h[?2026l[2K[1G[?25hdeleted 'gemma4:26b-200k'
+--- ollama rm gemma4-200k:latest ---
+[?2026h[?25l[1G⠙ [K[?25h[?2026l[?25l[?2026h[?25l[1G[K[?25h[?2026l[2K[1G[?25hdeleted 'gemma4-200k:latest'

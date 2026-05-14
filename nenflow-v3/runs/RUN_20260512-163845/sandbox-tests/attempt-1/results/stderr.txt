@@ -1,0 +1,8 @@
+FAIL parser-config.test.js :: invalid and unrelated percentages reject or default safely (1ms)
+AssertionError [ERR_ASSERTION]: context threshold -4%
+
+4 !== 65
+
+    at Object.fn (C:\Users\doner\.pi\agent\nenflow-v3\runs\RUN_20260512-163845\sandbox-tests\attempt-1\tests\parser-config.test.js:31:16)
+    at main (C:\Users\doner\.pi\agent\nenflow-v3\runs\RUN_20260512-163845\sandbox-tests\attempt-1\run-tests.js:65:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)

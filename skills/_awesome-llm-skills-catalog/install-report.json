@@ -1,0 +1,194 @@
+{
+  "installed": [
+    {
+      "name": "algorithmic-art",
+      "source": "algorithmic-art",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\algorithmic-art",
+      "patch": "patched"
+    },
+    {
+      "name": "artifacts-builder",
+      "source": "artifacts-builder",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\artifacts-builder",
+      "patch": "patched"
+    },
+    {
+      "name": "brand-guidelines",
+      "source": "brand-guidelines",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\brand-guidelines",
+      "patch": "patched"
+    },
+    {
+      "name": "canvas-design",
+      "source": "canvas-design",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\canvas-design",
+      "patch": "patched"
+    },
+    {
+      "name": "changelog-generator",
+      "source": "changelog-generator",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\changelog-generator",
+      "patch": "patched"
+    },
+    {
+      "name": "competitive-ads-extractor",
+      "source": "competitive-ads-extractor",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\competitive-ads-extractor",
+      "patch": "patched"
+    },
+    {
+      "name": "content-research-writer",
+      "source": "content-research-writer",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\content-research-writer",
+      "patch": "patched"
+    },
+    {
+      "name": "docx",
+      "source": "document-skills/docx",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\docx",
+      "patch": "patched"
+    },
+    {
+      "name": "pdf",
+      "source": "document-skills/pdf",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\pdf",
+      "patch": "patched"
+    },
+    {
+      "name": "pptx",
+      "source": "document-skills/pptx",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\pptx",
+      "patch": "patched"
+    },
+    {
+      "name": "xlsx",
+      "source": "document-skills/xlsx",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\xlsx",
+      "patch": "patched"
+    },
+    {
+      "name": "domain-name-brainstormer",
+      "source": "domain-name-brainstormer",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\domain-name-brainstormer",
+      "patch": "patched"
+    },
+    {
+      "name": "file-organizer",
+      "source": "file-organizer",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\file-organizer",
+      "patch": "patched"
+    },
+    {
+      "name": "image-enhancer",
+      "source": "image-enhancer",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\image-enhancer",
+      "patch": "patched"
+    },
+    {
+      "name": "internal-comms",
+      "source": "internal-comms",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\internal-comms",
+      "patch": "patched"
+    },
+    {
+      "name": "invoice-organizer",
+      "source": "invoice-organizer",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\invoice-organizer",
+      "patch": "patched"
+    },
+    {
+      "name": "lead-research-assistant",
+      "source": "lead-research-assistant",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\lead-research-assistant",
+      "patch": "patched"
+    },
+    {
+      "name": "mcp-builder",
+      "source": "mcp-builder",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\mcp-builder",
+      "patch": "patched"
+    },
+    {
+      "name": "meeting-insights-analyzer",
+      "source": "meeting-insights-analyzer",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\meeting-insights-analyzer",
+      "patch": "patched"
+    },
+    {
+      "name": "notion-knowledge-capture",
+      "source": "notion-knowledge-capture",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\notion-knowledge-capture",
+      "patch": "patched"
+    },
+    {
+      "name": "notion-meeting-intelligence",
+      "source": "notion-meeting-intelligence",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\notion-meeting-intelligence",
+      "patch": "patched"
+    },
+    {
+      "name": "notion-research-documentation",
+      "source": "notion-research-documentation",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\notion-research-documentation",
+      "patch": "patched"
+    },
+    {
+      "name": "notion-spec-to-implementation",
+      "source": "notion-spec-to-implementation",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\notion-spec-to-implementation",
+      "patch": "patched"
+    },
+    {
+      "name": "raffle-winner-picker",
+      "source": "raffle-winner-picker",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\raffle-winner-picker",
+      "patch": "patched"
+    },
+    {
+      "name": "resemble-detect",
+      "source": "resemble-detect",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\resemble-detect",
+      "patch": "patched"
+    },
+    {
+      "name": "skill-creator",
+      "source": "skill-creator",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\skill-creator",
+      "patch": "patched"
+    },
+    {
+      "name": "slack-gif-creator",
+      "source": "slack-gif-creator",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\slack-gif-creator",
+      "patch": "patched"
+    },
+    {
+      "name": "theme-factory",
+      "source": "theme-factory",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\theme-factory",
+      "patch": "patched"
+    },
+    {
+      "name": "video-downloader",
+      "source": "video-downloader",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\video-downloader",
+      "patch": "patched"
+    },
+    {
+      "name": "webapp-testing",
+      "source": "webapp-testing",
+      "dest": "C:\\Users\\doner\\.pi\\agent\\skills\\webapp-testing",
+      "patch": "patched"
+    }
+  ],
+  "skipped": [
+    {
+      "name": "template-skill",
+      "source": "template-skill",
+      "reason": "template/example skill, not installed as a runtime skill"
+    }
+  ],
+  "errors": [],
+  "sourceCommit": "f417203aa4a4c17268653382512081d10eaada23",
+  "installedAt": "2026-05-11T17:02:57.509663+00:00"
+}

@@ -1,0 +1,17 @@
+[sandbox-test-builder] root=C:\Users\doner\.pi\agent\nenflow-v3\runs\RUN_20260512-163845\sandbox-tests\attempt-2
+[sandbox-test-builder] files=normal-flow-smoke.test.js, parser-config.test.js, route-d-simulation.test.js, static-propagation.test.js, validator-continuation.test.js
+PASS normal-flow-smoke.test.js :: existing validator smoke passes representative PLAN artifact (45ms)
+PASS normal-flow-smoke.test.js :: existing validator smoke passes representative EXECUTION_REPORT artifact (47ms)
+PASS normal-flow-smoke.test.js :: existing validator smoke passes representative VERIFICATION_REPORT artifact (44ms)
+PASS parser-config.test.js :: thresholds 65,45,35,20,40 parse and propagate into RUN_CONFIG shape (5ms)
+PASS parser-config.test.js :: explicit invalid, signed, negative, malformed, empty, and unrelated percentages reject/default safely (1ms)
+PASS parser-config.test.js :: RUN_CONFIG read/write/default behavior, clean string values, and invalid config rejection (3ms)
+PASS parser-config.test.js :: intake frontmatter threshold fields accept clean values and reject signed or malformed fields (0ms)
+PASS route-d-simulation.test.js :: Route D simulation finds valid continuation when normal artifact is missing (4ms)
+PASS route-d-simulation.test.js :: Route D builds same-role minimal continuation prompt with exact current and next paths (3ms)
+PASS static-propagation.test.js :: active Pi orchestrator skill includes Route D, RUN_CONFIG, threshold propagation, and resume helper (0ms)
+PASS static-propagation.test.js :: role skills use configured threshold and exact continuation path instead of hard-coded At ~65% language (1ms)
+PASS validator-continuation.test.js :: continuation validator accepts complete valid contract through policy and CLI (46ms)
+PASS validator-continuation.test.js :: continuation validator rejects missing sections and placeholders (3ms)
+PASS validator-continuation.test.js :: continuation validator rejects role/run mismatch, bad name/path, invalid percentages, and stale/future cases (6ms)
+[sandbox-test-builder] summary total=14 passed=14 failed=0

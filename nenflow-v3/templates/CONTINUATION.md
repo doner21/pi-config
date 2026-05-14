@@ -1,21 +1,24 @@
 ---
 artifact_type: CONTINUATION_CONTRACT
-role: [PLANNER|EXECUTOR|VERIFIER|RESEARCHER]
+role: [PLANNER|EXECUTOR|VERIFIER|RESEARCHER|ORCHESTRATOR]
 run_id: [RUN_YYYYMMDD-HHMMSS]
-continuation_from: [PLANNER|EXECUTOR|VERIFIER|RESEARCHER]
+continuation_from: [PLANNER|EXECUTOR|VERIFIER|RESEARCHER|ORCHESTRATOR]
 context_saturation_estimate: "~65%"
+context_handoff_threshold_percent: 65
+threshold_source: [user_prompt|intake|default]
+measured_at: [ISO-8601 timestamp]
 ---
 
 # ATT_[n] — CONTINUATION CONTRACT
 
 ## Work Completed
-- [What has already been completed]
+- Replace this with concrete completed work and evidence.
 
 ## Work Remaining
-- [What still needs to be done]
+- Replace this with concrete remaining work.
 
 ## Critical Context
-- [Key constraints, file paths, findings, failures, command outputs, or decisions]
+- Replace this with key constraints, file paths, findings, failures, command outputs, or decisions.
 
 ## Resume Instruction
-[Exact instruction for the fresh continuation agent, including what to read first and what to do next.]
+Fresh [ROLE] continuation for run [RUN_ID]: read this continuation contract at [CONTRACT_PATH], read RUN_CONFIG.json, then complete only the remaining work and write the normal role output to the exact requested path. If context again reaches context_handoff_threshold_percent, finish the current atomic unit and write the next continuation contract to the exact configured path.
