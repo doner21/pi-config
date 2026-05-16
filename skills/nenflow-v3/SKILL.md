@@ -64,6 +64,36 @@ For every NenFlow run:
    - if verification is FAIL, you may run one more execution+verification attempt
    - if retrying, pass the previous failure report path to the executor
 
+## Ecological Intake Mode (Alternative INTAKE)
+
+The Orchestrator supports an optional ecological spec-driven intake mode as an alternative to the standard ORCHESTRATOR INTAKE path.
+
+### Trigger Detection
+
+Ecological mode is triggered when the user's prompt contains keywords like:
+- "ecological"
+- "spec-driven ecology"
+- "ecological intake"
+- "deep spec"
+- "/spec_driven_ecology"
+- Explicit request for the 15-phase ecological process
+
+If it is unclear whether the user wants ecological mode, the Orchestrator explicitly asks rather than auto-detecting from ambiguous prompts.
+
+### Ecological Mode Behavior
+
+1. **Do NOT perform INTAKE yourself.** Instead, spawn the `pev-intake-ecological` subagent.
+2. Pass to the subagent: raw prompt, run id, `RUN_CONFIG.json` path, configured `context_handoff_threshold_percent`, exact `ATT_0_INTAKE.md` output path, and exact continuation path.
+3. The subagent uses the `spec-driven-ecology` skill to guide the 15-phase ecological intake conversation.
+4. The subagent produces `ATT_0_INTAKE.md` in NenFlow-compatible format with standard frontmatter enriched with ecological sections.
+
+### After Ecological Intake
+
+After `pev-intake-ecological` completes:
+1. Read and validate the produced `ATT_0_INTAKE.md`.
+2. Continue to RESEARCH (optional) or PLAN normally.
+3. Route D-E (continuation, retry) operate as usual.
+
 ## Run Setup
 
 When invoked:
@@ -162,6 +192,17 @@ Then include ecological sections covering:
 - Routing Decision
 - Clarification Questions only if needed
 
+**Ecological INTAKE enrichment:** When ecological intake mode is used, `ATT_0_INTAKE.md` includes the standard sections above plus additional ecological supplements that the Planner, Executor, and Verifier can consume without format changes:
+- Epistemic Map (Known / Inferred / Assumed / Unknown)
+- Affordance Landscape
+- Attractors and Failure Modes
+- Perturbation Tests
+- Representative Environment
+- Falsifiers
+- Human Gates
+
+These supplements are additive — they enrich the specification without breaking compatibility with existing subagents.
+
 ## Subagent Invocation Pattern
 
 Use the `subagent` tool to invoke the role agents. Use the project being worked on as the working directory when helpful, but keep artifact paths in the global NenFlow home.
@@ -171,6 +212,7 @@ Subagents to use:
 - `pev-planner`
 - `pev-executor`
 - `pev-verifier`
+- `pev-intake-ecological` (only for ecological intake mode)
 
 Do not call `pev-intake`.
 

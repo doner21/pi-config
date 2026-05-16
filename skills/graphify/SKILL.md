@@ -1,6 +1,6 @@
 ---
 name: graphify
-description: any input (code, docs, papers, images, video) → knowledge graph → clustered communities → HTML + JSON + GRAPH_REPORT.md
+description: Turn any folder of files (code, docs, papers, images, video) into a queryable knowledge graph with community detection, an honest audit trail, and three outputs: interactive HTML, GraphRAG-ready JSON, and a plain-language GRAPH_REPORT.md. Use when asked to analyze a codebase, understand architecture, map dependencies, or build a knowledge graph.
 ---
 
 # /graphify
@@ -696,6 +696,82 @@ Then immediately offer to explore. Pick the single most interesting suggested qu
 If the user says yes, run `/graphify query "[question]"` on the graph and walk them through the answer using the graph structure - which nodes connect, which community boundaries get crossed, what the path reveals. Keep going as long as they want to explore. Each answer should end with a natural follow-up ("this connects to X - want to go deeper?") so the session feels like navigation, not a one-shot report.
 
 The graph is the map. Your job after the pipeline is to be the guide.
+
+---
+
+### Step 10 - Memory Persistence, Wiki Sync, and Human Wiki
+
+After the graph is built and the report is presented, automatically chain into the memory system:
+
+**Do this in order. Do not skip any step.**
+
+#### 10A — Save to brain
+
+Tell the user: `Saving graph to brain...`
+
+Invoke the Pi command:
+
+```
+/memory save
+```
+
+This persists the current `graphify-out/` snapshot as a timestamped run in `~/.pi/graphify-brain/`. The run includes `graph.json`, `GRAPH_REPORT.md`, `graph.html`, and any `wiki/` output. Existing commands (`/memory load`, `/memory list`, `/memory runs`) continue to work normally.
+
+If `/memory save` fails (e.g., no `graphify-out/` found), warn the user and continue. Do not block the remaining steps.
+
+#### 10B — Sync to Obsidian vault
+
+Tell the user: `Syncing to Obsidian vault...`
+
+Invoke the Pi command:
+
+```
+/memory-wiki sync
+```
+
+This copies the `graphify-out/obsidian/` output into the central Obsidian vault at `~/.pi/graphify-brain/obsidian-vault/`. The vault can be opened with `/memory-wiki open` or directly in Obsidian. All saved projects are accessible in one place.
+
+If the project was not built with `--obsidian`, skip this step silently (the sync command handles this gracefully).
+
+#### 10C — Generate human-readable wiki
+
+Tell the user: `Generating human-readable wiki...`
+
+Invoke the Pi command:
+
+```
+/memory-wiki-human
+```
+
+This runs the two-phase wiki generator:
+1. **Phase 1 (instant):** Runs `extensions/generate_wiki.py` against `graphify-out/graph.json` to build the structural wiki skeleton under `graphify-out/wiki/` — an `_INDEX.md`, `01_OVERVIEW/` (architecture at a glance, glossary), `02_TOP_COMMUNITIES/` (one page per community with frontmatter + "For LLMs" data), and supporting sections.
+2. **Phase 2 (LLM):** Sends a formatted instruction to the active agent asking it to write narrative content for every "For Humans" section — real-world analogies, ASCII box diagrams, Mermaid flowcharts, bridge analysis, and cohesion explanations.
+
+The agent should respond to this instruction by writing the narrative wiki content as a follow-up task. The instruction includes full DIAGRAM and NARRATIVE requirements.
+
+#### 10D — Confirm completion
+
+After all three sub-steps, tell the user:
+
+```
+Graphify pipeline complete.
+
+  graphify-out/
+    graph.html        - interactive visualization
+    GRAPH_REPORT.md   - audit report  
+    graph.json        - raw graph data
+    wiki/             - human-readable wiki (narratives pending agent writing)
+
+  Brain: saved as run in ~/.pi/graphify-brain/
+  Obsidian: synced to vault (use /memory-wiki open)
+  Wiki: skeleton generated — agent will write narratives next
+```
+
+#### Important notes
+
+- If any of the three commands fail, report the failure specifically (which command, what error) but continue to the next step.
+- The `/memory-wiki-human` command sends a `pi.sendUserMessage()` that becomes a new user prompt. The agent should handle this as a follow-up task — it does not block the current graphify pipeline from completing.
+- For `--update` runs, still run Step 10. New code changes should be persisted to the brain.
 
 ---
 

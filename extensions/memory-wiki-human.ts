@@ -20,7 +20,7 @@ const GENERATOR_SCRIPT = join(
 );
 
 export default function (pi: ExtensionAPI) {
-  pi.registerCommand("memory-wiki", {
+  pi.registerCommand("memory-wiki-human", {
     description: "Generate human-readable architecture wiki from graphify graph",
 
     getArgumentCompletions: (prefix: string) => {
