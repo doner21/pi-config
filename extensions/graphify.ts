@@ -3,6 +3,7 @@ import type { ExtensionCommandContext } from "@mariozechner/pi-coding-agent";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
+import * as crypto from "node:crypto";
 import { execSync } from "node:child_process";
 import { Text, Container, matchesKey, Key } from "@mariozechner/pi-tui";
 
@@ -78,6 +79,21 @@ function archiveRunDirFor(projectSlug: string, runId: string): string {
   return path.join(ARCHIVE_DIR, projectSlug, runId);
 }
 
+// ── Strong-typed helpers ──
+function getNodeLabels(graph: Record<string, unknown>): Set<string> {
+  const labels = new Set<string>();
+  const nodes = (graph.nodes as Array<Record<string, unknown>>) ?? [];
+  for (const n of nodes) {
+    const label = String(n.label || n.name || n.id || "").toLowerCase().trim();
+    if (label) labels.add(label);
+  }
+  return labels;
+}
+
+function getNodeLabelsArray(graph: Record<string, unknown>): string[] {
+  return Array.from(getNodeLabels(graph));
+}
+
 // ── Data interfaces ──
 interface RunMeta {
   runId: string;
@@ -127,6 +143,89 @@ interface BrainMeta {
     }>;
   };
   [key: string]: unknown;
+}
+
+// ── Compression / Archetype interfaces ──
+interface CommunityData {
+  communityId: number;
+  nodeIds: string[];
+  nodeCount: number;
+  edgeCount: number;
+  cohesionScore: number;
+  summary: string;
+  generatedBy: string;
+  generatedAt: string;
+  sourceNodeCount: number;
+  sourceNodeLabels: string[];
+}
+
+interface CompressedGraph {
+  schemaVersion: number;
+  compressedAt: string;
+  sourceRunId: string;
+  sourceSha256: string;
+  sourceNodeCount: number;
+  sourceEdgeCount: number;
+  compressedNodeCount: number;
+  compressedEdgeCount: number;
+  communityCount: number;
+  supernodes: Array<{
+    id: string;
+    label: string;
+    summary: string;
+    communityId: number;
+    cohesion: number;
+    originalNodeCount: number;
+    originalNodeIds: string[];
+    level: number;
+    children: string[];
+  }>;
+  edges: Array<{ source: string; target: string; weight: number }>;
+}
+
+interface ExpandManifest {
+  expandedAt: string;
+  sourceRunId: string;
+  sourceCompressedGraphHash: string;
+  supernodeMap: Record<string, string[]>;
+  originalNodeCount: number;
+  originalEdgeCount: number;
+}
+
+interface ArchetypeEntry {
+  archetypeId: string;
+  label: string;
+  nodePattern: string[];
+  occurrenceCount: number;
+  projectSlugs: string[];
+  firstSeenAt: string;
+  lastSeenAt: string;
+}
+
+// ── Path helpers for compression artifacts ──
+function communitiesPathFor(projectSlug: string, runId: string): string {
+  return path.join(runDirFor(projectSlug, runId), "communities.json");
+}
+
+function compressedGraphPathFor(projectSlug: string, runId: string): string {
+  return path.join(runDirFor(projectSlug, runId), "compressed-graph.json");
+}
+
+function expandManifestPathFor(projectSlug: string, runId: string): string {
+  return path.join(runDirFor(projectSlug, runId), "expand-manifest.json");
+}
+
+// ── SHA-256 file hasher ──
+function sha256File(filePath: string): string | null {
+  try {
+    if (!fs.existsSync(filePath)) return null;
+    const buffer = fs.readFileSync(filePath);
+    const hash = crypto.createHash("sha256");
+    hash.update(buffer);
+    return hash.digest("hex");
+  } catch {
+    return null;
+  }
 }
 
 // ── HeatTracker — persists access tracking to brain-meta.json ──
@@ -294,14 +393,18 @@ function rebuildBrainIndex(): void {
       const report = path.join(BRAIN_DIR, entry.name, "GRAPH_REPORT.md");
       const wiki = path.join(BRAIN_DIR, entry.name, "wiki", "index.md");
 
-      entries.push(
+      // Build output lines
+      const entryLines: (string | null)[] = [
         `## ${meta.displayName ?? entry.name}`,
         `- **Project path**: \`${meta.projectPath ?? "unknown"}\``,
         `- **Saved**: ${meta.savedAt ?? "unknown"}`,
         `- **Artifacts**: ${fs.existsSync(report) ? "GRAPH_REPORT.md" : ""}${fs.existsSync(report) && fs.existsSync(wiki) ? ", " : ""}${fs.existsSync(wiki) ? "wiki/index.md" : ""}${!fs.existsSync(report) && !fs.existsSync(wiki) ? "(empty)" : ""}`,
         `- **Nodes**: ${meta.nodeCount ?? "?"}  |  **Edges**: ${meta.edgeCount ?? "?"}`,
+        meta.compressionState && meta.compressionState !== "raw" ? `- **Compression**: ${meta.compressionState}${meta.communityCount != null ? ` (${meta.communityCount} communities)` : ""}` : null,
+        meta.verifiedStatus && meta.verifiedStatus !== "unknown" ? `- **Verification**: ${meta.verifiedStatus}` : null,
         "",
-      );
+      ];
+      entries.push(...entryLines.filter((l): l is string => l !== null));
     } catch {
       // skip
     }
@@ -344,56 +447,22 @@ function brainContextForCwd(cwd: string): string | null {
 
       if (!match) continue;
 
-      // Read run-meta for safety gating
-      let safeToInject = true;
-      let verifiedStatus: string | undefined;
-      let skipReport = false;
-
-      try {
-        const lastRunId = meta.lastRunId;
-        if (lastRunId) {
-          const runMetaPath = path.join(BRAIN_DIR, entry.name, "runs", lastRunId, "run-meta.json");
-          if (fs.existsSync(runMetaPath)) {
-            const runMeta = JSON.parse(fs.readFileSync(runMetaPath, "utf-8"));
-            safeToInject = runMeta.safeToInject !== false;
-            verifiedStatus = typeof runMeta.verifiedStatus === "string" ? runMeta.verifiedStatus : undefined;
-
-            if (safeToInject === false) {
-              parts.push(
-                `\n## Active Project Graph: ${meta.displayName ?? entry.name}`,
-                `⚠️ safeToInject is false — GRAPH_REPORT not injected. Run /memory verify to re-enable.`,
-              );
-              skipReport = true;
-            } else if (verifiedStatus !== undefined && verifiedStatus !== "verified") {
-              parts.push(
-                `\n## Active Project Graph: ${meta.displayName ?? entry.name}`,
-                `⚠️ verifiedStatus=${verifiedStatus}. GRAPH_REPORT content may be stale or unverified.`,
-              );
-            }
-          }
-        }
-      } catch {
-        // Fall through — skip gating on read failure
+      const reportPath = path.join(BRAIN_DIR, entry.name, "GRAPH_REPORT.md");
+      if (fs.existsSync(reportPath)) {
+        const report = fs.readFileSync(reportPath, "utf-8");
+        const sections = extractSections(report, [
+          "God Nodes",
+          "Surprising Connections",
+          "Suggested Questions",
+        ]);
+        parts.push(
+          `\n## Active Project Graph: ${meta.displayName ?? entry.name}`,
+          `(Saved ${meta.savedAt})`,
+          `\n${sections}`,
+        );
       }
 
-      if (!skipReport) {
-        const reportPath = path.join(BRAIN_DIR, entry.name, "GRAPH_REPORT.md");
-        if (fs.existsSync(reportPath)) {
-          const report = fs.readFileSync(reportPath, "utf-8");
-          const sections = extractSections(report, [
-            "God Nodes",
-            "Surprising Connections",
-            "Suggested Questions",
-          ]);
-          parts.push(
-            `\n## Active Project Graph: ${meta.displayName ?? entry.name}`,
-            `(Saved ${meta.savedAt})`,
-            `\n${sections}`,
-          );
-        }
-      }
-
-const wikiIndex = path.join(BRAIN_DIR, entry.name, "wiki", "index.md");
+      const wikiIndex = path.join(BRAIN_DIR, entry.name, "wiki", "index.md");
       if (fs.existsSync(wikiIndex)) {
         const wiki = fs.readFileSync(wikiIndex, "utf-8");
         parts.push(
@@ -640,7 +709,33 @@ export default function (pi: ExtensionAPI) {
   // ── /memory ─────────────────────────────────────────────────
   pi.registerCommand("memory", {
     description:
-      "Global graphify brain. /memory save | list | load <project> [--run <id>] | runs <project> | prune [project] [--dry-run] | pin/unpin <project> [--run <id>] | gc [project] [--dry-run] [--apply] | keep <project> --run <id> | stats [p]",
+      "Global graphify brain. /memory save | list | load <project> [--run <id>] | runs <project> | prune [project] [--dry-run] | pin/unpin <project> [--run <id>] | gc [project] [--dry-run] [--apply] | keep <project> --run <id> | stats [p] | compress <project> [--apply] | expand <run-id> | zoom <run-id> | fuse <project> --run <id1> --run <id2> | archetypes",
+
+    getArgumentCompletions: (prefix: string) => {
+      const options = [
+        { value: "save", label: "save — Save current project graph to brain" },
+        { value: "list", label: "list — List all saved projects" },
+        { value: "load", label: "load <project> [--run <id>] — Load project graph into context" },
+        { value: "runs", label: "runs <project> — List all runs for a project" },
+        { value: "stats", label: "stats [project] — Show brain statistics" },
+        { value: "prune", label: "prune [project] [--dry-run] — Show prune candidates" },
+        { value: "pin", label: "pin <project> --run <id> — Pin a run (immune to pruning)" },
+        { value: "unpin", label: "unpin <project> --run <id> — Remove pin protection" },
+        { value: "gc", label: "gc [project] [--dry-run] [--apply] — Garbage collect stale runs" },
+        { value: "keep", label: "keep <project> --run <id> — Restore archived run" },
+        { value: "compress", label: "compress <project> [--apply] — Compress communities to supernodes" },
+        { value: "expand", label: "expand <run-id> — Restore compressed run to full graph" },
+        { value: "zoom", label: "zoom <run-id> — Inspect compressed run without expanding" },
+        { value: "fuse", label: "fuse <project> --run <id1> --run <id2> — Compare two runs" },
+        { value: "archetypes", label: "archetypes — Cross-project pattern detection" },
+      ];
+      const lower = (prefix ?? "").toLowerCase();
+      const filtered = lower
+        ? options.filter((o) => o.value.startsWith(lower))
+        : options;
+      return filtered.length > 0 ? filtered : null;
+    },
+
     handler: async (args, ctx) => {
       const parts = args?.trim().split(/\s+/) ?? [];
       const sub = parts[0]?.toLowerCase();
@@ -686,9 +781,24 @@ export default function (pi: ExtensionAPI) {
         case "stats":
           await handleStats(ctx, pi, rest || undefined);
           break;
+        case "compress":
+          await handleCompress(ctx, pi, rest);
+          break;
+        case "expand":
+          await handleExpand(ctx, pi, rest);
+          break;
+        case "zoom":
+          await handleZoom(ctx, pi, rest);
+          break;
+        case "fuse":
+          await handleFuse(ctx, pi, rest);
+          break;
+        case "archetypes":
+          await handleArchetypes(ctx, pi);
+          break;
         default:
           ctx.ui.notify(
-            "Usage: /memory save | list | load <project> [--run <id>] | runs <project> | prune [project] [--dry-run] | pin/unpin <project> [--run <id>] | gc [project] [--dry-run] [--apply] | keep <project> --run <id> | stats [p]",
+            "Usage: /memory save | list | load <project> [--run <id>] | runs <project> | prune [project] [--dry-run] | pin/unpin <project> [--run <id>] | gc [project] [--dry-run] [--apply] | keep <project> --run <id> | stats [p] | compress <project> [--apply] | expand <run-id> | zoom <run-id> | fuse <project> --run <id1> --run <id2> | archetypes",
             "info",
           );
       }
@@ -723,7 +833,6 @@ export default function (pi: ExtensionAPI) {
 
   // ── Ensure brain index on every startup ─────────────────────
   pi.on("session_start", async () => {
-    graphifyConsulted = false;
     ensureBrainDir();
     rebuildBrainIndex();
     try { heatTracker.decayTemperatures(); } catch { /* non-critical */ }
@@ -745,7 +854,7 @@ export default function (pi: ExtensionAPI) {
     };
   });
 
-  // ── Graphify Gate: block exploratory reads until graph consulted ──
+  // ── Graphify enforcement gate ──────────────────────────────
   pi.on("tool_call", async (event, ctx) => {
     const cwd = ctx.cwd ?? process.cwd();
     const wikiIndex = path.join(cwd, "graphify-out", "wiki", "_INDEX.md");
@@ -1101,7 +1210,7 @@ async function handleSave(
 
 async function handleList(
   ctx: ExtensionCommandContext,
-  pi: ExtensionAPI,
+  _pi: ExtensionAPI,
 ): Promise<void> {
   if (!fs.existsSync(INDEX_PATH)) {
     ctx.ui.notify(
@@ -1110,6 +1219,7 @@ async function handleList(
     );
     return;
   }
+
   // Parse index.md to extract project entries
   const raw = fs.readFileSync(INDEX_PATH, "utf-8");
   const projects: Array<{
@@ -1354,16 +1464,6 @@ async function handleRuns(
 }
 
 // ── Prune scoring (Phase 2-3) ──
-function getNodeLabels(graph: Record<string, unknown>): Set<string> {
-  const labels = new Set<string>();
-  const nodes = (graph.nodes as Array<Record<string, unknown>>) ?? [];
-  for (const n of nodes) {
-    const label = String(n.label || n.name || n.id || "").toLowerCase().trim();
-    if (label) labels.add(label);
-  }
-  return labels;
-}
-
 function computePruneScores(projectDir: string, options?: { persist?: boolean }): RunMeta[] {
   const persist = options?.persist === true;
   const projectSlug = path.basename(projectDir);
@@ -1547,6 +1647,602 @@ function getProjectSlugsForCommand(projectArg: string | undefined): string[] {
     if (fs.existsSync(path.join(BRAIN_DIR, pe.name, "runs"))) slugs.push(pe.name);
   }
   return slugs;
+}
+
+// ═══════════════════════════════════════════
+//  Fractal Compression Engine (Phase 4)
+// ═══════════════════════════════════════════
+
+// ── Community Detection ──
+
+function detectCommunitiesTS(graph: Record<string, unknown>): { communities: Map<number, string[]>; modularity: number } {
+  const nodes = (graph.nodes as Array<Record<string, unknown>>) ?? [];
+  const edges = (graph.links as Array<Record<string, unknown>>) ?? (graph.edges as Array<Record<string, unknown>>) ?? [];
+
+  if (nodes.length === 0) return { communities: new Map(), modularity: 0 };
+
+  // Build adjacency
+  const nodeIndex = new Map<string, number>();
+  nodes.forEach((n, i) => {
+    nodeIndex.set(String(n.id ?? n.name ?? `node-${i}`), i);
+  });
+
+  const adj: number[][] = Array.from({ length: nodes.length }, () => []);
+  const weights: Map<string, number> = new Map();
+  for (const e of edges) {
+    const s = String(e.source ?? e.from ?? "");
+    const t = String(e.target ?? e.to ?? "");
+    const si = nodeIndex.get(s);
+    const ti = nodeIndex.get(t);
+    if (si === undefined || ti === undefined || si === ti) continue;
+    adj[si].push(ti);
+    adj[ti].push(si);
+    const w = typeof e.weight === "number" ? e.weight : 1;
+    const key = si < ti ? `${si}-${ti}` : `${ti}-${si}`;
+    weights.set(key, (weights.get(key) ?? 0) + w);
+  }
+
+  // Label propagation
+  const labels: number[] = nodes.map((_, i) => i);
+  let changed = true;
+  const maxIterations = 50;
+  let iter = 0;
+
+  while (changed && iter < maxIterations) {
+    changed = false;
+    iter++;
+    // Randomize order each iteration
+    const order = nodes.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+
+    for (const u of order) {
+      if (adj[u].length === 0) continue;
+      const labelCounts = new Map<number, number>();
+      for (const v of adj[u]) {
+        const l = labels[v];
+        const key = u < v ? `${u}-${v}` : `${v}-${u}`;
+        const w = weights.get(key) ?? 1;
+        labelCounts.set(l, (labelCounts.get(l) ?? 0) + w);
+      }
+      let bestLabel = labels[u];
+      let bestCount = 0;
+      for (const [label, count] of labelCounts) {
+        if (count > bestCount) {
+          bestCount = count;
+          bestLabel = label;
+        }
+      }
+      if (bestLabel !== labels[u]) {
+        labels[u] = bestLabel;
+        changed = true;
+      }
+    }
+  }
+
+  // Group into communities
+  const communities = new Map<number, string[]>();
+  for (let i = 0; i < nodes.length; i++) {
+    const commId = labels[i];
+    if (!communities.has(commId)) communities.set(commId, []);
+    communities.get(commId)!.push(String(nodes[i].id ?? nodes[i].name ?? `node-${i}`));
+  }
+
+  // Simple modularity estimate
+  const m = edges.length || 1;
+  let q = 0.0;
+  for (const [commId, members] of communities) {
+    const memberSet = new Set(members);
+    let internalEdges = 0;
+    let totalDegree = 0;
+    for (const e of edges) {
+      const s = String(e.source ?? e.from ?? "");
+      const t = String(e.target ?? e.to ?? "");
+      if (memberSet.has(s) && memberSet.has(t)) internalEdges++;
+      if (memberSet.has(s)) totalDegree++;
+      if (memberSet.has(t)) totalDegree++;
+    }
+    const expected = (totalDegree * totalDegree) / (4 * m);
+    q += internalEdges / (2 * m) - expected / (2 * m);
+  }
+
+  return { communities, modularity: Math.round(q * 1000) / 1000 };
+}
+
+function detectCommunitiesPython(graphPath: string): { communities: Map<number, string[]>; modularity: number } | null {
+  try {
+    const cmd = `graphify cluster "${graphPath}"`;
+    const stdout = execSync(cmd, { encoding: "utf-8", timeout: 30000, stdio: ["pipe", "pipe", "pipe"] });
+    const result = JSON.parse(stdout);
+    const communities = new Map<number, string[]>();
+    if (result.communities && Array.isArray(result.communities)) {
+      for (const member of result.communities) {
+        const commId = typeof member.community === "number" ? member.community : 0;
+        const nodeId = String(member.node ?? member.id ?? "");
+        if (!communities.has(commId)) communities.set(commId, []);
+        communities.get(commId)!.push(nodeId);
+      }
+    }
+    return { communities, modularity: typeof result.modularity === "number" ? result.modularity : 0 };
+  } catch {
+    return null;
+  }
+}
+
+function detectCommunities(graph: Record<string, unknown>, graphPath?: string): { communities: Map<number, string[]>; modularity: number; method: string } {
+  // Try Python first if graphPath provided
+  if (graphPath && fs.existsSync(graphPath)) {
+    const pythonResult = detectCommunitiesPython(graphPath);
+    if (pythonResult) {
+      return { ...pythonResult, method: "python-louvain" };
+    }
+  }
+  // Fall back to TypeScript label propagation
+  const tsResult = detectCommunitiesTS(graph);
+  return { ...tsResult, method: "ts-label-propagation" };
+}
+
+function cohesionScore(communityNodeIds: string[], graph: Record<string, unknown>): number {
+  const edges = (graph.links as Array<Record<string, unknown>>) ?? (graph.edges as Array<Record<string, unknown>>) ?? [];
+  const nodeSet = new Set(communityNodeIds);
+  let internal = 0;
+  let external = 0;
+
+  for (const e of edges) {
+    const s = String(e.source ?? e.from ?? "");
+    const t = String(e.target ?? e.to ?? "");
+    const sIn = nodeSet.has(s);
+    const tIn = nodeSet.has(t);
+    if (sIn && tIn) internal++;
+    else if (sIn || tIn) external++;
+  }
+
+  const total = internal + external;
+  return total > 0 ? Math.round((internal / total) * 1000) / 1000 : 0;
+}
+
+// ── Supernode Collapse ──
+
+function collapseToSupernodes(
+  graph: Record<string, unknown>,
+  communities: Map<number, string[]>,
+  summaries: Map<number, string>,
+  sourceNodeCount: number,
+  sourceEdgeCount: number,
+  sourceSha256: string,
+  runId: string,
+): CompressedGraph {
+  const edges = (graph.links as Array<Record<string, unknown>>) ?? (graph.edges as Array<Record<string, unknown>>) ?? [];
+  const nodeToCommunity = new Map<string, number>();
+  const communityNodeIds = new Map<number, string[]>();
+
+  for (const [commId, nodeIds] of communities) {
+    communityNodeIds.set(commId, nodeIds);
+    for (const nid of nodeIds) {
+      nodeToCommunity.set(nid, commId);
+    }
+  }
+
+  // Build supernodes
+  const supernodes: CompressedGraph["supernodes"] = [];
+  for (const [commId, nodeIds] of communities) {
+    const cohesion = cohesionScore(nodeIds, graph);
+    const summary = summaries.get(commId) ?? statisticalSummary(commId, nodeIds, cohesion, graph);
+    const topLabels: string[] = [];
+    const nodes = (graph.nodes as Array<Record<string, unknown>>) ?? [];
+    for (const nid of nodeIds.slice(0, 5)) {
+      const node = nodes.find((n: Record<string, unknown>) => String(n.id ?? n.name ?? "") === nid);
+      if (node) {
+        topLabels.push(String(node.label || node.name || nid));
+      }
+    }
+    const label = topLabels.length > 0 ? topLabels[0] : `Community-${commId}`;
+
+    supernodes.push({
+      id: `supernode-${commId}`,
+      label,
+      summary,
+      communityId: commId,
+      cohesion,
+      originalNodeCount: nodeIds.length,
+      originalNodeIds: nodeIds,
+      level: 1,
+      children: nodeIds,
+    });
+  }
+
+  // Build inter-community edges
+  const interCommunityEdges = new Map<string, { source: string; target: string; weight: number }>();
+  for (const e of edges) {
+    const s = String(e.source ?? e.from ?? "");
+    const t = String(e.target ?? e.to ?? "");
+    const sComm = nodeToCommunity.get(s);
+    const tComm = nodeToCommunity.get(t);
+    if (sComm === undefined || tComm === undefined || sComm === tComm) continue;
+    const key = sComm < tComm ? `${sComm}-${tComm}` : `${tComm}-${sComm}`;
+    const existing = interCommunityEdges.get(key);
+    if (existing) {
+      existing.weight++;
+    } else {
+      interCommunityEdges.set(key, { source: `supernode-${sComm}`, target: `supernode-${tComm}`, weight: 1 });
+    }
+  }
+
+  return {
+    schemaVersion: 1,
+    compressedAt: new Date().toISOString(),
+    sourceRunId: runId,
+    sourceSha256,
+    sourceNodeCount,
+    sourceEdgeCount,
+    compressedNodeCount: supernodes.length,
+    compressedEdgeCount: interCommunityEdges.size,
+    communityCount: communities.size,
+    supernodes,
+    edges: Array.from(interCommunityEdges.values()),
+  };
+}
+
+function statisticalSummary(communityId: number, nodeIds: string[], cohesion: number, graph: Record<string, unknown>): string {
+  const nodes = (graph.nodes as Array<Record<string, unknown>>) ?? [];
+  const labelsInCommunity: string[] = [];
+  for (const nid of nodeIds) {
+    const node = nodes.find((n: Record<string, unknown>) => String(n.id ?? n.name ?? "") === nid);
+    if (node) {
+      labelsInCommunity.push(String(node.label || node.name || nid));
+    }
+  }
+  const top3 = labelsInCommunity.slice(0, 3).join(", ");
+  return `Community of ${nodeIds.length} nodes (cohesion ${cohesion.toFixed(2)}) including: ${top3}${labelsInCommunity.length > 3 ? "..." : ""}`;
+}
+
+async function generateSummaries(
+  pi: ExtensionAPI,
+  communities: Map<number, string[]>,
+  graph: Record<string, unknown>,
+  skipSummaries: boolean,
+): Promise<Map<number, string>> {
+  const summaries = new Map<number, string>();
+
+  if (skipSummaries || communities.size === 0) {
+    for (const [commId, nodeIds] of communities) {
+      const cohesion = cohesionScore(nodeIds, graph);
+      summaries.set(commId, statisticalSummary(commId, nodeIds, cohesion, graph));
+    }
+    return summaries;
+  }
+
+  // Build prompts batch by batch
+  const communityEntries = Array.from(communities.entries()).sort((a, b) => a[0] - b[0]);
+  const BATCH_SIZE = 10;
+
+  for (let batchStart = 0; batchStart < communityEntries.length; batchStart += BATCH_SIZE) {
+    const batch = communityEntries.slice(batchStart, batchStart + BATCH_SIZE);
+    const nodes = (graph.nodes as Array<Record<string, unknown>>) ?? [];
+    let prompt = "# Community Summarization\n\n";
+    prompt += "For each community below, write a 1-3 sentence summary describing what these concepts collectively represent.\n";
+    prompt += "Be specific and grounded in the labels — do not fabricate connections.\n\n";
+
+    const batchCommunities: Array<{ commId: number; nodeCount: number; labels: string[]; cohesion: number }> = [];
+    for (const [commId, nodeIds] of batch) {
+      const communityLabels: string[] = [];
+      for (const nid of nodeIds.slice(0, 15)) {
+        const node = nodes.find((n: Record<string, unknown>) => String(n.id ?? n.name ?? "") === nid);
+        if (node) communityLabels.push(String(node.label || node.name || nid));
+      }
+      const cohesion = cohesionScore(nodeIds, graph);
+      prompt += `Community ${commId} (${nodeIds.length} nodes, cohesion ${cohesion.toFixed(2)}): [${communityLabels.join(", ")}]\n`;
+      batchCommunities.push({ commId, nodeCount: nodeIds.length, labels: communityLabels, cohesion });
+    }
+
+    prompt += "\nRespond with one line per community in this format:\n";
+    prompt += "Community <id>: <summary>\n";
+
+    try {
+      await pi.sendUserMessage(prompt);
+      // The agent will respond and we parse it later via the response handler
+      // For now, store batch metadata for the caller
+      for (const bc of batchCommunities) {
+        summaries.set(bc.commId, statisticalSummary(bc.commId, nodeIdsFromCommunity(communities, bc.commId), bc.cohesion, graph));
+      }
+    } catch {
+      for (const bc of batchCommunities) {
+        summaries.set(bc.commId, statisticalSummary(bc.commId, nodeIdsFromCommunity(communities, bc.commId), bc.cohesion, graph));
+      }
+    }
+  }
+
+  return summaries;
+}
+
+function nodeIdsFromCommunity(communities: Map<number, string[]>, commId: number): string[] {
+  return communities.get(commId) ?? [];
+}
+
+function writeExpandManifestFile(
+  projectSlug: string,
+  runId: string,
+  compressedGraph: CompressedGraph,
+  compressedHash: string,
+): ExpandManifest {
+  const supernodeMap: Record<string, string[]> = {};
+  for (const sn of compressedGraph.supernodes) {
+    supernodeMap[sn.id] = sn.originalNodeIds;
+  }
+
+  const manifest: ExpandManifest = {
+    expandedAt: "",
+    sourceRunId: runId,
+    sourceCompressedGraphHash: compressedHash,
+    supernodeMap,
+    originalNodeCount: compressedGraph.sourceNodeCount,
+    originalEdgeCount: compressedGraph.sourceEdgeCount,
+  };
+
+  const manifestPath = expandManifestPathFor(projectSlug, runId);
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), "utf-8");
+  return manifest;
+}
+
+// ═══════════════════════════════════════════
+//  Archetype Detection Engine (Phase 5)
+// ═══════════════════════════════════════════
+
+function shingleText(text: string, k: number): string[] {
+  const shingles: string[] = [];
+  for (let i = 0; i <= text.length - k; i++) {
+    shingles.push(text.slice(i, i + k));
+  }
+  return shingles;
+}
+
+function minHashSignature(labels: string[], numHashes: number, shingleSize: number): number[] {
+  // Collect all shingles
+  const allShingles = new Set<string>();
+  for (const label of labels) {
+    const normalized = label.toLowerCase().trim();
+    for (const sh of shingleText(normalized, shingleSize)) {
+      allShingles.add(sh);
+    }
+  }
+
+  if (allShingles.size === 0) return new Array(numHashes).fill(0);
+
+  const signature: number[] = new Array(numHashes).fill(Number.MAX_SAFE_INTEGER);
+
+  for (const shingle of allShingles) {
+    for (let i = 0; i < numHashes; i++) {
+      const hash = crypto.createHash("sha256");
+      hash.update(shingle + ":" + i);
+      const hval = parseInt(hash.digest("hex").slice(0, 13), 16);
+      if (hval < signature[i]) {
+        signature[i] = hval;
+      }
+    }
+  }
+
+  return signature;
+}
+
+function lshBandMatch(signatures: number[][], bands: number): Array<[number, number]> {
+  const rows = Math.floor(signatures[0]?.length ?? 0 / bands);
+  if (rows === 0) return [];
+
+  const candidates = new Set<string>();
+
+  for (let b = 0; b < bands; b++) {
+    const bucket = new Map<string, number[]>();
+    const start = b * rows;
+    const end = start + rows;
+
+    for (let runIdx = 0; runIdx < signatures.length; runIdx++) {
+      const band = signatures[runIdx].slice(start, end).join(",");
+      if (!bucket.has(band)) bucket.set(band, []);
+      bucket.get(band)!.push(runIdx);
+    }
+
+    for (const [, indices] of bucket) {
+      if (indices.length > 1) {
+        for (let i = 0; i < indices.length; i++) {
+          for (let j = i + 1; j < indices.length; j++) {
+            const a = Math.min(indices[i], indices[j]);
+            const b2 = Math.max(indices[i], indices[j]);
+            candidates.add(`${a}-${b2}`);
+          }
+        }
+      }
+    }
+  }
+
+  return Array.from(candidates).map(s => {
+    const [a, b] = s.split("-").map(Number);
+    return [a, b] as [number, number];
+  });
+}
+
+function detectArchetypes(brainDir: string): ArchetypeEntry[] {
+  const NUM_HASHES = 128;
+  const SHINGLE_SIZE = 3;
+  const BANDS = 16;
+  const SIMILARITY_THRESHOLD = 0.7;
+
+  if (!fs.existsSync(brainDir)) return [];
+
+  // Collect all non-archived raw runs with their label signatures
+  const runData: Array<{
+    projectSlug: string;
+    runId: string;
+    savedAt: string;
+    labels: string[];
+    signature: number[];
+  }> = [];
+
+  for (const pe of fs.readdirSync(brainDir, { withFileTypes: true })) {
+    if (!pe.isDirectory() || pe.name.startsWith(".") || pe.name === "obsidian-vault") continue;
+    const runsDir = path.join(brainDir, pe.name, "runs");
+    if (!fs.existsSync(runsDir)) continue;
+
+    for (const re of fs.readdirSync(runsDir, { withFileTypes: true })) {
+      if (!re.isDirectory()) continue;
+      const metaPath = path.join(runsDir, re.name, "run-meta.json");
+      const graphPath = path.join(runsDir, re.name, "graph.json");
+      if (!fs.existsSync(metaPath) || !fs.existsSync(graphPath)) continue;
+
+      try {
+        const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8"));
+        if (meta.archived) continue;
+        const compState = String(meta.compressionState ?? "raw");
+        if (compState !== "raw") continue;
+
+        const graph = JSON.parse(fs.readFileSync(graphPath, "utf-8"));
+        const labels = getNodeLabelsArray(graph);
+        if (labels.length === 0) continue;
+
+        const signature = minHashSignature(labels, NUM_HASHES, SHINGLE_SIZE);
+        runData.push({
+          projectSlug: pe.name,
+          runId: re.name,
+          savedAt: String(meta.savedAt ?? ""),
+          labels,
+          signature,
+        });
+      } catch {
+        // skip corrupted runs
+      }
+    }
+  }
+
+  if (runData.length < 3) return [];
+
+  // LSH candidate matching
+  const signatures = runData.map(rd => rd.signature);
+  const candidates = lshBandMatch(signatures, BANDS);
+
+  // Group candidates by shared label patterns
+  const archetypeGroups = new Map<string, {
+    labelSets: string[][];
+    projects: Set<string>;
+    firstSeen: string;
+    lastSeen: string;
+  }>();
+
+  for (const [a, b] of candidates) {
+    if (a >= runData.length || b >= runData.length) continue;
+    const ra = runData[a];
+    const rb = runData[b];
+    if (ra.projectSlug === rb.projectSlug) continue;
+
+    // Find common labels
+    const setA = new Set(ra.labels.map(l => l.toLowerCase()));
+    const commonLabels: string[] = [];
+    for (const lbl of rb.labels) {
+      if (setA.has(lbl.toLowerCase())) commonLabels.push(lbl);
+    }
+
+    if (commonLabels.length === 0) continue;
+    const key = commonLabels.sort().slice(0, 10).join("|");
+
+    if (!archetypeGroups.has(key)) {
+      archetypeGroups.set(key, {
+        labelSets: [],
+        projects: new Set(),
+        firstSeen: ra.savedAt < rb.savedAt ? ra.savedAt : rb.savedAt,
+        lastSeen: ra.savedAt > rb.savedAt ? ra.savedAt : rb.savedAt,
+      });
+    }
+    const group = archetypeGroups.get(key)!;
+    group.labelSets.push(commonLabels);
+    group.projects.add(ra.projectSlug);
+    group.projects.add(rb.projectSlug);
+    if (ra.savedAt < group.firstSeen) group.firstSeen = ra.savedAt;
+    if (rb.savedAt < group.firstSeen) group.firstSeen = rb.savedAt;
+    if (ra.savedAt > group.lastSeen) group.lastSeen = ra.savedAt;
+    if (rb.savedAt > group.lastSeen) group.lastSeen = rb.savedAt;
+  }
+
+  // Filter to >= 3 distinct projects
+  const archetypes: ArchetypeEntry[] = [];
+  for (const [key, group] of archetypeGroups) {
+    if (group.projects.size < 3) continue;
+    const pattern = key.split("|");
+    const archetypeId = `arch-${pattern[0].slice(0, 20).replace(/[^a-z0-9]/gi, "-").toLowerCase()}`;
+    archetypes.push({
+      archetypeId,
+      label: pattern[0],
+      nodePattern: pattern,
+      occurrenceCount: group.labelSets.length,
+      projectSlugs: Array.from(group.projects).sort(),
+      firstSeenAt: group.firstSeen,
+      lastSeenAt: group.lastSeen,
+    });
+  }
+
+  return archetypes;
+}
+
+// ═══════════════════════════════════════════
+//  Compression State Machine (Phase 4)
+// ═══════════════════════════════════════════
+
+type CompressionState = "raw" | "communities" | "compressed" | "frozen";
+
+const VALID_TRANSITIONS: Record<CompressionState, CompressionState[]> = {
+  raw: ["communities", "frozen"],
+  communities: ["compressed", "raw"],
+  compressed: ["frozen", "raw"],
+  frozen: ["raw"],
+};
+
+function compressionTransition(
+  runMeta: RunMeta,
+  newState: CompressionState,
+  projectSlug: string,
+  runId: string,
+): { success: true } | { error: string } {
+  const current = (runMeta.compressionState ?? "raw") as CompressionState;
+  if (!VALID_TRANSITIONS[current]) {
+    return { error: `Unknown compression state: ${current}` };
+  }
+  if (!VALID_TRANSITIONS[current].includes(newState)) {
+    return { error: `Invalid transition: ${current} → ${newState}. Valid: ${current} → ${VALID_TRANSITIONS[current].join(", ")}` };
+  }
+  // Freeze requires cold temperature
+  if (newState === "frozen") {
+    const temp = heatTracker.getTemperature(projectSlug, runId);
+    if (temp !== "cold") {
+      return { error: `Cannot freeze: temperature is "${temp}". Freeze requires "cold".` };
+    }
+  }
+  runMeta.compressionState = newState;
+  return { success: true };
+}
+
+function freezeEligible(projectSlug: string, runId: string): boolean {
+  return heatTracker.getTemperature(projectSlug, runId) === "cold";
+}
+
+// ═══════════════════════════════════════════
+//  Compression-related run-meta updates
+// ═══════════════════════════════════════════
+
+function updateCompressionMeta(
+  projectSlug: string,
+  runId: string,
+  state: CompressionState,
+  communityCount?: number,
+): void {
+  const runDir = runDirFor(projectSlug, runId);
+  if (!fs.existsSync(runDir)) return;
+  const meta = loadRunMeta(projectSlug, runId, runDir);
+  if (!meta) return;
+  meta.compressionState = state;
+  if (communityCount !== undefined) {
+    (meta as Record<string, unknown>)["communityCount"] = communityCount;
+  }
+  recordRunAccess(projectSlug, runId);
+  writeRunMeta(projectSlug, runId, meta, runDir);
 }
 
 async function handlePrune(ctx: ExtensionCommandContext, pi: ExtensionAPI, rest: string): Promise<void> {
@@ -1751,6 +2447,698 @@ async function handleStats(ctx: ExtensionCommandContext, pi: ExtensionAPI, proje
     await ctx.waitForIdle();
     pi.sendUserMessage(out);
   }
+}
+
+// ═══════════════════════════════════════════
+//  Fractal Compression Handlers
+// ═══════════════════════════════════════════
+
+async function handleCompress(
+  ctx: ExtensionCommandContext,
+  pi: ExtensionAPI,
+  rest: string,
+): Promise<void> {
+  const args = splitArgs(rest);
+  const apply = hasFlag(args, "--apply");
+  const includePinned = hasFlag(args, "--include-pinned");
+  const noSummaries = hasFlag(args, "--no-summaries");
+  const tsOnly = hasFlag(args, "--ts-only");
+  const freeze = hasFlag(args, "--freeze");
+  const runFlag = getFlagValue(args, "--run");
+  const pos = positionalArgs(args);
+  const projectName = pos.join(" ");
+
+  if (!projectName) {
+    ctx.ui.notify("Usage: /memory compress <project> [--apply] [--include-pinned] [--no-summaries] [--ts-only] [--freeze] [--run <id>]", "info");
+    return;
+  }
+
+  const slug = slugify(projectName);
+  const projectDir = projectDirForSlug(slug);
+  if (!fs.existsSync(projectDir)) {
+    ctx.ui.notify(`Project "${projectName}" not found.`, "error");
+    return;
+  }
+
+  const runsDir = path.join(projectDir, "runs");
+  if (!fs.existsSync(runsDir)) {
+    ctx.ui.notify(`No runs found for "${projectName}".`, "info");
+    return;
+  }
+
+  // Resolve target runs
+  let targetRunIds: string[];
+  if (runFlag) {
+    if (!fs.existsSync(runDirFor(slug, runFlag))) {
+      ctx.ui.notify(`Run ${runFlag} not found for project ${slug}.`, "error");
+      return;
+    }
+    targetRunIds = [runFlag];
+  } else {
+    targetRunIds = fs.readdirSync(runsDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name)
+      .sort((a, b) => b.localeCompare(a));
+  }
+
+  if (targetRunIds.length === 0) {
+    ctx.ui.notify(`No runs found for "${projectName}".`, "info");
+    return;
+  }
+
+  if (targetRunIds.length === 1 && !runFlag) {
+    ctx.ui.notify(`Warning: "${projectName}" has only one run. Compression is most effective with multiple runs.`, "info");
+  }
+
+  const lines: string[] = [`## Compression ${apply ? "Applied" : "Dry-Run"}: ${projectName}`, ""];
+  let totalOriginalNodes = 0;
+  let totalCompressedNodes = 0;
+  let totalOriginalEdges = 0;
+  let totalCompressedEdges = 0;
+  let totalCommunities = 0;
+  let totalBytesSaved = 0;
+  let compressedRuns = 0;
+  let skippedPinned = 0;
+  let skippedFrozen = 0;
+
+  for (const runId of targetRunIds) {
+    const runDir = runDirFor(slug, runId);
+    const graphPath = path.join(runDir, "graph.json");
+    const metaPath = path.join(runDir, "run-meta.json");
+
+    if (!fs.existsSync(graphPath)) {
+      lines.push(`- SKIP ${slug}/${runId}: no graph.json`);
+      continue;
+    }
+
+    const meta = loadRunMeta(slug, runId, runDir);
+    if (!meta) {
+      lines.push(`- SKIP ${slug}/${runId}: corrupted meta`);
+      continue;
+    }
+
+    // Gate: skip pinned unless --include-pinned
+    if (meta.pruneScore.pinned && !includePinned) {
+      lines.push(`- SKIP ${slug}/${runId}: pinned (use --include-pinned to override)`);
+      skippedPinned++;
+      continue;
+    }
+
+    // Gate: skip frozen runs
+    if (meta.compressionState === "frozen") {
+      lines.push(`- SKIP ${slug}/${runId}: already frozen`);
+      skippedFrozen++;
+      continue;
+    }
+
+    // Gate: warn if already compressed
+    if (meta.compressionState === "compressed") {
+      lines.push(`- WARN ${slug}/${runId}: already compressed. Re-compressing will overwrite previous results.`);
+    }
+
+    try {
+      const graph = JSON.parse(fs.readFileSync(graphPath, "utf-8"));
+      const nodeCount = graph.nodes?.length ?? 0;
+      const edgeCount = graph.links?.length ?? graph.edges?.length ?? 0;
+
+      if (nodeCount === 0) {
+        lines.push(`- SKIP ${slug}/${runId}: empty graph`);
+        continue;
+      }
+
+      // Detect communities
+      const communities = detectCommunities(graph, tsOnly ? undefined : graphPath);
+
+      if (communities.communities.size === 0) {
+        lines.push(`- SKIP ${slug}/${runId}: no communities detected`);
+        continue;
+      }
+
+      const temp = heatTracker.getTemperature(slug, runId);
+
+      if (!apply) {
+        // Dry-run: just show estimates
+        totalOriginalNodes += nodeCount;
+        totalCompressedNodes += communities.communities.size;
+        totalOriginalEdges += edgeCount;
+        totalCommunities += communities.communities.size;
+        totalBytesSaved += Math.round((nodeCount - communities.communities.size) * 120);
+
+        lines.push(`- DRY-RUN ${slug}/${runId}: ${nodeCount}~${communities.communities.size} nodes, ${edgeCount} edges, ${communities.communities.size} communities (${communities.method}), temp=${temp}`);
+        continue;
+      }
+
+      // Apply path
+      const originalHash = sha256File(graphPath);
+      if (!originalHash) {
+        lines.push(`- ERROR ${slug}/${runId}: could not compute source hash`);
+        continue;
+      }
+
+      // Transition to communities state
+      const trans1 = compressionTransition(meta, "communities", slug, runId);
+      if ("error" in trans1) {
+        lines.push(`- ERROR ${slug}/${runId}: ${trans1.error}`);
+        continue;
+      }
+
+      // Generate summaries (LLM or statistical)
+      const summaries = await generateSummaries(pi, communities.communities, graph, noSummaries);
+
+      // Collapse to supernodes
+      const compressedGraph = collapseToSupernodes(
+        graph,
+        communities.communities,
+        summaries,
+        nodeCount,
+        edgeCount,
+        originalHash,
+        runId,
+      );
+
+      // Write compressed-graph.json
+      const compressedPath = compressedGraphPathFor(slug, runId);
+      fs.writeFileSync(compressedPath, JSON.stringify(compressedGraph, null, 2), "utf-8");
+
+      // Write communities.json with provenance
+      const communitiesData: CommunityData[] = [];
+      for (const [commId, nodeIds] of communities.communities) {
+        const summary = summaries.get(commId) ?? statisticalSummary(commId, nodeIds, cohesionScore(nodeIds, graph), graph);
+        const commLabels: string[] = [];
+        const nodesArr = (graph.nodes as Array<Record<string, unknown>>) ?? [];
+        for (const nid of nodeIds.slice(0, 20)) {
+          const node = nodesArr.find((n: Record<string, unknown>) => String(n.id ?? n.name ?? "") === nid);
+          if (node) commLabels.push(String(node.label || node.name || nid));
+        }
+        communitiesData.push({
+          communityId: commId,
+          nodeIds,
+          nodeCount: nodeIds.length,
+          edgeCount: 0,
+          cohesionScore: cohesionScore(nodeIds, graph),
+          summary,
+          generatedBy: noSummaries ? "statistical-fallback" : "llm-agent",
+          generatedAt: new Date().toISOString(),
+          sourceNodeCount: nodeIds.length,
+          sourceNodeLabels: commLabels,
+        });
+      }
+      fs.writeFileSync(
+        communitiesPathFor(slug, runId),
+        JSON.stringify(communitiesData, null, 2),
+        "utf-8",
+      );
+
+      // Write expand-manifest.json
+      const compressedHash = sha256File(compressedPath) ?? "unknown";
+      writeExpandManifestFile(slug, runId, compressedGraph, compressedHash);
+
+      // Transition to compressed state
+      const trans2 = compressionTransition(meta, "compressed", slug, runId);
+      if ("error" in trans2) {
+        lines.push(`- WARN ${slug}/${runId}: compression wrote files but state transition failed: ${trans2.error}`);
+      }
+
+      // Optionally freeze
+      let frozenApplied = false;
+      if (freeze) {
+        const trans3 = compressionTransition(meta, "frozen", slug, runId);
+        if ("error" in trans3) {
+          lines.push(`- WARN ${slug}/${runId}: could not freeze: ${trans3.error}`);
+        } else {
+          frozenApplied = true;
+        }
+      }
+
+      // Update run-meta.json
+      updateCompressionMeta(slug, runId, frozenApplied ? "frozen" : "compressed", communities.communities.size);
+
+      // Verify original graph integrity
+      const postHash = sha256File(graphPath);
+      const hashMatch = originalHash === postHash;
+
+      const actualNodesAfter = compressedGraph.compressedNodeCount;
+      const actualEdgesAfter = compressedGraph.compressedEdgeCount;
+      const bytesSaved = Math.round(JSON.stringify(graph).length - JSON.stringify(compressedGraph).length);
+
+      totalOriginalNodes += nodeCount;
+      totalCompressedNodes += actualNodesAfter;
+      totalOriginalEdges += edgeCount;
+      totalCompressedEdges += actualEdgesAfter;
+      totalCommunities += communities.communities.size;
+      totalBytesSaved += bytesSaved;
+      compressedRuns++;
+
+      const ratio = nodeCount > 0 ? (nodeCount / Math.max(actualNodesAfter, 1)).toFixed(2) : "N/A";
+      lines.push(
+        `- COMPRESSED ${slug}/${runId}: ${nodeCount}${actualNodesAfter} nodes (${ratio}x), ` +
+        `${edgeCount}${actualEdgesAfter} edges, ${communities.communities.size} communities, ` +
+        `${bytesSaved > 0 ? "+" : ""}${bytesSaved} bytes saved, ` +
+        `SHA-256: ${hashMatch ? "verified" : "MISMATCH"}${frozenApplied ? ", frozen" : ""}`,
+      );
+    } catch (err) {
+      lines.push(`- ERROR ${slug}/${runId}: ${String(err)}`);
+    }
+  }
+
+  // Summary
+  if (!apply) {
+    const totalRatio = totalCompressedNodes > 0 ? (totalOriginalNodes / totalCompressedNodes).toFixed(2) : "N/A";
+    lines.push(
+      "",
+      "## Dry-Run Summary",
+      "",
+      `| Metric | Value |`,
+      `|---|---|`,
+      `| Runs evaluated | ${targetRunIds.length} |`,
+      `| Skipped (pinned) | ${skippedPinned} |`,
+      `| Skipped (frozen) | ${skippedFrozen} |`,
+      `| Est. nodes before | ${totalOriginalNodes} |`,
+      `| Est. nodes after | ${totalCompressedNodes} |`,
+      `| Est. edges before | ${totalOriginalEdges} |`,
+      `| Est. communities | ${totalCommunities} |`,
+      `| Est. ratio | ${totalRatio}x |`,
+      `| Est. bytes saved | ${formatBytes(Math.max(0, totalBytesSaved))} |`,
+      "",
+      `> Dry-run only: no files were changed. Use \`/memory compress ${slug} --apply\` to execute.`,
+    );
+  } else {
+    const totalRatio = totalCompressedNodes > 0 ? (totalOriginalNodes / totalCompressedNodes).toFixed(2) : "N/A";
+    lines.push(
+      "",
+      "## Compression Applied",
+      "",
+      `| Metric | Value |`,
+      `|---|---|`,
+      `| Runs compressed | ${compressedRuns} / ${targetRunIds.length} |`,
+      `| Skipped (pinned) | ${skippedPinned} |`,
+      `| Skipped (frozen) | ${skippedFrozen} |`,
+      `| Nodes before | ${totalOriginalNodes} |`,
+      `| Nodes after | ${totalCompressedNodes} |`,
+      `| Edges before | ${totalOriginalEdges} |`,
+      `| Edges after | ${totalCompressedEdges} |`,
+      `| Total communities | ${totalCommunities} |`,
+      `| Compression ratio | ${totalRatio}x |`,
+      `| Total bytes saved | ${formatBytes(Math.max(0, totalBytesSaved))} |`,
+      "",
+      `> Compression complete. Use \`/memory expand ${slug} --run <id>\` to restore.`,
+    );
+  }
+
+  await ctx.waitForIdle();
+  pi.sendUserMessage(lines.join("\n"));
+}
+
+async function handleExpand(
+  ctx: ExtensionCommandContext,
+  pi: ExtensionAPI,
+  rest: string,
+): Promise<void> {
+  const args = splitArgs(rest);
+  const runFlag = getFlagValue(args, "--run");
+  const pos = positionalArgs(args);
+
+  let projectSlug: string;
+  let runId: string;
+
+  if (runFlag) {
+    projectSlug = slugify(pos.join(" "));
+    runId = runFlag;
+  } else if (pos.length === 1) {
+    // Try resolving as run-id auto-find
+    const found = findRunMeta(pos[0]);
+    if (found) {
+      projectSlug = found.projectSlug;
+      runId = found.meta.runId;
+    } else {
+      ctx.ui.notify(`Run "${pos[0]}" not found. Use /memory expand <project> --run <id>.`, "error");
+      return;
+    }
+  } else {
+    ctx.ui.notify("Usage: /memory expand <project> --run <id> or /memory expand <run-id>", "info");
+    return;
+  }
+
+  const runDir = runDirFor(projectSlug, runId);
+  if (!fs.existsSync(runDir)) {
+    ctx.ui.notify(`Run ${runId} not found for project ${projectSlug}.`, "error");
+    return;
+  }
+
+  const meta = loadRunMeta(projectSlug, runId, runDir);
+  if (!meta) {
+    ctx.ui.notify(`Run ${runId} metadata not found.`, "error");
+    return;
+  }
+
+  const compState = meta.compressionState ?? "raw";
+  if (compState === "raw") {
+    ctx.ui.notify(`Run ${runId} is already in raw state - nothing to expand.`, "info");
+    return;
+  }
+
+  const manifestPath = expandManifestPathFor(projectSlug, runId);
+  if (!fs.existsSync(manifestPath)) {
+    ctx.ui.notify(`No expand manifest found for ${runId}. Cannot restore.`, "error");
+    return;
+  }
+
+  let manifest: ExpandManifest;
+  try {
+    manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+  } catch {
+    ctx.ui.notify(`Corrupted expand manifest for ${runId}.`, "error");
+    return;
+  }
+
+  // Verify original graph exists
+  const graphPath = path.join(runDir, "graph.json");
+  if (!fs.existsSync(graphPath)) {
+    ctx.ui.notify(`Original graph.json missing for ${runId}. Cannot verify expand.`, "error");
+    return;
+  }
+
+  try {
+    const graph = JSON.parse(fs.readFileSync(graphPath, "utf-8"));
+    const nodeCount = graph.nodes?.length ?? 0;
+    const edgeCount = graph.links?.length ?? graph.edges?.length ?? 0;
+
+    // Transition back to raw
+    const trans = compressionTransition(meta, "raw", projectSlug, runId);
+    if ("error" in trans) {
+      ctx.ui.notify(`Cannot expand: ${trans.error}`, "error");
+      return;
+    }
+
+    // Update state - compressed/communities/frozen artifacts are preserved
+    const runMeta = loadRunMeta(projectSlug, runId, runDir);
+    if (runMeta) {
+      runMeta.compressionState = "raw";
+      (runMeta as Record<string, unknown>)["communityCount"] = undefined;
+      writeRunMeta(projectSlug, runId, runMeta, runDir);
+    }
+
+    recordRunAccess(projectSlug, runId);
+    heatTracker.recordAccess(projectSlug, runId);
+
+    const lines = [
+      `## Expanded: ${projectSlug}/${runId}`,
+      "",
+      `| Metric | Value |`,
+      `|---|---|`,
+      `| Original nodes | ${nodeCount} |`,
+      `| Original edges | ${edgeCount} |`,
+      `| Previous state | ${compState} |`,
+      `| New state | raw |`,
+      "",
+      `> Run restored to raw state. Original graph.json was never modified.`,
+      `> Compressed-graph.json, communities.json, and expand-manifest.json are preserved (non-destructive).`,
+    ];
+
+    await ctx.waitForIdle();
+    pi.sendUserMessage(lines.join("\n"));
+  } catch (err) {
+    ctx.ui.notify(`Error during expand: ${String(err)}`, "error");
+  }
+}
+
+async function handleZoom(
+  ctx: ExtensionCommandContext,
+  pi: ExtensionAPI,
+  rest: string,
+): Promise<void> {
+  const args = splitArgs(rest);
+  const runFlag = getFlagValue(args, "--run");
+  const pos = positionalArgs(args);
+
+  let projectSlug: string;
+  let runId: string;
+
+  if (runFlag) {
+    projectSlug = slugify(pos.join(" "));
+    runId = runFlag;
+  } else if (pos.length === 1) {
+    const found = findRunMeta(pos[0]);
+    if (found) {
+      projectSlug = found.projectSlug;
+      runId = found.meta.runId;
+    } else {
+      ctx.ui.notify(`Run "${pos[0]}" not found. Use /memory zoom <project> --run <id>.`, "error");
+      return;
+    }
+  } else {
+    ctx.ui.notify("Usage: /memory zoom <project> --run <id> or /memory zoom <run-id>", "info");
+    return;
+  }
+
+  const runDir = runDirFor(projectSlug, runId);
+  if (!fs.existsSync(runDir)) {
+    ctx.ui.notify(`Run ${runId} not found.`, "error");
+    return;
+  }
+
+  const meta = loadRunMeta(projectSlug, runId, runDir);
+  if (!meta) {
+    ctx.ui.notify(`Run ${runId} metadata not found.`, "error");
+    return;
+  }
+
+  // Record access and set temperature to hot
+  recordRunAccess(projectSlug, runId);
+  heatTracker.recordAccess(projectSlug, runId);
+
+  const compState = meta.compressionState ?? "raw";
+
+  if (compState === "raw") {
+    // Fall back to standard load behavior
+    const parts: string[] = [`## Zoom: ${projectSlug}/${runId} (raw)`, ""];
+
+    const reportPath = path.join(runDir, "GRAPH_REPORT.md");
+    if (fs.existsSync(reportPath)) {
+      parts.push(fs.readFileSync(reportPath, "utf-8"));
+    }
+
+    await ctx.waitForIdle();
+    pi.sendUserMessage(parts.join("\n"));
+    return;
+  }
+
+  // Compressed run: show supernode summary
+  const compressedPath = compressedGraphPathFor(projectSlug, runId);
+  if (!fs.existsSync(compressedPath)) {
+    ctx.ui.notify(`Run is ${compState} but compressed-graph.json not found.`, "error");
+    return;
+  }
+
+  try {
+    const compressed: CompressedGraph = JSON.parse(fs.readFileSync(compressedPath, "utf-8"));
+
+    const lines: string[] = [
+      `## Zoom: ${projectSlug}/${runId} (${compState})`,
+      "",
+      `**Compressed:** ${compressed.sourceNodeCount}${compressed.compressedNodeCount} nodes, ` +
+        `${compressed.sourceEdgeCount}${compressed.compressedEdgeCount} edges, ` +
+        `${compressed.communityCount} communities`,
+      "",
+      "### Supernodes",
+      "",
+    ];
+
+    for (const sn of compressed.supernodes) {
+      lines.push(
+        `- **${sn.label}** (${sn.originalNodeCount} nodes, cohesion ${sn.cohesion.toFixed(2)}): ${sn.summary}`,
+      );
+    }
+
+    if (compressed.edges.length > 0) {
+      lines.push("", "### Inter-Community Edges", "");
+      const topEdges = compressed.edges
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, 20);
+      for (const e of topEdges) {
+        lines.push(`- ${e.source} ~ ${e.target} (weight: ${e.weight})`);
+      }
+      if (compressed.edges.length > 20) {
+        lines.push(`- ... and ${compressed.edges.length - 20} more edges`);
+      }
+    }
+
+    lines.push("", `> State: ${compState}  Use \`/memory expand\` to restore raw graph.`);
+
+    await ctx.waitForIdle();
+    pi.sendUserMessage(lines.join("\n"));
+  } catch (err) {
+    ctx.ui.notify(`Error loading compressed graph: ${String(err)}`, "error");
+  }
+}
+
+async function handleFuse(
+  ctx: ExtensionCommandContext,
+  pi: ExtensionAPI,
+  rest: string,
+): Promise<void> {
+  const args = splitArgs(rest);
+  const runA = getFlagValue(args, "--run-a") ?? getFlagValue(args, "--run");
+  // Parse second --run flag
+  let runB: string | null = null;
+  const runIndexes: number[] = [];
+  args.forEach((arg, i) => {
+    if (arg === "--run") runIndexes.push(i);
+  });
+  if (runIndexes.length >= 2) {
+    runB = args[runIndexes[1] + 1];
+  } else {
+    runB = getFlagValue(args, "--run-b");
+  }
+  const pos = positionalArgs(args);
+
+  if (!runA || !runB) {
+    ctx.ui.notify("Usage: /memory fuse <project> --run <id1> --run <id2>", "info");
+    return;
+  }
+
+  const projectSlug = slugify(pos.join(" ") || path.basename(ctx.cwd));
+
+  const runDirA = runDirFor(projectSlug, runA);
+  const runDirB = runDirFor(projectSlug, runB);
+
+  if (!fs.existsSync(runDirA)) {
+    ctx.ui.notify(`Run ${runA} not found for project ${projectSlug}.`, "error");
+    return;
+  }
+  if (!fs.existsSync(runDirB)) {
+    ctx.ui.notify(`Run ${runB} not found for project ${projectSlug}.`, "error");
+    return;
+  }
+
+  // Load graphs (compressed or raw)
+  const loadGraph = (rd: string): { nodes: Set<string>; edges: number; compressed: boolean; summaries: string[] } | null => {
+    const compressedPath = compressedGraphPathFor(projectSlug, rd);
+    if (fs.existsSync(compressedPath)) {
+      try {
+        const cg: CompressedGraph = JSON.parse(fs.readFileSync(compressedPath, "utf-8"));
+        const nodes = new Set<string>(cg.supernodes.map(sn => sn.label));
+        return { nodes, edges: cg.compressedEdgeCount, compressed: true, summaries: cg.supernodes.map(sn => sn.summary) };
+      } catch { /* fall through */ }
+    }
+    const graphPath = path.join(runDirFor(projectSlug, rd), "graph.json");
+    if (fs.existsSync(graphPath)) {
+      try {
+        const graph = JSON.parse(fs.readFileSync(graphPath, "utf-8"));
+        const labels = getNodeLabels(graph);
+        const edgeCount = graph.links?.length ?? graph.edges?.length ?? 0;
+        return { nodes: labels, edges: edgeCount, compressed: false, summaries: [] };
+      } catch { /* fall through */ }
+    }
+    return null;
+  };
+
+  const graphA = loadGraph(runA);
+  const graphB = loadGraph(runB);
+
+  if (!graphA || !graphB) {
+    ctx.ui.notify("Could not load both run graphs.", "error");
+    return;
+  }
+
+  // Compute overlap metrics
+  const intersection = new Set<string>();
+  for (const n of graphA.nodes) {
+    if (graphB.nodes.has(n)) intersection.add(n);
+  }
+  const onlyA = new Set([...graphA.nodes].filter(n => !graphB.nodes.has(n)));
+  const onlyB = new Set([...graphB.nodes].filter(n => !graphA.nodes.has(n)));
+  const union = graphA.nodes.size + graphB.nodes.size - intersection.size;
+  const jaccard = union > 0 ? (intersection.size / union) : 0;
+
+  // Record access for both
+  recordRunAccess(projectSlug, runA);
+  recordRunAccess(projectSlug, runB);
+
+  const lines: string[] = [
+    `## Fuse: ${projectSlug}`,
+    "",
+    `| Metric | Run ${runA.slice(0, 12)}... | Run ${runB.slice(0, 12)}... | Overlap |`,
+    `|---|---|---|---|`,
+    `| Type | ${graphA.compressed ? "compressed" : "raw"} | ${graphB.compressed ? "compressed" : "raw"} | - |`,
+    `| Nodes | ${graphA.nodes.size} | ${graphB.nodes.size} | ${intersection.size} shared |`,
+    `| Edges | ${graphA.edges} | ${graphB.edges} | - |`,
+    `| Only in A | ${onlyA.size} | - | - |`,
+    `| Only in B | - | ${onlyB.size} | - |`,
+    `| Jaccard | - | - | ${jaccard.toFixed(3)} |`,
+  ];
+
+  if (graphA.compressed && graphB.compressed && intersection.size > 0) {
+    lines.push(
+      "",
+      `> Both runs are compressed. ${intersection.size} supernodes overlap in label.`,
+    );
+  }
+
+  await ctx.waitForIdle();
+  pi.sendUserMessage(lines.join("\n"));
+}
+
+async function handleArchetypes(
+  ctx: ExtensionCommandContext,
+  pi: ExtensionAPI,
+): Promise<void> {
+  if (!fs.existsSync(BRAIN_DIR)) {
+    ctx.ui.notify("No brain directory found. Run /memory save first.", "info");
+    return;
+  }
+
+  const archetypes = detectArchetypes(BRAIN_DIR);
+
+  // Write to brain-meta.json
+  try {
+    const brainMetaPath = path.join(BRAIN_DIR, "brain-meta.json");
+    let brainMeta: BrainMeta;
+    if (fs.existsSync(brainMetaPath)) {
+      brainMeta = JSON.parse(fs.readFileSync(brainMetaPath, "utf-8"));
+    } else {
+      brainMeta = { schemaVersion: 2, archetypes: [], heatTracker: { lastUpdateAt: new Date().toISOString(), entries: {} } };
+    }
+    brainMeta.archetypes = archetypes as unknown as Array<Record<string, unknown>>;
+    fs.writeFileSync(brainMetaPath, JSON.stringify(brainMeta, null, 2), "utf-8");
+  } catch (err) {
+    ctx.ui.notify(`Warning: could not persist archetypes: ${String(err)}`, "info");
+  }
+
+  if (archetypes.length === 0) {
+    const lines = [
+      "## Archetypes",
+      "",
+      "No archetypes detected. (Requires >=3 projects with shared label patterns.)",
+      "",
+      `> Scanned ${Array.from(new Set(getProjectSlugsForCommand(undefined))).length} project(s) in brain.`,
+    ];
+    await ctx.waitForIdle();
+    pi.sendUserMessage(lines.join("\n"));
+    return;
+  }
+
+  const lines: string[] = [
+    `## Archetypes (${archetypes.length})`,
+    "",
+    `| Archetype | Pattern | Projects | Occurrences | First Seen | Last Seen |`,
+    `|---|---|---|---|---|---|`,
+  ];
+
+  for (const a of archetypes) {
+    lines.push(
+      `| \`${a.archetypeId}\` | ${a.nodePattern.slice(0, 3).join(", ")} | ${a.projectSlugs.length} | ${a.occurrenceCount} | ${a.firstSeenAt.slice(0, 10)} | ${a.lastSeenAt.slice(0, 10)} |`,
+    );
+  }
+
+  lines.push(
+    "",
+    `> Archetypes detected across ${archetypes.length > 0 ? archetypes[0].projectSlugs.length : 0}+ projects.`,
+    `> Detection is idempotent - re-run produces identical results.`,
+  );
+
+  await ctx.waitForIdle();
+  pi.sendUserMessage(lines.join("\n"));
 }
 
 // ──────────────────────────────────────────────
