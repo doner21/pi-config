@@ -1,0 +1,25 @@
+---
+source_file: "nenflow-v3/runs/RUN_20260505-205658/research_tmp/graphify/tests/test_report.py"
+type: "code"
+community: "Community 77"
+location: "L1"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/Community_77
+---
+
+# test_report.py
+
+## Connections
+- [[make_inputs()]] - `contains` [EXTRACTED]
+- [[test_report_contains_ambiguous_section()]] - `contains` [EXTRACTED]
+- [[test_report_contains_communities()]] - `contains` [EXTRACTED]
+- [[test_report_contains_corpus_check()]] - `contains` [EXTRACTED]
+- [[test_report_contains_god_nodes()]] - `contains` [EXTRACTED]
+- [[test_report_contains_header()]] - `contains` [EXTRACTED]
+- [[test_report_contains_surprising_connections()]] - `contains` [EXTRACTED]
+- [[test_report_shows_raw_cohesion_scores()]] - `contains` [EXTRACTED]
+- [[test_report_shows_token_cost()]] - `contains` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/Community_77

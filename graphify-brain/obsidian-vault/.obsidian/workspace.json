@@ -1,0 +1,213 @@
+{
+  "main": {
+    "id": "9460e84b4a8d09c9",
+    "type": "split",
+    "children": [
+      {
+        "id": "3a54ca2da4a97a51",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b35f2c4e927da8f1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "memory-reaserch/_COMMUNITY_Compression & Communities.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "_COMMUNITY_Compression & Communities"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d85a5dbf10c9e2a7",
+    "type": "split",
+    "children": [
+      {
+        "id": "aae89c1de070bca3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1a4a6f912ed48849",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "e214604802e26af6",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "1f70c377d3f60452",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "a9bfd60cfa6e1b64",
+    "type": "split",
+    "children": [
+      {
+        "id": "12e08a81b487e25d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "06a8e8f96aea9d3c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "cf88a962407649b9",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "1ef4880d7e44a92f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "16fab24acac0bf20",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "def046ab9bf770a3",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "b35f2c4e927da8f1",
+  "lastOpenFiles": [
+    "_INDEX.md",
+    "memory-reaserch/Obsoletion Scoring.md",
+    "_BRAIN_CANVAS.canvas",
+    "memory-reaserch/Zettelkasten Linking Principle.md",
+    "memory-reaserch/Weisfeiler-Lehman Color Refinement.md",
+    "memory-reaserch/Phase 4 Fractal Compression.md",
+    "memory-reaserch/Phase 2 Pruning Infrastructure.md",
+    "memory-reaserch/Phase 1 Run-Level Storage (MVP).md",
+    "memory-reaserch/Formal Concept Analysis (FCA).md",
+    "memory-reaserch/Filesystem Layout (runs directory).md",
+    "memory-reaserch/Ebbinghaus Forgetting Curve.md",
+    "memory-reaserch/Degree Centrality Metric.md",
+    "memory-reaserch/Compression State Machine (rawâ†’communitiesâ†’compressedâ†’frozen).md",
+    "memory-reaserch/Coherence Scoring (density+cohesion).md",
+    "memory-reaserch/brain-meta.json Schema.md",
+    "memory-reaserch/Archive System (30-day grace period).md",
+    "memory-reaserch/3-Level Hierarchy (Rootâ†’Projectâ†’Run).md",
+    "memory-reaserch/_COMMUNITY_Temporal Decay Foundations.md",
+    "memory-reaserch/_COMMUNITY_Run Storage & Filesystem.md",
+    "memory-reaserch/_COMMUNITY_Pruning & Score System.md",
+    "memory-reaserch/_COMMUNITY_Knowledge Curation Principles.md",
+    "memory-reaserch/_COMMUNITY_Graph Isomorphism & Fractal Math.md",
+    "memory-reaserch/_COMMUNITY_Compression & Communities.md",
+    "memory-reaserch/_COMMUNITY_Community 8.md",
+    "memory-reaserch/_COMMUNITY_Archetypes & Temperature Tracking.md",
+    "memory-reaserch/memory Fractal Commands (compress, expand, zoom, fuse, archetypes).md",
+    "memory-reaserch/Cross-Project Archetypes System.md"
+  ]
+}

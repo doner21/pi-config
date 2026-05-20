@@ -1,0 +1,28 @@
+{
+  "runId": "2026-05-09T11-26-50Z",
+  "projectSlug": "memory-reaserch",
+  "savedAt": "2026-05-09T11:26:50.927Z",
+  "nodeCount": 213,
+  "edgeCount": 402,
+  "artifactCount": 4,
+  "pruneScore": {
+    "staleness": 0,
+    "redundancy": 0,
+    "lowSignal": 0,
+    "obsoletion": 0,
+    "pinned": false
+  },
+  "totalPruneScore": 0,
+  "temperature": "hot",
+  "lastAccessedAt": "2026-05-09T11:26:50.927Z",
+  "accessCount": 0,
+  "compressionState": "raw",
+  "verifiedStatus": "unknown",
+  "sourceType": "graphify",
+  "agentRole": "orchestrator",
+  "safeToInject": true,
+  "contextPriority": 0,
+  "failureSignatures": [],
+  "invariants": [],
+  "openQuestions": []
+}

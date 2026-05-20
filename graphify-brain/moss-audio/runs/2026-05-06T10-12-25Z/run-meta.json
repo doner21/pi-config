@@ -1,0 +1,29 @@
+{
+  "runId": "2026-05-06T10-12-25Z",
+  "projectSlug": "moss-audio",
+  "savedAt": "2026-05-06T10:12:25.145Z",
+  "nodeCount": 6856,
+  "edgeCount": 23623,
+  "artifactCount": 2,
+  "pruneScore": {
+    "staleness": 0,
+    "redundancy": 0,
+    "lowSignal": 0,
+    "obsoletion": 0,
+    "pinned": false
+  },
+  "totalPruneScore": 0,
+  "temperature": "hot",
+  "lastAccessedAt": "2026-05-06T10:12:25.145Z",
+  "accessCount": 0,
+  "compressionState": "raw",
+  "verifiedStatus": "unknown",
+  "sourceType": "graphify",
+  "agentRole": "unknown",
+  "safeToInject": true,
+  "contextPriority": 0,
+  "failureSignatures": [],
+  "invariants": [],
+  "openQuestions": [],
+  "archived": false
+}

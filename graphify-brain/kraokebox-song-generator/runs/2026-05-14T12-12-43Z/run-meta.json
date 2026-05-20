@@ -1,0 +1,29 @@
+{
+  "runId": "2026-05-14T12-12-43Z",
+  "projectSlug": "kraokebox-song-generator",
+  "savedAt": "2026-05-14T12:12:43.385Z",
+  "nodeCount": 407,
+  "edgeCount": 516,
+  "artifactCount": 4,
+  "pruneScore": {
+    "staleness": 0,
+    "redundancy": 0,
+    "lowSignal": 0,
+    "obsoletion": 0,
+    "pinned": false
+  },
+  "totalPruneScore": 0,
+  "temperature": "hot",
+  "lastAccessedAt": "2026-05-14T12:12:43.385Z",
+  "accessCount": 0,
+  "compressionState": "raw",
+  "verifiedStatus": "unknown",
+  "sourceType": "graphify",
+  "agentRole": "unknown",
+  "safeToInject": true,
+  "contextPriority": 0,
+  "failureSignatures": [],
+  "invariants": [],
+  "openQuestions": [],
+  "archived": false
+}

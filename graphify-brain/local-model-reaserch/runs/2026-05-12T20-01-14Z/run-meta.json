@@ -1,0 +1,29 @@
+{
+  "runId": "2026-05-12T20-01-14Z",
+  "projectSlug": "local-model-reaserch",
+  "savedAt": "2026-05-12T20:01:14.455Z",
+  "nodeCount": 7,
+  "edgeCount": 9,
+  "artifactCount": 2,
+  "pruneScore": {
+    "staleness": 0,
+    "redundancy": 0,
+    "lowSignal": 0,
+    "obsoletion": 0,
+    "pinned": false
+  },
+  "totalPruneScore": 0,
+  "temperature": "hot",
+  "lastAccessedAt": "2026-05-12T20:01:14.455Z",
+  "accessCount": 0,
+  "compressionState": "raw",
+  "verifiedStatus": "unknown",
+  "sourceType": "graphify",
+  "agentRole": "unknown",
+  "safeToInject": true,
+  "contextPriority": 0,
+  "failureSignatures": [],
+  "invariants": [],
+  "openQuestions": [],
+  "archived": false
+}

@@ -1,0 +1,229 @@
+{
+  "main": {
+    "id": "5a25612540ac0899",
+    "type": "split",
+    "children": [
+      {
+        "id": "667f5e6e2fb8477c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f0ec54fbf7374eb3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "wiki/_WIKI.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "_WIKI"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "7c60804ef196e8df",
+    "type": "split",
+    "children": [
+      {
+        "id": "7287df90fbde5a78",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b33e92ee31f70507",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "6289aa340ed5bd21",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "f012c7127809054d",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "250a28bf3969c851",
+    "type": "split",
+    "children": [
+      {
+        "id": "f34a85b41e37a108",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7707f5510ecba25f",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "wiki/_WIKI.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for _WIKI"
+            }
+          },
+          {
+            "id": "831768ddaeade8bb",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "wiki/_WIKI.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from _WIKI"
+            }
+          },
+          {
+            "id": "311138fe1e9cdde0",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "56e0efab5205a7af",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "74461f6f06782fa5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "wiki/_WIKI.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of _WIKI"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "f0ec54fbf7374eb3",
+  "lastOpenFiles": [
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES/_README.md",
+    "wiki/05_LLM_INSTRUCTIONS/INSTRUCTION_architecture_review.md",
+    "wiki/04_DECISIONS/_README.md",
+    "obsidian/Tree Memory Proposal.md",
+    "obsidian/Unified Memory Management Plan.md",
+    "obsidian/Weisfeiler-Lehman Color Refinement.md",
+    "obsidian/Zettelkasten Linking Principle.md",
+    "wiki/01_OVERVIEW/ARCHITECTURE_AT_A_GLANCE.md",
+    "wiki/01_OVERVIEW/GLOSSARY.md",
+    "wiki/_WIKI.md",
+    "wiki/04_DECISIONS/DECISION_tree_plus_graph.md",
+    "wiki/02_SYSTEM_LAYERS/LAYER_02_Scoring.md",
+    "runs/2026-05-09T11-22-02Z/wiki/_WIKI.md",
+    "runs/2026-05-09T11-22-02Z/wiki/_INDEX.md",
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES/COMMUNITY_Testing.md",
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES/COMMUNITY_Pruning.md",
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES/COMMUNITY_Obsidian.md",
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES/COMMUNITY_Implementations.md",
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES/COMMUNITY_HeatTracker.md",
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES/COMMUNITY_Graphify.md",
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES/COMMUNITY_Design.md",
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES/COMMUNITY_Architecture.md",
+    "runs/2026-05-12T18-01-44Z/wiki/03_COMMUNITY_NARRATIVES",
+    "runs/2026-05-12T18-01-44Z/run-meta.json",
+    "runs/2026-05-12T18-01-44Z/obsidian/_COMMUNITY_Temporal Decay Foundations.md",
+    "runs/2026-05-12T18-01-44Z/obsidian/_COMMUNITY_Run Storage & Filesystem.md",
+    "runs/2026-05-12T18-01-44Z/obsidian/_COMMUNITY_Pruning & Score System.md",
+    "runs/2026-05-12T18-01-44Z/obsidian/_COMMUNITY_Knowledge Curation Principles.md",
+    "runs/2026-05-12T18-01-44Z/obsidian/graph.canvas",
+    "runs/2026-05-12T18-01-44Z/obsidian",
+    "runs/2026-05-12T18-01-44Z/wiki/05_LLM_INSTRUCTIONS",
+    "runs/2026-05-12T18-01-44Z/wiki/04_DECISIONS",
+    "runs/2026-05-12T18-01-44Z/wiki/02_TOP_COMMUNITIES",
+    "runs/2026-05-12T18-01-44Z/wiki/02_SYSTEM_LAYERS",
+    "runs/2026-05-12T18-01-44Z/wiki/01_OVERVIEW",
+    "runs/2026-05-12T18-01-44Z/wiki",
+    "runs/2026-05-12T18-01-44Z/graph.json",
+    "runs/2026-05-09T11-26-50Z/obsidian/graph.canvas",
+    "runs/2026-05-09T11-22-02Z/obsidian/graph.canvas",
+    "Untitled.canvas"
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "INTAKE.md",
+      "file_type": "document",
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "INTAKE_file",
+      "community": 0,
+      "norm_label": "intake.md"
+    },
+    {
+      "label": "Whisper",
+      "file_type": "rationale",
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "INTAKE_Whisper",
+      "community": 0,
+      "norm_label": "whisper"
+    },
+    {
+      "label": "Intake",
+      "file_type": "rationale",
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "INTAKE_Intake",
+      "community": 0,
+      "norm_label": "intake"
+    },
+    {
+      "label": "Analysis",
+      "file_type": "rationale",
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "INTAKE_Analysis",
+      "community": 0,
+      "norm_label": "analysis"
+    },
+    {
+      "label": "**Date**:",
+      "file_type": "rationale",
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "INTAKE_**Date**:",
+      "community": 0,
+      "norm_label": "**date**:"
+    },
+    {
+      "label": "2026-05-11",
+      "file_type": "rationale",
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "INTAKE_2026-05-11",
+      "community": 0,
+      "norm_label": "2026-05-11"
+    }
+  ],
+  "links": [
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "INTAKE_file",
+      "target": "INTAKE_Whisper"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "INTAKE_file",
+      "target": "INTAKE_Intake"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "INTAKE_file",
+      "target": "INTAKE_Analysis"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "INTAKE_file",
+      "target": "INTAKE_**Date**:"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:/Users/doner/whisperlocal/INTAKE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "INTAKE_file",
+      "target": "INTAKE_2026-05-11"
+    }
+  ],
+  "hyperedges": []
+}

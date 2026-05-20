@@ -1,0 +1,29 @@
+{
+  "runId": "2026-05-11T20-12-12Z",
+  "projectSlug": "whisperlocal",
+  "savedAt": "2026-05-11T20:12:12.387Z",
+  "nodeCount": 6,
+  "edgeCount": 5,
+  "artifactCount": 2,
+  "pruneScore": {
+    "staleness": 0,
+    "redundancy": 0,
+    "lowSignal": 0,
+    "obsoletion": 0,
+    "pinned": false
+  },
+  "totalPruneScore": 0,
+  "temperature": "hot",
+  "lastAccessedAt": "2026-05-11T20:12:12.387Z",
+  "accessCount": 0,
+  "compressionState": "raw",
+  "verifiedStatus": "unknown",
+  "sourceType": "graphify",
+  "agentRole": "unknown",
+  "safeToInject": true,
+  "contextPriority": 0,
+  "failureSignatures": [],
+  "invariants": [],
+  "openQuestions": [],
+  "archived": false
+}

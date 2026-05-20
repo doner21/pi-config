@@ -1,0 +1,16 @@
+---
+source_file: "research_nenflow/RUN_20260429-151202_ATT_1_RESEARCH.md"
+type: "document"
+community: "Android Emulator"
+tags:
+  - graphify/document
+  - graphify/EXTRACTED
+  - community/Android_Emulator
+---
+
+# Android Emulator
+
+## Connections
+- [[Pi Bridge Server]] - `connects_to` [EXTRACTED]
+
+#graphify/document #graphify/EXTRACTED #community/Android_Emulator

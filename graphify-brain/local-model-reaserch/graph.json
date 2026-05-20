@@ -1,0 +1,144 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "Intake: Rebuild Local Google Gemma Model Configuration for Pi Harness",
+      "file_type": "document",
+      "source_file": "intake.md",
+      "id": "intake_task",
+      "community": 0,
+      "norm_label": "intake: rebuild local google gemma model configuration for pi harness"
+    },
+    {
+      "label": "Google Gemma Model",
+      "file_type": "rationale",
+      "source_file": "intake.md",
+      "rationale": "The primary model being reconfigured.",
+      "id": "google_gemma_model",
+      "community": 1,
+      "norm_label": "google gemma model"
+    },
+    {
+      "label": "Llama Installation",
+      "file_type": "rationale",
+      "source_file": "intake.md",
+      "rationale": "An existing installation that must be preserved.",
+      "id": "llama_installation",
+      "community": 0,
+      "norm_label": "llama installation"
+    },
+    {
+      "label": "Turbo Quant / KV-cache compression",
+      "file_type": "rationale",
+      "source_file": "intake.md",
+      "rationale": "A specific optimization technique mentioned for the task.",
+      "id": "turbo_quant",
+      "community": 0,
+      "norm_label": "turbo quant / kv-cache compression"
+    },
+    {
+      "label": "Pi Coding Harness",
+      "file_type": "rationale",
+      "source_file": "intake.md",
+      "rationale": "The target runtime for the configuration.",
+      "id": "pi_harness",
+      "community": 0,
+      "norm_label": "pi coding harness"
+    },
+    {
+      "label": "Research Agent",
+      "file_type": "rationale",
+      "source_file": "intake.md",
+      "rationale": "The agent role assigned to investigate the model configuration.",
+      "id": "research_agent",
+      "community": 1,
+      "norm_label": "research agent"
+    },
+    {
+      "label": "Executor Agent",
+      "file_type": "rationale",
+      "source_file": "intake.md",
+      "rationale": "The agent role assigned to execute the findings.",
+      "id": "executor_agent",
+      "community": 1,
+      "norm_label": "executor agent"
+    }
+  ],
+  "links": [
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "intake.md",
+      "source": "intake_task",
+      "target": "google_gemma_model"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "intake.md",
+      "source": "intake_task",
+      "target": "llama_installation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "intake.md",
+      "source": "intake_task",
+      "target": "pi_harness"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "intake.md",
+      "source": "intake_task",
+      "target": "turbo_quant"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "intake.md",
+      "source": "intake_task",
+      "target": "research_agent"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "intake.md",
+      "source": "intake_task",
+      "target": "executor_agent"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "intake.md",
+      "source": "research_agent",
+      "target": "google_gemma_model"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "intake.md",
+      "source": "executor_agent",
+      "target": "google_gemma_model"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "intake.md",
+      "source": "turbo_quant",
+      "target": "google_gemma_model"
+    }
+  ],
+  "hyperedges": []
+}

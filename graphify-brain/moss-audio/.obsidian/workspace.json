@@ -1,0 +1,211 @@
+{
+  "main": {
+    "id": "fd50ddfc88f54dbc",
+    "type": "split",
+    "children": [
+      {
+        "id": "d138cf86710c2fea",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cac6e9d6f36fef8e",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "6a4e3536999814fe",
+    "type": "split",
+    "children": [
+      {
+        "id": "ac9ecf3c89c26a75",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d53bf14f73a553b7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "644f58e135192ad6",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#graphify/document",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "914d5b77de4b1903",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "2d2cfa4b53f26cb1",
+    "type": "split",
+    "children": [
+      {
+        "id": "4b92b5dbed617b73",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "93fcfb51e455e9bc",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Untitled.canvas",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Untitled"
+            }
+          },
+          {
+            "id": "6e9e85089915e8dd",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Untitled.canvas",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Untitled"
+            }
+          },
+          {
+            "id": "7e5f62285299cbea",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "1676f2431a7d91ad",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "d4a54c29e0432d98",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Untitled.canvas",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Untitled"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "cac6e9d6f36fef8e",
+  "lastOpenFiles": [
+    "Untitled 2.canvas",
+    "2026-05-08.md",
+    "runs/2026-05-08T01-14-19Z/obsidian/12-Point Karaoke Verification Checklist.md",
+    "obsidian/AgentInput.md",
+    "runs/2026-05-08T01-13-59Z/obsidian/AgentInput.md",
+    "obsidian/aeneas DTW-Based Aligner.md",
+    "runs/2026-05-08T01-13-59Z/obsidian/aeneas DTW-Based Aligner.md",
+    "runs/2026-05-08T01-14-19Z/obsidian/aeneas DTW-Based Aligner.md",
+    "obsidian/Adapter Tuning on SSL for Singing Alignment.md",
+    "runs/2026-05-08T01-13-59Z/obsidian/Optimal Transport (Sinkhorn) for Alignment.md",
+    "runs/2026-05-08T01-13-59Z/obsidian/_COMMUNITY_Alignment Pipeline.md",
+    "runs/2026-05-08T01-13-59Z/GRAPH_REPORT.md",
+    "_COMMUNITY_Karaoke Player UI.md",
+    "_COMMUNITY_STARS Utility Functions.md",
+    "_COMMUNITY_STARS Dataset.md",
+    "_COMMUNITY_Library Code (65).md",
+    "GRAPH_REPORT.md",
+    "2026-05-07.md",
+    "obsidian/Viterbi Decoding Forced Alignment.md",
+    "runs/2026-05-07T11-38-40Z/GRAPH_REPORT.md",
+    "runs/2026-05-06T10-12-25Z/GRAPH_REPORT.md",
+    "runs/2026-05-06T10-12-25Z/2026-05-06.md",
+    "Untitled.canvas",
+    "runs/2026-05-08T01-14-19Z/obsidian/PiBridgeClient.md",
+    "Untitled 1.canvas"
+  ]
+}

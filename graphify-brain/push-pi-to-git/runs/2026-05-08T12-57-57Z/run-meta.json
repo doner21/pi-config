@@ -1,0 +1,29 @@
+{
+  "runId": "2026-05-08T12-57-57Z",
+  "projectSlug": "push-pi-to-git",
+  "savedAt": "2026-05-08T12:57:57.355Z",
+  "nodeCount": 2138,
+  "edgeCount": 4245,
+  "artifactCount": 2,
+  "pruneScore": {
+    "staleness": 0,
+    "redundancy": 0,
+    "lowSignal": 0,
+    "obsoletion": 0,
+    "pinned": false
+  },
+  "totalPruneScore": 0,
+  "temperature": "hot",
+  "lastAccessedAt": "2026-05-08T12:57:57.355Z",
+  "accessCount": 0,
+  "compressionState": "raw",
+  "verifiedStatus": "unknown",
+  "sourceType": "graphify",
+  "agentRole": "unknown",
+  "safeToInject": true,
+  "contextPriority": 0,
+  "failureSignatures": [],
+  "invariants": [],
+  "openQuestions": [],
+  "archived": false
+}

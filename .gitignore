@@ -1,39 +1,52 @@
 # Secrets
-auth.json
+agent/auth.json
 
 # Session history
-sessions/
+agent/sessions/
 
 # Binary tools
-bin/
+agent/bin/
 
 # Dependencies
-extensions/node_modules/
+agent/extensions/node_modules/
+agent/node_modules/
 node_modules/
 
 # Runtime state
 verbosity-state.json
+agent/verbosity-state.json
 *.disabled
 
 # Health check
 .nenflow_context_health.json
+agent/.nenflow_context_health.json
 
 # Lock files
 *.lock
 
 # Temporary search results
-tmp_search*.json
+agent/tmp_search*.json
 
 # Backups
-backups/
+agent/backups/
 
 # Test bundles
-graphify-test-bundle.js
+agent/graphify-test-bundle.js
 
 # Misspelled old directory
 neflow-v3/
+agent/neflow-v3/
+
+# Graphify analysis caches and large auto-generated files
+.graphify_*.json
+graphify-brain/**/graphify-out/cache/
+graphify-brain/**/runs/*/graph.json
+graphify-out/
 
 # OS
+.DS_Store
+Thumbs.db
+nul
 .DS_Store
 Thumbs.db
 nul

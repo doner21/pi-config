@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 2,
+  "archetypes": [],
+  "heatTracker": {
+    "lastUpdateAt": "2026-05-20T16:44:36.871Z",
+    "entries": {
+      "memory-reaserch/2026-05-05T21-19-07Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-05T21:19:07.354Z",
+        "temperature": "cold"
+      },
+      "moss-audio/2026-05-06T10-12-25Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-06T10:12:25.203Z",
+        "temperature": "cold"
+      },
+      "moss-audio/2026-05-07T11-38-40Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-07T11:38:40.277Z",
+        "temperature": "cold"
+      },
+      "moss-audio/2026-05-08T01-13-59Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-08T01:14:00.040Z",
+        "temperature": "cold"
+      },
+      "moss-audio/2026-05-08T01-14-19Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-08T01:14:20.335Z",
+        "temperature": "cold"
+      },
+      "memory-reaserch/2026-05-08T12-06-06Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-08T12:06:06.150Z",
+        "temperature": "cold"
+      },
+      "push-pi-to-git/2026-05-08T12-57-57Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-08T12:57:57.373Z",
+        "temperature": "cold"
+      },
+      "memory-reaserch/2026-05-09T11-22-02Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-09T11:22:02.030Z",
+        "temperature": "cold"
+      },
+      "memory-reaserch/2026-05-09T11-26-50Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-09T11:26:50.927Z",
+        "temperature": "cold"
+      },
+      "whisperlocal/2026-05-11T20-12-12Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-11T20:12:12.430Z",
+        "temperature": "cold"
+      },
+      "whisperlocal/2026-05-11T21-19-34Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-11T21:19:34.593Z",
+        "temperature": "cold"
+      },
+      "local-model-reaserch/2026-05-12T20-01-14Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-12T20:01:14.460Z",
+        "temperature": "cold"
+      },
+      "kraokebox-song-generator/2026-05-13T00-28-18Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-13T00:28:18.970Z",
+        "temperature": "cold"
+      },
+      "kraokebox-song-generator/2026-05-14T09-59-35Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-14T09:59:35.948Z",
+        "temperature": "warm"
+      },
+      "kraokebox-song-generator/2026-05-14T12-12-43Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-14T12:12:43.735Z",
+        "temperature": "warm"
+      },
+      "ramen-don/2026-05-15T18-12-00Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-15T18:12:00.942Z",
+        "temperature": "warm"
+      },
+      "memory-reaserch/2026-05-16T13-47-51Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-16T13:47:51.539Z",
+        "temperature": "warm"
+      },
+      "ramen-don/2026-05-17T20-37-01Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-17T20:37:01.475Z",
+        "temperature": "warm"
+      },
+      "ramen-don/2026-05-17T23-40-15Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-17T23:40:15.547Z",
+        "temperature": "warm"
+      },
+      "ramen-don/2026-05-19T15-50-51Z": {
+        "accessCount": 0,
+        "lastAccessedAt": "2026-05-19T15:50:51.127Z",
+        "temperature": "warm"
+      }
+    }
+  }
+}
