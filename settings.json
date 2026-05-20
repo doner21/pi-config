@@ -3,7 +3,7 @@
   "defaultProvider": "deepseek",
   "defaultThinkingLevel": "high",
   "hideThinkingBlock": false,
-  "lastChangelogVersion": "0.73.1",
+  "lastChangelogVersion": "0.75.0",
   "packages": [
     "npm:@ollama/pi-web-search"
   ]

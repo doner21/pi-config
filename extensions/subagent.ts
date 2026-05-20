@@ -36,8 +36,13 @@ function resolveCliPath(): string {
 	}
 	if (process.platform === "win32") {
 		const appData = process.env.APPDATA || join(homedir(), "AppData", "Roaming");
-		const winPath = join(appData, "npm", "node_modules", "@mariozechner", "pi-coding-agent", "dist", "cli.js");
-		if (existsSync(winPath)) return winPath;
+		const candidates = [
+			join(appData, "npm", "node_modules", "@earendil-works", "pi-coding-agent", "dist", "cli.js"),
+			join(appData, "npm", "node_modules", "@mariozechner", "pi-coding-agent", "dist", "cli.js"),
+		];
+		for (const c of candidates) {
+			if (existsSync(c)) return c;
+		}
 	} else {
 		const candidates = [
 			join(homedir(), ".npm-global", "lib", "node_modules", "@mariozechner", "pi-coding-agent", "dist", "cli.js"),
