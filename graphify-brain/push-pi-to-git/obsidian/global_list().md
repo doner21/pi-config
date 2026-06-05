@@ -1,0 +1,20 @@
+---
+source_file: "nenflow-v3/runs/RUN_20260505-205658/research_tmp/graphify/graphify/global_graph.py"
+type: "code"
+community: "Community 65"
+location: "L149"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/Community_65
+---
+
+# global_list()
+
+## Connections
+- [[Return the manifest repos dict.]] - `rationale_for` [EXTRACTED]
+- [[_load_manifest()]] - `calls` [EXTRACTED]
+- [[global_graph.py]] - `contains` [EXTRACTED]
+- [[global_graph.py_1]] - `contains` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/Community_65

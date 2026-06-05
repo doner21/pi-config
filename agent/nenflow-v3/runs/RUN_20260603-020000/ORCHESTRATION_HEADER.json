@@ -1,0 +1,14 @@
+{
+  "run_id": "RUN_20260603-020000",
+  "paradigm": "nenflow-v3-multi-hypothesis-preview",
+  "maxSubagents": 1,
+  "maxRetries": 3,
+  "concurrency": 1,
+  "roles": [
+    { "agentName": "pev-researcher", "role": "hypothesizer-1", "model": "gpt-5.5", "provider": "openai-codex" },
+    { "agentName": "pev-researcher", "role": "hypothesizer-2", "model": "gpt-5.5", "provider": "openai-codex" },
+    { "agentName": "pev-researcher", "role": "hypothesizer-3", "model": "gpt-5.5", "provider": "openai-codex" },
+    { "agentName": "pev-planner", "role": "critique", "model": "gpt-5.5", "provider": "openai-codex" },
+    { "agentName": "pev-planner", "role": "synthesizer-planner", "model": "gpt-5.5", "provider": "openai-codex" }
+  ]
+}

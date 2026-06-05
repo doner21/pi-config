@@ -1,0 +1,33 @@
+{
+  "run_id": "RUN_20260603-ORCHPANEL",
+  "paradigm": "nenflow-v3",
+  "maxSubagents": 1,
+  "maxRetries": 5,
+  "concurrency": 1,
+  "roles": [
+    {
+      "agentName": "researcher",
+      "role": "researcher",
+      "model": "deepseek-v4-pro",
+      "provider": "deepseek"
+    },
+    {
+      "agentName": "planner",
+      "role": "planner",
+      "model": "deepseek-v4-pro",
+      "provider": "deepseek"
+    },
+    {
+      "agentName": "coder",
+      "role": "executor",
+      "model": "deepseek-v4-pro",
+      "provider": "deepseek"
+    },
+    {
+      "agentName": "reviewer",
+      "role": "verifier",
+      "model": "deepseek-v4-pro",
+      "provider": "deepseek"
+    }
+  ]
+}

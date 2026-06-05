@@ -1,0 +1,26 @@
+---
+source_file: "backups/RUN_20260505-205658/sources/graphify/tests/test_rationale.py"
+type: "code"
+community: "Community 70"
+location: "L1"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/Community_70
+---
+
+# test_rationale.py
+
+## Connections
+- [[NOTE must run before compile() or linker will fail]] - `rationale_for` [EXTRACTED]
+- [[Tests for rationaledocstring extraction in extract.py.]] - `rationale_for` [EXTRACTED]
+- [[_write_py()]] - `contains` [EXTRACTED]
+- [[test_class_docstring_extracted()]] - `contains` [EXTRACTED]
+- [[test_function_docstring_extracted()]] - `contains` [EXTRACTED]
+- [[test_module_docstring_extracted()]] - `contains` [EXTRACTED]
+- [[test_rationale_comment_extracted()]] - `contains` [EXTRACTED]
+- [[test_rationale_confidence_is_extracted()]] - `contains` [EXTRACTED]
+- [[test_rationale_for_edges_present()]] - `contains` [EXTRACTED]
+- [[test_short_docstring_ignored()]] - `contains` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/Community_70

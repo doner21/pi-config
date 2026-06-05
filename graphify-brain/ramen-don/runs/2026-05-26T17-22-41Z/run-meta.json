@@ -1,0 +1,29 @@
+{
+  "runId": "2026-05-26T17-22-41Z",
+  "projectSlug": "ramen-don",
+  "savedAt": "2026-05-26T17:22:41.884Z",
+  "nodeCount": 519,
+  "edgeCount": 781,
+  "artifactCount": 3,
+  "pruneScore": {
+    "staleness": 0,
+    "redundancy": 0,
+    "lowSignal": 0,
+    "obsoletion": 0,
+    "pinned": false
+  },
+  "totalPruneScore": 0,
+  "temperature": "hot",
+  "lastAccessedAt": "2026-05-26T17:22:41.884Z",
+  "accessCount": 0,
+  "compressionState": "raw",
+  "verifiedStatus": "unknown",
+  "sourceType": "graphify",
+  "agentRole": "unknown",
+  "safeToInject": true,
+  "contextPriority": 0,
+  "failureSignatures": [],
+  "invariants": [],
+  "openQuestions": [],
+  "archived": false
+}

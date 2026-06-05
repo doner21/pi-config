@@ -43,22 +43,27 @@ For every NenFlow run:
    - write `ATT_0_INTAKE.md` yourself
    - set frontmatter role to `ORCHESTRATOR`
    - decide `recommended_next_step`
+   - After writing `ATT_0_INTAKE.md`, update `ORCHESTRATION_STATE.json` phase to `"INTAKE_COMPLETE"` (use `write` tool to rewrite the file in the run directory).
 
 2. **Optional RESEARCH**
    - if the intake recommends RESEARCH, call subagent `pev-researcher`
    - pass it the intake path, run id, `RUN_CONFIG.json`, configured `context_handoff_threshold_percent`, exact output path, and exact continuation path
+   - After RESEARCH subagent returns, update `ORCHESTRATION_STATE.json` phase to `"RESEARCH_COMPLETE"` (use `write` tool).
 
 3. **PLAN**
    - call subagent `pev-planner`
    - pass intake path, optional research path, run id, `RUN_CONFIG.json`, configured `context_handoff_threshold_percent`, exact output path, and exact continuation path
+   - After PLAN subagent returns, update `ORCHESTRATION_STATE.json` phase to `"PLAN_COMPLETE"` (use `write` tool).
 
 4. **EXECUTE**
    - call subagent `pev-executor`
    - pass intake path, active plan path, run id, `RUN_CONFIG.json`, configured `context_handoff_threshold_percent`, exact execution report path, exact verifier brief path, and exact continuation path
+   - After EXECUTE subagent returns, update `ORCHESTRATION_STATE.json` phase to `"EXECUTE_COMPLETE"` (use `write` tool).
 
 5. **VERIFY**
    - call subagent `pev-verifier`
    - pass intake path, plan path, verifier brief path, run id, `RUN_CONFIG.json`, configured `context_handoff_threshold_percent`, exact verification report path, and exact continuation path
+   - After VERIFY subagent returns, update `ORCHESTRATION_STATE.json` phase to `"COMPLETE"` and write `"completed": true` so the status panel knows the run is finished.
 
 6. **Retry policy**
    - if verification is FAIL, you may run one more execution+verification attempt
@@ -132,6 +137,58 @@ Minimum health file fields:
   "orchestrator_session": "current-visible-session"
 }
 ```
+
+## Orchestration Status Panel
+
+When a run begins, the orchestrator must write an `ORCHESTRATION_HEADER.json` file in the run directory so that the right-side orchestration status panel (the `nenflow-orchestration-panel` extension) can render static configuration. After `RUN_CONFIG.json` is written and BEFORE spawning the first role subagent, write:
+
+```
+~/.pi/agent/nenflow-v3/runs/{run_id}/ORCHESTRATION_HEADER.json
+```
+
+With this content (adapt the `roles` array to match the actual model routing defined in the intake contract for this run):
+
+```json
+{
+  "run_id": "{run_id}",
+  "paradigm": "nenflow-v3",
+  "maxSubagents": 1,
+  "maxRetries": 5,
+  "concurrency": 1,
+  "roles": [
+    {
+      "agentName": "pev-researcher",
+      "role": "researcher",
+      "model": "deepseek-v4-pro",
+      "provider": "deepseek"
+    },
+    {
+      "agentName": "pev-planner",
+      "role": "planner",
+      "model": "deepseek-v4-pro",
+      "provider": "deepseek"
+    },
+    {
+      "agentName": "pev-executor",
+      "role": "executor",
+      "model": "deepseek-v4-pro",
+      "provider": "deepseek"
+    },
+    {
+      "agentName": "pev-verifier",
+      "role": "verifier",
+      "model": "deepseek-v4-flash",
+      "provider": "deepseek"
+    }
+  ]
+}
+```
+
+The orchestrator model uses the `write` tool to create this file. The `roles` array reflects the actual model routing defined in the intake contract for this run. If the user specifies different models, update the `roles` array accordingly.
+
+After the run completes (after VERIFY phase), mark the run finished by writing `"completed": true` to `ORCHESTRATION_STATE.json` so the panel knows to hide on subsequent invocations.
+
+Users can manually show the orchestration status panel by running `/nenflow-panel` in Pi.
 
 ## Artifact Rules
 
@@ -265,6 +322,8 @@ Because this is a visible orchestration skill:
 - show key decisions and next steps
 - do not disappear into a hidden mode
 - the current session is the orchestrator
+- before spawning the first subagent, write `ORCHESTRATION_HEADER.json` (see Orchestration Status Panel section)
+- after each phase transition, update `ORCHESTRATION_STATE.json` in the run directory with the new phase
 
 ## Completion
 

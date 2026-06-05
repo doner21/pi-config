@@ -1,0 +1,18 @@
+---
+source_file: "graphify-test-bundle.js"
+type: "code"
+community: "Community 10"
+location: "L143"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/Community_10
+---
+
+# extractSections()
+
+## Connections
+- [[brainContextForCwd()]] - `calls` [EXTRACTED]
+- [[graphify-test-bundle.js]] - `contains` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/Community_10

@@ -1,0 +1,7 @@
+---
+alias_for: ATT_2A_VERIFIER_BRIEF.md
+run_id: RUN_20260527-155952
+track: A
+---
+
+See: [ATT_2A_VERIFIER_BRIEF.md](./ATT_2A_VERIFIER_BRIEF.md)

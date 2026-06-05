@@ -1,0 +1,17 @@
+---
+source_file: "nenflow-v3/runs/RUN_20260505-205658/research_tmp/graphify/tests/fixtures/sample.swift"
+type: "code"
+community: "Community 12"
+location: "L44"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/Community_12
+---
+
+# unauthorized
+
+## Connections
+- [[NetworkError]] - `case_of` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/Community_12

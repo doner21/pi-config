@@ -5,14 +5,16 @@
     {"id":"proj-kraokebox-song-generator","type":"text","x":500,"y":0,"width":300,"height":120,"file":"kraokebox-song-generator/_PROJECT.md"},
     {"id":"proj-memory-reaserch","type":"text","x":1000,"y":0,"width":300,"height":120,"file":"memory-reaserch/_PROJECT.md"},
     {"id":"proj-moss-audio","type":"text","x":0,"y":300,"width":300,"height":120,"file":"moss-audio/_PROJECT.md"},
-    {"id":"proj-push_pi_to_git","type":"text","x":500,"y":300,"width":300,"height":120,"file":"push_pi_to_git/_PROJECT.md"},
-    {"id":"notes","type":"text","x":0,"y":1700,"width":300,"height":80,"file":"_notes/_INBOX.md"}
+    {"id":"proj-push-pi-to-git","type":"text","x":500,"y":300,"width":300,"height":120,"file":"push-pi-to-git/_PROJECT.md"},
+    {"id":"proj-push_pi_to_git","type":"text","x":1000,"y":300,"width":300,"height":120,"file":"push_pi_to_git/_PROJECT.md"},
+    {"id":"notes","type":"text","x":0,"y":2000,"width":300,"height":80,"file":"_notes/_INBOX.md"}
   ],
   "edges": [
     {"id":"edge-master-.obsidian","fromNode":"master","toNode":"proj-.obsidian"},
     {"id":"edge-master-kraokebox-song-generator","fromNode":"master","toNode":"proj-kraokebox-song-generator"},
     {"id":"edge-master-memory-reaserch","fromNode":"master","toNode":"proj-memory-reaserch"},
     {"id":"edge-master-moss-audio","fromNode":"master","toNode":"proj-moss-audio"},
+    {"id":"edge-master-push-pi-to-git","fromNode":"master","toNode":"proj-push-pi-to-git"},
     {"id":"edge-master-push_pi_to_git","fromNode":"master","toNode":"proj-push_pi_to_git"}
   ]
 }

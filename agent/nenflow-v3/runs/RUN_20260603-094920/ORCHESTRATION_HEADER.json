@@ -1,0 +1,33 @@
+{
+  "run_id": "RUN_20260603-094920",
+  "paradigm": "nenflow-v3",
+  "maxSubagents": 1,
+  "maxRetries": 5,
+  "concurrency": 1,
+  "roles": [
+    {
+      "agentName": "pev-researcher",
+      "role": "researcher",
+      "model": "deepseek-v4-pro",
+      "provider": "deepseek"
+    },
+    {
+      "agentName": "pev-planner",
+      "role": "planner",
+      "model": "gpt-5.5",
+      "provider": "openai-codex"
+    },
+    {
+      "agentName": "pev-executor",
+      "role": "executor",
+      "model": "deepseek-v4-pro",
+      "provider": "deepseek"
+    },
+    {
+      "agentName": "pev-verifier",
+      "role": "verifier",
+      "model": "deepseek-v4-flash",
+      "provider": "deepseek"
+    }
+  ]
+}

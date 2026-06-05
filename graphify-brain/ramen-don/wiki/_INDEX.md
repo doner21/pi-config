@@ -1,9 +1,9 @@
 ---
 type: wiki/index
 generated: auto
-nodes: 384
-edges: 496
-communities: 93
+nodes: 538
+edges: 828
+communities: 97
 ---
 
 # Project Knowledge Graph Wiki
@@ -22,9 +22,9 @@ communities: 93
 
 ## Quick Stats
 
-- **384** concepts (nodes)
-- **496** relationships (edges)
-- **93** communities
+- **538** concepts (nodes)
+- **828** relationships (edges)
+- **97** communities
 
 ## Most Connected Concepts (God Nodes)
 

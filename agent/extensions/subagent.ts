@@ -418,8 +418,28 @@ export default function subagentExtension(pi: ExtensionAPI) {
 					details: { availableAgents: agents.map((entry) => entry.name) },
 				};
 			}
+			// Emit subagent:spawn event for orchestration status panel
+			const resolvedModel = resolveModelSelection(agent, ctx, params.allowLocalModel);
+			try {
+				pi.events.emit("subagent:spawn", {
+					agentName: agent.name,
+					task: params.task,
+					model: resolvedModel.model ?? ctx.model?.id,
+					provider: resolvedModel.provider ?? ctx.model?.provider,
+					startTime: new Date().toISOString(),
+				});
+			} catch { /* events are best-effort; never break the main flow */ }
 			try {
 				const result = await runSubagent(agent, params.task, params.cwd, ctx, signal, params.allowLocalModel);
+				try {
+					pi.events.emit("subagent:exit", {
+						agentName: agent.name,
+						exitCode: 0,
+						endTime: new Date().toISOString(),
+						model: agent.model ?? ctx.model?.id,
+						provider: agent.provider ?? ctx.model?.provider,
+					});
+				} catch { /* events are best-effort */ }
 				return {
 					content: [{ type: "text", text: result }],
 					details: {
@@ -442,6 +462,14 @@ export default function subagentExtension(pi: ExtensionAPI) {
 					},
 				};
 			} catch (error: any) {
+				try {
+					pi.events.emit("subagent:exit", {
+						agentName: params.agent,
+						exitCode: 1,
+						endTime: new Date().toISOString(),
+						errorMessage: error?.message,
+					});
+				} catch { /* events are best-effort */ }
 				return {
 					content: [{ type: "text", text: error?.message || `Subagent ${agent.name} failed` }],
 					isError: true,

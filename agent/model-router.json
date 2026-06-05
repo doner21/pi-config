@@ -1,0 +1,29 @@
+{
+  "allowDirectSet": true,
+  "routes": {
+    "planner": {
+      "provider": "deepseek",
+      "model": "deepseek-v4-pro",
+      "thinkingLevel": "high",
+      "description": "Deep planning and architecture reasoning"
+    },
+    "executor": {
+      "provider": "openai-codex",
+      "model": "gpt-5.5",
+      "thinkingLevel": "high",
+      "description": "Implementation and code-editing execution"
+    },
+    "executor-fast": {
+      "provider": "openai-codex",
+      "model": "gpt-5.5-fast",
+      "thinkingLevel": "high",
+      "description": "Faster implementation pass"
+    },
+    "deepseek": {
+      "provider": "deepseek",
+      "model": "deepseek-v4-pro",
+      "thinkingLevel": "high",
+      "description": "DeepSeek V4 Pro default route"
+    }
+  }
+}

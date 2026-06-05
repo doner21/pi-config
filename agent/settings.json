@@ -3,8 +3,9 @@
   "defaultProvider": "deepseek",
   "defaultThinkingLevel": "high",
   "hideThinkingBlock": false,
-  "lastChangelogVersion": "0.75.0",
+  "lastChangelogVersion": "0.78.0",
   "packages": [
-    "npm:@ollama/pi-web-search"
+    "npm:@ollama/pi-web-search",
+    "..\\..\\pi-orchestrator-extension"
   ]
 }
