@@ -1,0 +1,7 @@
+.graphify_ast.json
+.graphify_uncached.txt
+.cache/
+graphify-out/cache/
+graphify-out/obsidian/
+node_modules/
+.DS_Store

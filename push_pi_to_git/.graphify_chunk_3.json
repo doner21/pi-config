@@ -1,0 +1,2331 @@
+{
+  "nodes": [
+    {
+      "id": "n3-pi-code-harness",
+      "label": "Pi Coding Agent Harness",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-hardening-sprint-run",
+      "label": "Hardening Sprint RUN_20260509-011600",
+      "file_type": "document",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-extension-layer",
+      "label": "Extension Layer (12 .ts files)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-core-orchestration-subsystem",
+      "label": "Core Orchestration Subsystem",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-safety-guardrails-subsystem",
+      "label": "Safety Guardrails Subsystem",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-subagent-infrastructure-subsystem",
+      "label": "Subagent Infrastructure Subsystem",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-browser-automation-subsystem",
+      "label": "Browser Automation Subsystem",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-memory-system-subsystem",
+      "label": "Memory System Subsystem",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-skills-layer",
+      "label": "Skills Layer (8 .md directories)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-subagents-layer",
+      "label": "Subagents Layer (9 .json agents)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-prompts-layer",
+      "label": "Prompts Layer (2 .md templates)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-thinking-ext",
+      "label": "thinking.ts Extension (cognitive mode control)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-v3-ext",
+      "label": "nenflow-v3.ts Extension (orchestration trigger)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-verbosity-ext",
+      "label": "verbosity.ts Extension (output detail control)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-todos-ext",
+      "label": "todos.ts Extension (JSON-backed task list)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-confirm-destructive-ext",
+      "label": "confirm-destructive.ts Extension (dangerous command blocking)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-git-checkpoint-ext",
+      "label": "git-checkpoint.ts Extension (write/edit auto-commit)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-subagent-ext",
+      "label": "subagent.ts Extension (subagent lifecycle management)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-agents-ext",
+      "label": "agents.ts Extension (deprecated redirect stub)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-playwright-mcp-ext",
+      "label": "playwright-mcp.ts Extension (browser automation MCP)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-mcp-status-ext",
+      "label": "mcp-status.ts Extension (MCP server registry)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-graphify-ext",
+      "label": "graphify.ts Extension (knowledge graph memory)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-memory-wiki-human-ext",
+      "label": "memory-wiki-human.ts Extension (Obsidian vault mgmt)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-v3-skill-family",
+      "label": "NenFlow v3 Skill Family (5 skills)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-v3-orchestrator-skill",
+      "label": "nenflow-v3 Orchestrator Skill",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pev-researcher-skill",
+      "label": "nenflow-pev-researcher Skill (lightweight discovery)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pev-planner-skill",
+      "label": "nenflow-pev-planner Skill (structured planning)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pev-executor-skill",
+      "label": "nenflow-pev-executor Skill (implementation + handoff)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pev-verifier-skill",
+      "label": "nenflow-pev-verifier Skill (evidence-based validation)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pev-prompt",
+      "label": "pev.md Prompt Template",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-v3-prompt",
+      "label": "nenflow_v3.md Prompt Template",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-researcher-agent-def",
+      "label": "researcher.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-planner-agent-def",
+      "label": "planner.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-coder-agent-def",
+      "label": "coder.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-reviewer-agent-def",
+      "label": "reviewer.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pev-researcher-agent-def",
+      "label": "pev-researcher.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pev-planner-agent-def",
+      "label": "pev-planner.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pev-executor-agent-def",
+      "label": "pev-executor.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pev-verifier-agent-def",
+      "label": "pev-verifier.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-api-test-reader-agent-def",
+      "label": "api-test-reader.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-browser-agent-def",
+      "label": "browser-agent.json Subagent Definition",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-agency-level-read-only",
+      "label": "read-only Agency Level (read,grep,find,ls)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-agency-level-research",
+      "label": "research Agency Level (read,bash,grep,find,ls)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-agency-level-write-enabled",
+      "label": "write-enabled Agency Level (read,bash,edit,write)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-agency-enforcement-gap",
+      "label": "Agency Enforcement Gap (research bash CAN write via shell)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-memory-store",
+      "label": "Graphify Memory Store (~/.pi/graphify-brain/)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-runs",
+      "label": "NenFlow v3 Run Artifacts (~/.pi/agent/nenflow-v3/runs/)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-state-files",
+      "label": "Other State Files (settings, auth, models, mcp, verbosity, sessions)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-dataflow",
+      "label": "NenFlow v3 Run Data Flow (Intake→Research→Plan→Execute→Verify)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-orchestrator-role",
+      "label": "NenFlow Orchestrator Role (intake, run ID, context health)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-research-role",
+      "label": "NenFlow Researcher Role (optional discovery subagent)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-planner-role",
+      "label": "NenFlow Planner Role (structured plan with invariants/criteria)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-executor-role",
+      "label": "NenFlow Executor Role (implementation + verifier brief)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-verifier-role",
+      "label": "NenFlow Verifier Role (independent PASS/FAIL verdict)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-nenflow-retry-loop",
+      "label": "NenFlow Retry on FAIL (Route E: one more EXECUTE+VERIFY cycle)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-validator-js",
+      "label": "validator.js (frontmatter checks: role, artifact_type, verdict)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-context-health-json",
+      "label": ".nenflow_context_health.json (shared context tracker)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-continuation-template",
+      "label": "CONTINUATION.md Template (continuation contract)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-att-artifacts-pattern",
+      "label": "ATT_n Artifact Naming Pattern (ATT_0_INTAKE, ATT_1_RESEARCH, etc.)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-latest-symlink-pattern",
+      "label": "LATEST_ Symlink Pattern (LATEST_PLAN, LATEST_EXECUTION, etc.)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-memory-store-structure",
+      "label": "Memory Store Structure (index.md, brain-meta.json, project dirs, runs, archive)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-run-meta-json",
+      "label": "run-meta.json (safeToInject, verifiedStatus, run metadata)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-browser-lock-recovery",
+      "label": "Browser Lock Recovery (zombie Chrome kill, stale LOCK clear)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-hardcoded-paths-bug",
+      "label": "Hardcoded Windows Paths Bug (C:/Users/doner/ scattered across 7 files)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-portability-fix-sc1",
+      "label": "SC1 Fix: resolveCliPath() with process.platform branching",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-portability-fix-sc2",
+      "label": "SC2 Fix: homedir() import replaces hardcoded Playwright path",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-portability-fix-sc3",
+      "label": "SC3 Fix: 5 skill files paths made portable (~/.pi/agent/...)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-portability-fix-sc4",
+      "label": "SC4 Fix: 2 prompt files paths made portable",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-underscore-to-hyphen-fix",
+      "label": "Underscore-to-Hyphen Fix (nenflow_v3 → nenflow-v3 in 4 PEV skills)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-graphify-safety-gate-sc5",
+      "label": "SC5 Fix: Graphify brainContextForCwd() reads run-meta.json before injection",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-graphify-safety-gate-sc6",
+      "label": "SC6 Fix: safeToInject===false → skipReport=true → GRAPH_REPORT skipped",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-git-checkpoint-sc7",
+      "label": "SC7 Fix: git add -A → git add -u (stages tracked files only)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-subagent-metadata-sc8",
+      "label": "SC8 Fix: Subagent results include metadata field (7 success fields + 2 error fields)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-sprint-improvement-categories",
+      "label": "4 Sprint Improvement Categories (paths, graphify safety, git checkpoints, subagent metadata)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-deferred-bash-read-only",
+      "label": "Deferred: Bash Read-Only Enforcement (needs pi-core policy engine)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-deferred-run-ledger",
+      "label": "Deferred: Full Run Ledger Infrastructure (transcript logging)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-deferred-progressive-mcp",
+      "label": "Deferred: Progressive-Disclosure MCP (dynamic tool registration)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-deferred-capability-registry",
+      "label": "Deferred: Capability Registry / Policy Engine (pi-core middleware)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-deferred-evidence-verification",
+      "label": "Deferred: Evidence-Based Verification Enforcement in validator.js",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-deferred-architecture-wiki",
+      "label": "Deferred: Architecture Wiki (Graphify already covers; manual later)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-deferred-destructive-patterns",
+      "label": "Deferred: Expanded Destructive Command Patterns (git reset, curl|sh, npm publish)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-deferred-secret-scanning",
+      "label": "Deferred: Secret Scanning (gitleaks/trufflehog for public repo)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-deferred-subagent-transcript-logging",
+      "label": "Deferred: Subagent Transcript Logging (full JSONL persistence)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-confirm-destructive-patterns",
+      "label": "confirm-destructive.ts Blocked Patterns (rm -rf, mkfs, dd, truncate, sudo rm, del/rd, /dev/ redirect)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-playwright-tools",
+      "label": "Playwright MCP Tools (navigate, click, snapshot, screenshot, type, fill, evaluate, etc.)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-brain-meta-json",
+      "label": "brain-meta.json (HeatTracker: access counts, temperatures)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-project-meta-json",
+      "label": "meta.json per project (displayName, projectPath, savedAt, nodes, edges, lastRunId, runCount)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-graphify-output-artifacts",
+      "label": "Graphify Output Artifacts (GRAPH_REPORT.md, graph.json, wiki/, obsidian/)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-archive-auto-delete",
+      "label": ".archive/ Auto-Delete Policy (pruned/gc'd runs deleted after 30d)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-settings-json",
+      "label": "settings.json (default model, provider, thinking config)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-auth-json",
+      "label": "auth.json (API keys, gitignored, never committed)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-models-json",
+      "label": "models.json (custom model definitions)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-mcp-registry-json",
+      "label": "mcp-registry.json (MCP server connection state)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-verbosity-state-json",
+      "label": "verbosity-state.json (current verbosity level)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-sessions-dir",
+      "label": "sessions/ Directory (session history, gitignored)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-run-id-format",
+      "label": "Run ID Format (RUN_YYYYMMDD-HHMMSS)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-pi-cli-path-env",
+      "label": "PI_CLI_PATH Environment Variable (CLI path override)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-homedir-portability",
+      "label": "homedir() Portability Import (from node:os)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-global-grep-zero-hardcoded",
+      "label": "Global Grep Confirmation (0 functional hardcoded paths remain post-sprint)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-sprint-verdict-pass",
+      "label": "Sprint Verdict PASS (all 8 success criteria met)",
+      "file_type": "document",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-11-files-modified",
+      "label": "11 Files Modified in Sprint across 4 categories",
+      "file_type": "document",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-nenflow-run-dir-structure",
+      "label": "NenFlow Run Directory Structure (ATT_n, LATEST_ symlinks)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-session-hooks",
+      "label": "Pi Session Lifecycle Hooks (session_start, session_shutdown, before_agent_start, tool_call)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-graphify-modes",
+      "label": "Graphify Slash Commands (/graphify, /memory, /memory-wiki subcommands)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-subagent-slash-commands",
+      "label": "Subagent Slash Commands (/subagents list|spawn|create)",
+      "file_type": "rationale",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-user-entry-points",
+      "label": "User Entry Points (slash commands, subagent spawn, LLM tool calls)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-intake-artifact-att0",
+      "label": "ATT_0_INTAKE.md (ecological framing of task)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-research-artifact-att1",
+      "label": "ATT_1_RESEARCH.md (optional researcher output)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-plan-artifact-att1or2",
+      "label": "ATT_1_PLAN.md / ATT_2_PLAN.md (planner output, shifted if research exists)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-execution-artifact-attn",
+      "label": "ATT_n_EXECUTION.md (executor implementation report)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-verifier-brief-artifact",
+      "label": "ATT_n_VERIFIER_BRIEF.md (executor handoff to verifier)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-verification-artifact",
+      "label": "ATT_n_VERIFICATION.md (verifier PASS/FAIL verdict)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-graphify-skill",
+      "label": "graphify Skill (code→knowledge graph, AST + LLM extraction)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-internet-research-skill",
+      "label": "internet-research Skill (DuckDuckGo web search)",
+      "file_type": "code",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-obsidian-vault",
+      "label": "Obsidian Vault (~/.pi/graphify-brain/obsidian-vault/)",
+      "file_type": "document",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "n3-git-add-u-change",
+      "label": "git add -u Change Rationale (prevent untracked absorption)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-try-catch-degradation",
+      "label": "try/catch Graceful Degradation Pattern (new FS reads in graphify.ts)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-nenflow-verification-report",
+      "label": "Full Verification Report (ATT_3_VERIFICATION.md at run path)",
+      "file_type": "document",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-sprint-recommendations",
+      "label": "Next Sprint Recommendations (Linux/macOS test, destructive patterns, transcripts, gitleaks)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-safety-gate-warning-mode",
+      "label": "Safety Gate Warning Mode (verifiedStatus present but not 'verified' → warn but inject)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "n3-skip-report-guard",
+      "label": "skipReport Guard (safeToInject===false → skip GRAPH_REPORT, wiki still injected)",
+      "file_type": "rationale",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    }
+  ],
+  "edges": [
+    {
+      "source": "n3-pi-code-harness",
+      "target": "n3-extension-layer",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-extension-layer",
+      "target": "n3-core-orchestration-subsystem",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-extension-layer",
+      "target": "n3-safety-guardrails-subsystem",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-extension-layer",
+      "target": "n3-subagent-infrastructure-subsystem",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-extension-layer",
+      "target": "n3-browser-automation-subsystem",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-extension-layer",
+      "target": "n3-memory-system-subsystem",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-core-orchestration-subsystem",
+      "target": "n3-thinking-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-core-orchestration-subsystem",
+      "target": "n3-nenflow-v3-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-core-orchestration-subsystem",
+      "target": "n3-verbosity-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-core-orchestration-subsystem",
+      "target": "n3-todos-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-safety-guardrails-subsystem",
+      "target": "n3-confirm-destructive-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-safety-guardrails-subsystem",
+      "target": "n3-git-checkpoint-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-infrastructure-subsystem",
+      "target": "n3-subagent-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-infrastructure-subsystem",
+      "target": "n3-agents-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-browser-automation-subsystem",
+      "target": "n3-playwright-mcp-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-browser-automation-subsystem",
+      "target": "n3-mcp-status-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-system-subsystem",
+      "target": "n3-graphify-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-system-subsystem",
+      "target": "n3-memory-wiki-human-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-extension-layer",
+      "target": "n3-skills-layer",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-extension-layer",
+      "target": "n3-subagents-layer",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-extension-layer",
+      "target": "n3-prompts-layer",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-skills-layer",
+      "target": "n3-nenflow-v3-skill-family",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-skill-family",
+      "target": "n3-nenflow-v3-orchestrator-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-skill-family",
+      "target": "n3-pev-researcher-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-skill-family",
+      "target": "n3-pev-planner-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-skill-family",
+      "target": "n3-pev-executor-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-skill-family",
+      "target": "n3-pev-verifier-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-prompts-layer",
+      "target": "n3-pev-prompt",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-prompts-layer",
+      "target": "n3-nenflow-v3-prompt",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-ext",
+      "target": "n3-nenflow-v3-prompt",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-ext",
+      "target": "n3-pev-prompt",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-ext",
+      "target": "n3-nenflow-v3-orchestrator-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-ext",
+      "target": "n3-researcher-agent-def",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-ext",
+      "target": "n3-planner-agent-def",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-ext",
+      "target": "n3-coder-agent-def",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-ext",
+      "target": "n3-reviewer-agent-def",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-ext",
+      "target": "n3-pev-researcher-agent-def",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-ext",
+      "target": "n3-pev-planner-agent-def",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-ext",
+      "target": "n3-pev-executor-agent-def",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-ext",
+      "target": "n3-pev-verifier-agent-def",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-orchestrator-skill",
+      "target": "n3-nenflow-orchestrator-role",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-researcher-skill",
+      "target": "n3-nenflow-research-role",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-planner-skill",
+      "target": "n3-nenflow-planner-role",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-executor-skill",
+      "target": "n3-nenflow-executor-role",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-verifier-skill",
+      "target": "n3-nenflow-verifier-role",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-researcher-agent-def",
+      "target": "n3-pev-researcher-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-planner-agent-def",
+      "target": "n3-pev-planner-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-executor-agent-def",
+      "target": "n3-pev-executor-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-verifier-agent-def",
+      "target": "n3-pev-verifier-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-researcher-agent-def",
+      "target": "n3-agency-level-research",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-planner-agent-def",
+      "target": "n3-agency-level-read-only",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-planner-agent-def",
+      "target": "n3-agency-level-read-only",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-reviewer-agent-def",
+      "target": "n3-agency-level-read-only",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-verifier-agent-def",
+      "target": "n3-agency-level-read-only",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-researcher-agent-def",
+      "target": "n3-agency-level-research",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-coder-agent-def",
+      "target": "n3-agency-level-write-enabled",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-pev-executor-agent-def",
+      "target": "n3-agency-level-write-enabled",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-agency-level-research",
+      "target": "n3-agency-enforcement-gap",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-confirm-destructive-ext",
+      "target": "n3-agency-enforcement-gap",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-dataflow",
+      "target": "n3-nenflow-orchestrator-role",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-dataflow",
+      "target": "n3-nenflow-research-role",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-dataflow",
+      "target": "n3-nenflow-planner-role",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-dataflow",
+      "target": "n3-nenflow-executor-role",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-dataflow",
+      "target": "n3-nenflow-verifier-role",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-dataflow",
+      "target": "n3-nenflow-retry-loop",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-runs",
+      "target": "n3-validator-js",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-runs",
+      "target": "n3-context-health-json",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-runs",
+      "target": "n3-continuation-template",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-runs",
+      "target": "n3-att-artifacts-pattern",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-runs",
+      "target": "n3-latest-symlink-pattern",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-runs",
+      "target": "n3-run-id-format",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-att-artifacts-pattern",
+      "target": "n3-intake-artifact-att0",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-att-artifacts-pattern",
+      "target": "n3-research-artifact-att1",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-att-artifacts-pattern",
+      "target": "n3-plan-artifact-att1or2",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-att-artifacts-pattern",
+      "target": "n3-execution-artifact-attn",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-att-artifacts-pattern",
+      "target": "n3-verifier-brief-artifact",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-att-artifacts-pattern",
+      "target": "n3-verification-artifact",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-executor-role",
+      "target": "n3-verifier-brief-artifact",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-executor-role",
+      "target": "n3-execution-artifact-attn",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-verifier-role",
+      "target": "n3-verification-artifact",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-retry-loop",
+      "target": "n3-nenflow-executor-role",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-retry-loop",
+      "target": "n3-nenflow-verifier-role",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-validator-js",
+      "target": "n3-intake-artifact-att0",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-validator-js",
+      "target": "n3-plan-artifact-att1or2",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-validator-js",
+      "target": "n3-verification-artifact",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-git-checkpoint-ext",
+      "target": "n3-nenflow-executor-role",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-confirm-destructive-ext",
+      "target": "n3-nenflow-executor-role",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-store",
+      "target": "n3-memory-store-structure",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-store-structure",
+      "target": "n3-brain-meta-json",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-store-structure",
+      "target": "n3-project-meta-json",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-store-structure",
+      "target": "n3-graphify-output-artifacts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-store-structure",
+      "target": "n3-run-meta-json",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-store-structure",
+      "target": "n3-archive-auto-delete",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-store-structure",
+      "target": "n3-obsidian-vault",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-graphify-ext",
+      "target": "n3-memory-store",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-memory-wiki-human-ext",
+      "target": "n3-obsidian-vault",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-hardening-sprint-run",
+      "target": "n3-hardcoded-paths-bug",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardening-sprint-run",
+      "target": "n3-sprint-improvement-categories",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardening-sprint-run",
+      "target": "n3-sprint-verdict-pass",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardening-sprint-run",
+      "target": "n3-11-files-modified",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardcoded-paths-bug",
+      "target": "n3-subagent-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardcoded-paths-bug",
+      "target": "n3-playwright-mcp-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardcoded-paths-bug",
+      "target": "n3-nenflow-v3-orchestrator-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardcoded-paths-bug",
+      "target": "n3-pev-executor-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardcoded-paths-bug",
+      "target": "n3-pev-planner-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardcoded-paths-bug",
+      "target": "n3-pev-researcher-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardcoded-paths-bug",
+      "target": "n3-pev-verifier-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardcoded-paths-bug",
+      "target": "n3-pev-prompt",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardcoded-paths-bug",
+      "target": "n3-nenflow-v3-prompt",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc1",
+      "target": "n3-subagent-ext",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc2",
+      "target": "n3-playwright-mcp-ext",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc3",
+      "target": "n3-nenflow-v3-orchestrator-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc3",
+      "target": "n3-pev-executor-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc3",
+      "target": "n3-pev-planner-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc3",
+      "target": "n3-pev-researcher-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc3",
+      "target": "n3-pev-verifier-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc4",
+      "target": "n3-pev-prompt",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc4",
+      "target": "n3-nenflow-v3-prompt",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-underscore-to-hyphen-fix",
+      "target": "n3-pev-executor-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-underscore-to-hyphen-fix",
+      "target": "n3-pev-planner-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-underscore-to-hyphen-fix",
+      "target": "n3-pev-researcher-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-underscore-to-hyphen-fix",
+      "target": "n3-pev-verifier-skill",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-graphify-safety-gate-sc5",
+      "target": "n3-graphify-ext",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-graphify-safety-gate-sc6",
+      "target": "n3-graphify-ext",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-git-checkpoint-sc7",
+      "target": "n3-git-checkpoint-ext",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-subagent-metadata-sc8",
+      "target": "n3-subagent-ext",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-graphify-safety-gate-sc5",
+      "target": "n3-run-meta-json",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-graphify-safety-gate-sc6",
+      "target": "n3-run-meta-json",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc1",
+      "target": "n3-pi-cli-path-env",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-portability-fix-sc2",
+      "target": "n3-homedir-portability",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-deferred-bash-read-only",
+      "target": "n3-agency-enforcement-gap",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-deferred-run-ledger",
+      "target": "n3-subagent-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-deferred-progressive-mcp",
+      "target": "n3-playwright-mcp-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-deferred-evidence-verification",
+      "target": "n3-validator-js",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-deferred-destructive-patterns",
+      "target": "n3-confirm-destructive-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-deferred-secret-scanning",
+      "target": "n3-auth-json",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-graphify-safety-gate-sc6",
+      "target": "n3-skip-report-guard",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-graphify-safety-gate-sc6",
+      "target": "n3-safety-gate-warning-mode",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-graphify-ext",
+      "target": "n3-try-catch-degradation",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-git-checkpoint-sc7",
+      "target": "n3-git-add-u-change",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-confirm-destructive-ext",
+      "target": "n3-confirm-destructive-patterns",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-playwright-mcp-ext",
+      "target": "n3-playwright-tools",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-playwright-mcp-ext",
+      "target": "n3-browser-lock-recovery",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-playwright-mcp-ext",
+      "target": "n3-session-hooks",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-graphify-ext",
+      "target": "n3-session-hooks",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-nenflow-v3-ext",
+      "target": "n3-validator-js",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-ext",
+      "target": "n3-nenflow-runs",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-ext",
+      "target": "n3-run-id-format",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-orchestrator-role",
+      "target": "n3-intake-artifact-att0",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-orchestrator-role",
+      "target": "n3-context-health-json",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-research-role",
+      "target": "n3-research-artifact-att1",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-planner-role",
+      "target": "n3-plan-artifact-att1or2",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-planner-role",
+      "target": "n3-latest-symlink-pattern",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-planner-role",
+      "target": "n3-validator-js",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-verifier-role",
+      "target": "n3-validator-js",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-graphify-safety-gate-sc5",
+      "target": "n3-try-catch-degradation",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-hardening-sprint-run",
+      "target": "n3-nenflow-verification-report",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-sprint-recommendations",
+      "target": "n3-deferred-destructive-patterns",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-sprint-recommendations",
+      "target": "n3-deferred-secret-scanning",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-sprint-recommendations",
+      "target": "n3-deferred-subagent-transcript-logging",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-nenflow-v3-ext",
+      "target": "n3-subagent-ext",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-graphify-ext",
+      "target": "n3-graphify-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-graphify-output-artifacts",
+      "target": "n3-graphify-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-hardening-sprint-run",
+      "target": "n3-global-grep-zero-hardcoded",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-skills-layer",
+      "target": "n3-graphify-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-skills-layer",
+      "target": "n3-internet-research-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-user-entry-points",
+      "target": "n3-extension-layer",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-user-entry-points",
+      "target": "n3-subagent-slash-commands",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-user-entry-points",
+      "target": "n3-graphify-modes",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-subagent-slash-commands",
+      "target": "n3-subagent-ext",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-graphify-modes",
+      "target": "n3-graphify-ext",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-deferred-bash-read-only",
+      "target": "n3-agency-level-research",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-subagent-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-playwright-mcp-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-graphify-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-git-checkpoint-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-nenflow-v3-orchestrator-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-pev-executor-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-pev-planner-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-pev-researcher-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-pev-verifier-skill",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-pev-prompt",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-11-files-modified",
+      "target": "n3-nenflow-v3-prompt",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "source": "n3-confirm-destructive-ext",
+      "target": "n3-session-hooks",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-git-checkpoint-ext",
+      "target": "n3-session-hooks",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-nenflow-v3-skill-family",
+      "target": "n3-nenflow-dataflow",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "source": "n3-deferred-progressive-mcp",
+      "target": "n3-mcp-status-ext",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "he3-architecture-subsystems",
+      "label": "Harness Architectural Subsystems",
+      "nodes": [
+        "n3-core-orchestration-subsystem",
+        "n3-safety-guardrails-subsystem",
+        "n3-subagent-infrastructure-subsystem",
+        "n3-browser-automation-subsystem",
+        "n3-memory-system-subsystem"
+      ],
+      "description": "Five core subsystems of the Pi Coding Agent Harness extension layer",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "he3-nenflow-skill-family",
+      "label": "NenFlow v3 Skill Family (5 skills modified)",
+      "nodes": [
+        "n3-nenflow-v3-orchestrator-skill",
+        "n3-pev-researcher-skill",
+        "n3-pev-planner-skill",
+        "n3-pev-executor-skill",
+        "n3-pev-verifier-skill"
+      ],
+      "description": "All five NenFlow v3 skills were modified in the hardening sprint to fix hardcoded paths (SC3) and underscore→hyphen naming",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "he3-portability-fixes",
+      "label": "Hardcoded Path Portability Fixes (SC1-SC4)",
+      "nodes": [
+        "n3-portability-fix-sc1",
+        "n3-portability-fix-sc2",
+        "n3-portability-fix-sc3",
+        "n3-portability-fix-sc4",
+        "n3-hardcoded-paths-bug"
+      ],
+      "description": "Four portability fixes addressing the systemic hardcoded Windows paths bug across extensions, skills, and prompts",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "he3-graphify-safety-gates",
+      "label": "Graphify Memory Safety Gates (SC5-SC6)",
+      "nodes": [
+        "n3-graphify-safety-gate-sc5",
+        "n3-graphify-safety-gate-sc6",
+        "n3-run-meta-json",
+        "n3-skip-report-guard",
+        "n3-safety-gate-warning-mode",
+        "n3-try-catch-degradation"
+      ],
+      "description": "Memory injection safety gates added to graphify.ts: reads run-meta.json for safeToInject/verifiedStatus before injecting context, with graceful try/catch degradation",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    },
+    {
+      "id": "he3-nenflow-roles-artifacts",
+      "label": "NenFlow v3 Roles and Corresponding Artifacts",
+      "nodes": [
+        "n3-nenflow-orchestrator-role",
+        "n3-nenflow-research-role",
+        "n3-nenflow-planner-role",
+        "n3-nenflow-executor-role",
+        "n3-nenflow-verifier-role",
+        "n3-intake-artifact-att0",
+        "n3-research-artifact-att1",
+        "n3-plan-artifact-att1or2",
+        "n3-execution-artifact-attn",
+        "n3-verifier-brief-artifact",
+        "n3-verification-artifact"
+      ],
+      "description": "Each NenFlow v3 role produces a specific artifact; the executor produces both an execution report and a verifier brief for handoff to the verifier",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "he3-deferred-improvements",
+      "label": "Deferred Improvement Areas (needs pi-core or more work)",
+      "nodes": [
+        "n3-deferred-bash-read-only",
+        "n3-deferred-run-ledger",
+        "n3-deferred-progressive-mcp",
+        "n3-deferred-capability-registry",
+        "n3-deferred-evidence-verification",
+        "n3-deferred-destructive-patterns",
+        "n3-deferred-secret-scanning",
+        "n3-deferred-subagent-transcript-logging",
+        "n3-deferred-architecture-wiki"
+      ],
+      "description": "Nine deferred improvement areas that require pi-core changes or deeper integration work beyond the hardening sprint scope",
+      "source_file": "HARNESS_ARCHITECTURE_DIAGRAM.md"
+    },
+    {
+      "id": "he3-sprint-extension-fixes",
+      "label": "Four Extensions Modified in Sprint",
+      "nodes": [
+        "n3-subagent-ext",
+        "n3-playwright-mcp-ext",
+        "n3-graphify-ext",
+        "n3-git-checkpoint-ext"
+      ],
+      "description": "Four extension files that received substantive changes in the hardening sprint (SC1-SC8)",
+      "source_file": "HARDENING_SPRINT_REPORT.md"
+    }
+  ]
+}

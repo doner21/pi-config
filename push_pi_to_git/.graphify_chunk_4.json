@@ -1,0 +1,1098 @@
+{
+  "nodes": [
+    {
+      "id": "mock_dashboard_test_project",
+      "label": "Mock Dashboard Test Project",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "id": "widget_lifecycle_py",
+      "label": "widget_lifecycle.py — Deterministic State Machine",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "widget_state_enum",
+      "label": "WidgetState Enum",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "widget_state_idle",
+      "label": "WidgetState.IDLE — Initial/reset state",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "widget_state_showing",
+      "label": "WidgetState.SHOWING — Actively visible, cleanup expected",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "widget_state_cleared",
+      "label": "WidgetState.CLEARED — Clean exit via clear()",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "widget_state_error",
+      "label": "WidgetState.ERROR — Error during show; cleanup ran",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "widget_state_aborted",
+      "label": "WidgetState.ABORTED — Explicit abort; cleanup ran",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "cleanup_guaranteed_states",
+      "label": "CLEANUP_GUARANTEED_STATES frozenset",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "allowed_transitions",
+      "label": "ALLOWED_TRANSITIONS — deterministic state transition table",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "widget_lifecycle_class",
+      "label": "WidgetLifecycle dataclass — widget state machine",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "set_widget_method",
+      "label": "set_widget() — widget config, rejects overlay",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "session_start_method",
+      "label": "session_start() — lifecycle hook, must not auto-show",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "show_command_context_manager",
+      "label": "show_command() context manager — guarantees cleanup via finally",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "cleanup_finally_block",
+      "label": "finally block in show_command — guaranteed cleanup gate",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "update_method",
+      "label": "update() — widget update while SHOWING",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "clear_method",
+      "label": "clear() — clean shutdown, success path",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "error_method",
+      "label": "error() — error path with guaranteed cleanup",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "abort_method",
+      "label": "abort() — explicit abort with guaranteed cleanup",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "reset_method",
+      "label": "reset() — return to IDLE from terminal state",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "transition_to_helper",
+      "label": "_transition_to() — validates allowed transitions",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "validate_invariants_function",
+      "label": "validate_invariants() — checks all three invariants",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "invariant_1_no_overlay",
+      "label": "Invariant 1: setWidget never uses overlay",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "id": "invariant_2_guaranteed_cleanup",
+      "label": "Invariant 2: Every show paired with guaranteed cleanup",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "id": "invariant_3_no_auto_show",
+      "label": "Invariant 3: Auto-show never triggered without explicit command",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "id": "overlay_detection_pattern",
+      "label": "Overlay Detection Pattern — reject overlay at API boundary",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "context_manager_cleanup_guard",
+      "label": "Context Manager Cleanup Guard — finally-guaranteed cleanup",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "auto_show_guard",
+      "label": "Auto-Show Guard — session_start must not trigger show",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "implicit_abort_pattern",
+      "label": "Implicit Abort Pattern — context exit without explicit termination aborts",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "cleanup_show_count_parity",
+      "label": "_show_count/_cleanup_count parity enforcement",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "test_widget_lifecycle_py",
+      "label": "test_widget_lifecycle.py — unittest suite",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "id": "normal_lifecycle_tests",
+      "label": "NormalLifecycleTests — show→update→clear happy path",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "id": "error_path_cleanup_tests",
+      "label": "ErrorPathCleanupTests — error during show triggers cleanup",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "id": "abort_path_cleanup_tests",
+      "label": "AbortPathCleanupTests — abort triggers cleanup",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "id": "overlay_detection_tests",
+      "label": "OverlayDetectionTests — overlay rejected and violates invariants",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "id": "no_auto_show_guard_tests",
+      "label": "NoAutoShowGuardTests — session_start never triggers show",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "id": "invalid_transition_tests",
+      "label": "InvalidTransitionTests — guard rails against illegal transitions",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "id": "cleanup_guaranteed_states_tests",
+      "label": "CleanupGuaranteedStatesTests — all exit paths in guaranteed set",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "id": "validate_py_script",
+      "label": "validate.py — dependency-free JSON validation script",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "check_result_dataclass",
+      "label": "CheckResult dataclass — single validation check",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_report_dataclass",
+      "label": "ValidationReport dataclass — full validation report",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "run_check_function",
+      "label": "run_check() — run a single check catching exceptions",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_lifecycle_check_normal",
+      "label": "Validation Check: normal lifecycle show→update→clear",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_lifecycle_check_error",
+      "label": "Validation Check: error-path guarantees cleanup",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_lifecycle_check_abort",
+      "label": "Validation Check: abort-path guarantees cleanup",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_lifecycle_check_overlay",
+      "label": "Validation Check: set_widget rejects overlay",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_lifecycle_check_no_auto",
+      "label": "Validation Check: session_start does not auto-show",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_lifecycle_check_implicit_abort",
+      "label": "Validation Check: implicit abort on context exit",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_lifecycle_check_invar_normal",
+      "label": "Validation Check: invariants pass normal lifecycle",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_lifecycle_check_invar_error",
+      "label": "Validation Check: invariants pass error path",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "validation_lifecycle_check_invar_abort",
+      "label": "Validation Check: invariants pass abort path",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "id": "verification_report_json",
+      "label": "VERIFICATION_REPORT.json — independent verifier confirmation",
+      "file_type": "document",
+      "source_file": "mock-dashboard-test/VERIFICATION_REPORT.json"
+    },
+    {
+      "id": "dashboard_rebuild_brief_ref",
+      "label": "DASHBOARD_REBUILD_BRIEF.md — referenced specification",
+      "file_type": "document",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "dashboard_postmortem_ref",
+      "label": "DASHBOARD_POSTMORTEM.md — referenced postmortem",
+      "file_type": "document",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "init_py",
+      "label": "__init__.py — package re-exports",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/__init__.py"
+    },
+    {
+      "id": "pyproject_toml",
+      "label": "pyproject.toml — project metadata",
+      "file_type": "code",
+      "source_file": "mock-dashboard-test/pyproject.toml"
+    },
+    {
+      "id": "readme_md",
+      "label": "README.md — project documentation",
+      "file_type": "document",
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "id": "four_exit_paths_pattern",
+      "label": "Four Exit Paths Pattern — all exit paths from SHOWING tested",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "terminal_state_pattern",
+      "label": "Terminal State Pattern — CLEARED/ERROR/ABORTED as terminal states",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "id": "lifecycle_multiple_sequence",
+      "label": "Multiple Full Lifecycles Pattern — reset→show→clear loop",
+      "file_type": "rationale",
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    }
+  ],
+  "edges": [
+    {
+      "source": "widget_lifecycle_class",
+      "target": "widget_state_enum",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "widget_lifecycle_class",
+      "target": "allowed_transitions",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "set_widget_method",
+      "target": "invariant_1_no_overlay",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "show_command_context_manager",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "session_start_method",
+      "target": "invariant_3_no_auto_show",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "cleanup_finally_block",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "cleanup_finally_block",
+      "target": "show_command_context_manager",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "validate_invariants_function",
+      "target": "cleanup_show_count_parity",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "validate_invariants_function",
+      "target": "invariant_1_no_overlay",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "validate_invariants_function",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "validate_invariants_function",
+      "target": "invariant_3_no_auto_show",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "widget_state_cleared",
+      "target": "cleanup_guaranteed_states",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "widget_state_error",
+      "target": "cleanup_guaranteed_states",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "widget_state_aborted",
+      "target": "cleanup_guaranteed_states",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "transition_to_helper",
+      "target": "allowed_transitions",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "clear_method",
+      "target": "widget_state_cleared",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "error_method",
+      "target": "widget_state_error",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "abort_method",
+      "target": "widget_state_aborted",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "reset_method",
+      "target": "widget_state_idle",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "show_command_context_manager",
+      "target": "widget_state_showing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "set_widget_method",
+      "target": "overlay_detection_pattern",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "show_command_context_manager",
+      "target": "context_manager_cleanup_guard",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "session_start_method",
+      "target": "auto_show_guard",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "cleanup_finally_block",
+      "target": "implicit_abort_pattern",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "normal_lifecycle_tests",
+      "target": "widget_lifecycle_class",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "normal_lifecycle_tests",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "error_path_cleanup_tests",
+      "target": "error_method",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "error_path_cleanup_tests",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "abort_path_cleanup_tests",
+      "target": "abort_method",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "abort_path_cleanup_tests",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "abort_path_cleanup_tests",
+      "target": "implicit_abort_pattern",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "overlay_detection_tests",
+      "target": "set_widget_method",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "overlay_detection_tests",
+      "target": "invariant_1_no_overlay",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "no_auto_show_guard_tests",
+      "target": "session_start_method",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "no_auto_show_guard_tests",
+      "target": "invariant_3_no_auto_show",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "invalid_transition_tests",
+      "target": "allowed_transitions",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "invalid_transition_tests",
+      "target": "transition_to_helper",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "cleanup_guaranteed_states_tests",
+      "target": "cleanup_guaranteed_states",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "validate_py_script",
+      "target": "widget_lifecycle_py",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validate_py_script",
+      "target": "validate_invariants_function",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validate_py_script",
+      "target": "cleanup_guaranteed_states",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validation_lifecycle_check_normal",
+      "target": "normal_lifecycle_tests",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validation_lifecycle_check_error",
+      "target": "error_path_cleanup_tests",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validation_lifecycle_check_abort",
+      "target": "abort_path_cleanup_tests",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validation_lifecycle_check_overlay",
+      "target": "overlay_detection_tests",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validation_lifecycle_check_no_auto",
+      "target": "no_auto_show_guard_tests",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validation_lifecycle_check_implicit_abort",
+      "target": "implicit_abort_pattern",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "verification_report_json",
+      "target": "validate_py_script",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/VERIFICATION_REPORT.json"
+    },
+    {
+      "source": "verification_report_json",
+      "target": "test_widget_lifecycle_py",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/VERIFICATION_REPORT.json"
+    },
+    {
+      "source": "verification_report_json",
+      "target": "invariant_1_no_overlay",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/VERIFICATION_REPORT.json"
+    },
+    {
+      "source": "verification_report_json",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/VERIFICATION_REPORT.json"
+    },
+    {
+      "source": "verification_report_json",
+      "target": "invariant_3_no_auto_show",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/VERIFICATION_REPORT.json"
+    },
+    {
+      "source": "widget_lifecycle_py",
+      "target": "dashboard_rebuild_brief_ref",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "widget_lifecycle_py",
+      "target": "dashboard_postmortem_ref",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "init_py",
+      "target": "widget_lifecycle_py",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/__init__.py"
+    },
+    {
+      "source": "test_widget_lifecycle_py",
+      "target": "widget_lifecycle_py",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "test_widget_lifecycle_py",
+      "target": "validate_invariants_function",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "test_widget_lifecycle_py",
+      "target": "cleanup_guaranteed_states",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "validation_report_dataclass",
+      "target": "verification_report_json",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "readme_md",
+      "target": "invariant_1_no_overlay",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "source": "readme_md",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "source": "readme_md",
+      "target": "invariant_3_no_auto_show",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "source": "cleanup_show_count_parity",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "terminal_state_pattern",
+      "target": "cleanup_guaranteed_states",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "four_exit_paths_pattern",
+      "target": "show_command_context_manager",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "four_exit_paths_pattern",
+      "target": "cleanup_finally_block",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "lifecycle_multiple_sequence",
+      "target": "reset_method",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "overlay_detection_pattern",
+      "target": "invariant_1_no_overlay",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "context_manager_cleanup_guard",
+      "target": "invariant_2_guaranteed_cleanup",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "auto_show_guard",
+      "target": "invariant_3_no_auto_show",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "validation_lifecycle_check_invar_normal",
+      "target": "validate_invariants_function",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validation_lifecycle_check_invar_error",
+      "target": "validate_invariants_function",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validation_lifecycle_check_invar_abort",
+      "target": "validate_invariants_function",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "check_result_dataclass",
+      "target": "run_check_function",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "validation_report_dataclass",
+      "target": "check_result_dataclass",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "mock_dashboard_test_project",
+      "target": "widget_lifecycle_py",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "source": "mock_dashboard_test_project",
+      "target": "test_widget_lifecycle_py",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "source": "mock_dashboard_test_project",
+      "target": "validate_py_script",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "source": "pyproject_toml",
+      "target": "mock_dashboard_test_project",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/pyproject.toml"
+    },
+    {
+      "source": "verification_report_json",
+      "target": "four_exit_paths_pattern",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/VERIFICATION_REPORT.json"
+    },
+    {
+      "source": "verification_report_json",
+      "target": "cleanup_finally_block",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/VERIFICATION_REPORT.json"
+    },
+    {
+      "source": "implicit_abort_pattern",
+      "target": "widget_state_aborted",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "validation_lifecycle_check_implicit_abort",
+      "target": "abort_path_cleanup_tests",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/scripts/validate.py"
+    },
+    {
+      "source": "normal_lifecycle_tests",
+      "target": "lifecycle_multiple_sequence",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-dashboard-test/tests/test_widget_lifecycle.py"
+    },
+    {
+      "source": "session_start_method",
+      "target": "widget_state_showing",
+      "relation": "conceptually_related_to",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.3,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "source": "show_command_context_manager",
+      "target": "implicit_abort_pattern",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    }
+  ],
+  "hyperedges": [
+    {
+      "type": "invariant_enforcement_triad",
+      "nodes": [
+        "invariant_1_no_overlay",
+        "invariant_2_guaranteed_cleanup",
+        "invariant_3_no_auto_show"
+      ],
+      "description": "Three simultaneous invariants that the widget lifecycle state machine must preserve: no overlay, guaranteed cleanup, and no auto-show. These invariants are derived from dashboard postmortem findings and the rebuild brief specification.",
+      "source_file": "mock-dashboard-test/README.md"
+    },
+    {
+      "type": "four_exit_paths_from_showing",
+      "nodes": [
+        "widget_state_showing",
+        "widget_state_cleared",
+        "widget_state_error",
+        "widget_state_aborted"
+      ],
+      "description": "All four exit paths from SHOWING state — normal clear, error, explicit abort, and implicit abort on context exit. Every path guarantees cleanup via the finally block in show_command().",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    },
+    {
+      "type": "three_layer_verification",
+      "nodes": [
+        "test_widget_lifecycle_py",
+        "validate_py_script",
+        "verification_report_json"
+      ],
+      "description": "Three-layered verification: unittest suite (21 tests), dependency-free JSON validation script (9 checks), and independent verifier report. All three layers must agree for a confirmed PASS.",
+      "source_file": "mock-dashboard-test/VERIFICATION_REPORT.json"
+    },
+    {
+      "type": "context_manager_cleanup_flow",
+      "nodes": [
+        "show_command_context_manager",
+        "cleanup_finally_block",
+        "context_manager_cleanup_guard",
+        "invariant_2_guaranteed_cleanup"
+      ],
+      "description": "Core cleanup flow: show_command() context manager wraps the SHOWING state, its finally block acts as a guaranteed cleanup gate (invariant 2), and all four exit paths are covered. The @contextmanager with try/yield/finally pattern ensures cleanup even on exception.",
+      "source_file": "mock-dashboard-test/src/dashboard_mock/widget_lifecycle.py"
+    }
+  ]
+}

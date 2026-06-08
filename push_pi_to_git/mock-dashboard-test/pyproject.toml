@@ -1,0 +1,9 @@
+[project]
+name = "dashboard-mock"
+version = "0.1.0"
+description = "Deterministic mock dashboard widget lifecycle for testing orchestration."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

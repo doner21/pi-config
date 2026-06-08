@@ -1,0 +1,1291 @@
+{
+  "nodes": [
+    {
+      "id": "sys-orchestrator",
+      "label": "Orchestration System",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "sys-planner",
+      "label": "Planner Subagent",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "sys-executor",
+      "label": "Executor/Coder Subagent",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "sys-verifier",
+      "label": "Verifier/Reviewer Subagent",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "sys-intake-normalizer",
+      "label": "Intake Contract Normalizer",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "sys-routing-check",
+      "label": "Deterministic Model Routing Check",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "sys-subagent-spawner",
+      "label": "Subagent Spawner (substrate.ts)",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "file-plan-execute-verify-ts",
+      "label": "src/shapes/plan-execute-verify.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "file-index-ts",
+      "label": "src/index.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "file-substrate-ts",
+      "label": "src/substrate.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "bug-issue1-routing-fights-planner",
+      "label": "ISSUE-1: Routing check fights planner role assignments",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "bug-issue2-intake-overrides-model",
+      "label": "ISSUE-2: Intake normalizer overrides user model preference",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "bug-issue3-verifier-trusts-text",
+      "label": "ISSUE-3: Verifier trusts executor text output, not files",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "bug-issue4-tasks-too-large",
+      "label": "ISSUE-4: Executor tasks too large, produce reports not code",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "bug-issue5-no-artifact-verification",
+      "label": "ISSUE-5: No post-execution artifact verification",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "bug-issue6-post-agent-end-error",
+      "label": "ISSUE-6: Subagent post-agent_end error noise (FIXED)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "bug-issue7-pt-regex-false-match",
+      "label": "ISSUE-7: PT 5.5 regex false-match for GPT routing",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "func-checkRequiredModelRouting",
+      "label": "checkRequiredModelRouting() in plan-execute-verify.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "func-inferModelRoutingFromTask",
+      "label": "inferModelRoutingFromTask() in index.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "func-applyRoutingAlias",
+      "label": "applyRoutingAlias() in index.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "func-buildVerificationPrompt",
+      "label": "buildVerificationPrompt() in plan-execute-verify.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "func-spawnSubagent",
+      "label": "spawnSubagent() in substrate.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "func-modelAliasFromText",
+      "label": "modelAliasFromText() in index.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "func-parseVerifierResult",
+      "label": "parseVerifierResult() in index.ts",
+      "file_type": "code",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "concept-agent-name-vs-phase-routing",
+      "label": "Agent-name-based routing vs phase-based routing",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-intake-contract-governing",
+      "label": "Intake contract as governing specification",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-verifier-blind-trust",
+      "label": "Verifier blind trust problem (text vs files)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-context-saturation",
+      "label": "Context window saturation (reports vs code)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-post-execution-metadata",
+      "label": "Post-execution metadata collection",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-agentEnded-flag",
+      "label": "agentEnded flag pattern for subprocess shutdown",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-first-found-alias-wins",
+      "label": "First-found alias wins (no role-specific override)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-planner-workaround-agent-coder",
+      "label": "Planner workaround: assign all tasks to agent='coder'",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-outputType-code-vs-report",
+      "label": "outputType field: code vs report tasks",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-nenflow-pev-shape",
+      "label": "NenFlow Plan-Execute-Verify (PEV) shape",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "fix-issue6-agentEnded",
+      "label": "Fix: agentEnded flag ignores post-agent_end errors",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "fix-issue6-stdio-config",
+      "label": "Fix: stdio pipe configuration for large prompts",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "bug-enametoolong-stdin-regression",
+      "label": "ENAMETOOLONG stdin regression (verifier prompt loss)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "concept-stdin-piping",
+      "label": "Stdin piping mechanism for large subagent prompts",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "concept-prompt-file-flag",
+      "label": "--prompt-file CLI flag (not supported by Pi)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "concept-safeArgLen-6000",
+      "label": "safeArgLen=6000 chars (Windows command-line limit)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "concept-fake-pi-test-harness",
+      "label": "Fake Pi CLI test harness for no-API validation",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "fix-optionA-prompt-file",
+      "label": "Fix Option A: --prompt-file temp file approach",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "fix-optionB-placeholder-stdin",
+      "label": "Fix Option B: placeholder arg + stdin piping",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "fix-optionC-tempfile-stdin",
+      "label": "Fix Option C: always temp file + stdin piping",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "fix-applied-pipeStdin",
+      "label": "Fix Applied: pipeStdin + stdio:['pipe','pipe','pipe'] for large prompts",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "event-agent_end",
+      "label": "agent_end event (subprocess completion signal)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "event-message_end",
+      "label": "message_end event with stopReason (shutdown artifact)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "evidence-attempt1-fail",
+      "label": "Attempt 1: Routing check found 1 coder spawn, expected 4",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "evidence-attempt2-fail",
+      "label": "Attempt 2: Routing check found 2 coder spawns, expected 4",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "evidence-attempt3-workaround",
+      "label": "Attempt 3: Planner assigns all tasks to agent='coder' as workaround",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "evidence-zero-files",
+      "label": "Evidence: 0 files created after 18 subagents / 3 attempts",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "evidence-discrepancy-note",
+      "label": "Planner DISCREPANCY NOTE: intake overrides user v4 flash preference",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "evidence-stdin-pipe-logs",
+      "label": "Evidence: stdin pipe progress logs for large prompts",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "sys-pi-cli-binary",
+      "label": "Pi CLI binary (cli.js)",
+      "file_type": "code",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "sys-jiti-runtime",
+      "label": "Jiti runtime (jiti.cjs)",
+      "file_type": "code",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "sys-agent-profiles",
+      "label": "Agent profiles (planner.json, coder.json, reviewer.json)",
+      "file_type": "code",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "concept-orchestrate-command",
+      "label": "/orchestrate command (user-facing orchestration trigger)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-dashboard-sidebar-panel",
+      "label": "Dashboard sidebar panel (original task goal)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-model-routing-constraint",
+      "label": "Model routing constraint (provider+model per role)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "bug-stdio-ignore-blocked-stdin",
+      "label": "stdio:['ignore','pipe','pipe'] blocked stdin piping",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "concept-no-assistant-text-captured",
+      "label": "_(No assistant text captured.)_ symptom for large-prompt tasks",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "concept-deepseek-v4-pro",
+      "label": "deepseek/deepseek-v4-pro model",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-deepseek-v4-flash",
+      "label": "deepseek/deepseek-v4-flash model (requested but overridden)",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-gpt-5.5",
+      "label": "openai-codex/gpt-5.5 model",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "evidence-16831-char-reviewer-prompt",
+      "label": "Evidence: 16831 char reviewer prompt piped via stdin successfully",
+      "file_type": "rationale",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "concept-priority-p0",
+      "label": "Priority P0: Verifier trust + Task size blocking implementation",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-priority-p1",
+      "label": "Priority P1: Artifact verification + Routing fights planner",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-priority-p2",
+      "label": "Priority P2: Intake overrides user model prefs",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "concept-priority-p3",
+      "label": "Priority P3: PT 5.5 false-match risk",
+      "file_type": "rationale",
+      "source_file": "HANDOFF.md"
+    }
+  ],
+  "edges": [
+    {
+      "source": "bug-issue1-routing-fights-planner",
+      "target": "func-checkRequiredModelRouting",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue1-routing-fights-planner",
+      "target": "sys-planner",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue1-routing-fights-planner",
+      "target": "concept-agent-name-vs-phase-routing",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue1-routing-fights-planner",
+      "target": "concept-planner-workaround-agent-coder",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue2-intake-overrides-model",
+      "target": "func-inferModelRoutingFromTask",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue2-intake-overrides-model",
+      "target": "func-applyRoutingAlias",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue2-intake-overrides-model",
+      "target": "concept-first-found-alias-wins",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue2-intake-overrides-model",
+      "target": "concept-deepseek-v4-flash",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue2-intake-overrides-model",
+      "target": "concept-deepseek-v4-pro",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue3-verifier-trusts-text",
+      "target": "func-buildVerificationPrompt",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue3-verifier-trusts-text",
+      "target": "sys-verifier",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue3-verifier-trusts-text",
+      "target": "concept-verifier-blind-trust",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue4-tasks-too-large",
+      "target": "sys-executor",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue4-tasks-too-large",
+      "target": "concept-context-saturation",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue4-tasks-too-large",
+      "target": "concept-outputType-code-vs-report",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue5-no-artifact-verification",
+      "target": "sys-verifier",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue5-no-artifact-verification",
+      "target": "concept-post-execution-metadata",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue5-no-artifact-verification",
+      "target": "evidence-zero-files",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue6-post-agent-end-error",
+      "target": "func-spawnSubagent",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue6-post-agent-end-error",
+      "target": "concept-agentEnded-flag",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue6-post-agent-end-error",
+      "target": "event-agent_end",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue6-post-agent-end-error",
+      "target": "event-message_end",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue7-pt-regex-false-match",
+      "target": "func-modelAliasFromText",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue7-pt-regex-false-match",
+      "target": "concept-gpt-5.5",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-enametoolong-stdin-regression",
+      "target": "func-parseVerifierResult",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "bug-enametoolong-stdin-regression",
+      "target": "concept-safeArgLen-6000",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "bug-enametoolong-stdin-regression",
+      "target": "concept-stdin-piping",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "bug-enametoolong-stdin-regression",
+      "target": "concept-no-assistant-text-captured",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "bug-enametoolong-stdin-regression",
+      "target": "bug-stdio-ignore-blocked-stdin",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "fix-applied-pipeStdin",
+      "target": "bug-enametoolong-stdin-regression",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "fix-applied-pipeStdin",
+      "target": "bug-stdio-ignore-blocked-stdin",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "fix-applied-pipeStdin",
+      "target": "concept-stdin-piping",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "fix-optionA-prompt-file",
+      "target": "concept-prompt-file-flag",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "fix-optionB-placeholder-stdin",
+      "target": "concept-stdin-piping",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "fix-optionC-tempfile-stdin",
+      "target": "concept-stdin-piping",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "fix-issue6-agentEnded",
+      "target": "bug-issue6-post-agent-end-error",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "fix-issue6-agentEnded",
+      "target": "concept-agentEnded-flag",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "sys-intake-normalizer",
+      "target": "func-inferModelRoutingFromTask",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "sys-intake-normalizer",
+      "target": "func-applyRoutingAlias",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "sys-routing-check",
+      "target": "func-checkRequiredModelRouting",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "sys-subagent-spawner",
+      "target": "func-spawnSubagent",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "sys-verifier",
+      "target": "func-buildVerificationPrompt",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "sys-executor",
+      "target": "concept-context-saturation",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-planner-workaround-agent-coder",
+      "target": "concept-agent-name-vs-phase-routing",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-intake-contract-governing",
+      "target": "sys-intake-normalizer",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue3-verifier-trusts-text",
+      "target": "bug-issue5-no-artifact-verification",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue4-tasks-too-large",
+      "target": "bug-issue5-no-artifact-verification",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue1-routing-fights-planner",
+      "target": "concept-model-routing-constraint",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "evidence-attempt1-fail",
+      "target": "bug-issue1-routing-fights-planner",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "evidence-attempt2-fail",
+      "target": "bug-issue1-routing-fights-planner",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "evidence-attempt3-workaround",
+      "target": "concept-planner-workaround-agent-coder",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "evidence-discrepancy-note",
+      "target": "bug-issue2-intake-overrides-model",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "evidence-zero-files",
+      "target": "bug-issue4-tasks-too-large",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "evidence-zero-files",
+      "target": "bug-issue3-verifier-trusts-text",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-orchestrate-command",
+      "target": "sys-orchestrator",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-dashboard-sidebar-panel",
+      "target": "sys-orchestrator",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-nenflow-pev-shape",
+      "target": "sys-orchestrator",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-nenflow-pev-shape",
+      "target": "sys-planner",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-nenflow-pev-shape",
+      "target": "sys-executor",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-nenflow-pev-shape",
+      "target": "sys-verifier",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "fix-issue6-agentEnded",
+      "target": "file-substrate-ts",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "fix-applied-pipeStdin",
+      "target": "file-index-ts",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "bug-enametoolong-stdin-regression",
+      "target": "file-index-ts",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "evidence-stdin-pipe-logs",
+      "target": "fix-applied-pipeStdin",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "evidence-16831-char-reviewer-prompt",
+      "target": "fix-applied-pipeStdin",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "concept-fake-pi-test-harness",
+      "target": "fix-applied-pipeStdin",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "concept-prompt-file-flag",
+      "target": "sys-pi-cli-binary",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "sys-pi-cli-binary",
+      "target": "sys-jiti-runtime",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "sys-agent-profiles",
+      "target": "sys-planner",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "sys-agent-profiles",
+      "target": "sys-executor",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "sys-agent-profiles",
+      "target": "sys-verifier",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "file-plan-execute-verify-ts",
+      "target": "func-checkRequiredModelRouting",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "file-plan-execute-verify-ts",
+      "target": "func-buildVerificationPrompt",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "file-index-ts",
+      "target": "func-inferModelRoutingFromTask",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "file-index-ts",
+      "target": "func-applyRoutingAlias",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "file-index-ts",
+      "target": "func-modelAliasFromText",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "file-index-ts",
+      "target": "func-parseVerifierResult",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "file-substrate-ts",
+      "target": "func-spawnSubagent",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-priority-p0",
+      "target": "bug-issue3-verifier-trusts-text",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-priority-p0",
+      "target": "bug-issue4-tasks-too-large",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-priority-p1",
+      "target": "bug-issue5-no-artifact-verification",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-priority-p1",
+      "target": "bug-issue1-routing-fights-planner",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-priority-p2",
+      "target": "bug-issue2-intake-overrides-model",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-priority-p3",
+      "target": "bug-issue7-pt-regex-false-match",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "fix-issue6-agentEnded",
+      "target": "event-agent_end",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "fix-issue6-agentEnded",
+      "target": "event-message_end",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-no-assistant-text-captured",
+      "target": "sys-verifier",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "sys-orchestrator",
+      "target": "file-plan-execute-verify-ts",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "sys-orchestrator",
+      "target": "file-index-ts",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "sys-orchestrator",
+      "target": "file-substrate-ts",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-model-routing-constraint",
+      "target": "sys-routing-check",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-model-routing-constraint",
+      "target": "sys-intake-normalizer",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-issue3-verifier-trusts-text",
+      "target": "bug-issue4-tasks-too-large",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-safeArgLen-6000",
+      "target": "concept-stdin-piping",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "source": "concept-first-found-alias-wins",
+      "target": "func-applyRoutingAlias",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-outputType-code-vs-report",
+      "target": "bug-issue4-tasks-too-large",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "concept-post-execution-metadata",
+      "target": "evidence-zero-files",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "source": "bug-stdio-ignore-blocked-stdin",
+      "target": "concept-stdin-piping",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "hyper-verification-gap",
+      "label": "Systemic Verification Gap",
+      "nodes": [
+        "bug-issue3-verifier-trusts-text",
+        "bug-issue4-tasks-too-large",
+        "bug-issue5-no-artifact-verification"
+      ],
+      "relation": "conceptually_related_to",
+      "description": "Three interconnected bugs form a systemic gap: verifier trusts text output (Issue 3), executors produce reports not code due to oversize tasks (Issue 4), and no automated post-execution artifact check exists (Issue 5). Together these allow the system to PASS verification with 0 files created.",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "hyper-model-routing-fragility",
+      "label": "Model Routing Fragility",
+      "nodes": [
+        "bug-issue1-routing-fights-planner",
+        "bug-issue2-intake-overrides-model",
+        "bug-issue7-pt-regex-false-match"
+      ],
+      "relation": "conceptually_related_to",
+      "description": "Three bugs in the model routing subsystem: routing check uses agent-name not phase (Issue 1), intake normalizer applies first-found alias and never overrides with more specific role-model pairings (Issue 2), and the GPT-5.5 regex has false-match risk with 'PT 5.5' text (Issue 7). The routing layer is fragile to both natural planner behavior and user intent.",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "hyper-enametoolong-fix-chain",
+      "label": "ENAMETOOLONG Fix Chain",
+      "nodes": [
+        "bug-enametoolong-stdin-regression",
+        "bug-stdio-ignore-blocked-stdin",
+        "fix-optionA-prompt-file",
+        "fix-optionB-placeholder-stdin",
+        "fix-optionC-tempfile-stdin",
+        "fix-applied-pipeStdin"
+      ],
+      "relation": "conceptually_related_to",
+      "description": "The ENAMETOOLONG regression was caused by stdio:['ignore','pipe','pipe'] blocking stdin delivery for large prompts. Three fix options were evaluated (--prompt-file, placeholder+stdin, tempfile+stdin). The applied fix uses pipeStdin + stdio:['pipe','pipe','pipe'] to write/end child.stdin with the full task. Validated with 16831-char reviewer prompt via fake Pi CLI.",
+      "source_file": "HANDOFF_VERIFIER_FIX.md"
+    },
+    {
+      "id": "hyper-orchestration-failure-cascade",
+      "label": "Orchestration Failure Cascade",
+      "nodes": [
+        "bug-issue1-routing-fights-planner",
+        "bug-issue4-tasks-too-large",
+        "bug-issue3-verifier-trusts-text",
+        "bug-issue5-no-artifact-verification",
+        "evidence-zero-files",
+        "concept-planner-workaround-agent-coder"
+      ],
+      "relation": "conceptually_related_to",
+      "description": "The orchestration failure cascade: Issue 1 forces planner to burn 2 attempts working around routing check (11 subagent spawns wasted). Issue 4 causes oversize tasks that saturate executor context, producing reports instead of code. Issue 3 causes verifier to trust those text reports. Issue 5 has no file-level check. Result: 18 subagents, 3 attempts, 1 hour, 0 files — and a PASS verdict.",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "hyper-subagent-lifecycle",
+      "label": "Subagent Process Lifecycle Events",
+      "nodes": [
+        "event-agent_end",
+        "event-message_end",
+        "concept-agentEnded-flag",
+        "fix-issue6-agentEnded",
+        "bug-issue6-post-agent-end-error",
+        "func-spawnSubagent"
+      ],
+      "relation": "conceptually_related_to",
+      "description": "Subagent process lifecycle: agent_end signals task completion, but message_end with stopReason=error can arrive after agent_end during internal shutdown. The agentEnded flag fix ignores post-agent_end message_end errors, preventing false fatal crashes. Implemented in spawnSubagent() in substrate.ts.",
+      "source_file": "HANDOFF.md"
+    },
+    {
+      "id": "hyper-intake-contract-system",
+      "label": "Intake Contract Processing System",
+      "nodes": [
+        "sys-intake-normalizer",
+        "func-inferModelRoutingFromTask",
+        "func-applyRoutingAlias",
+        "func-modelAliasFromText",
+        "concept-intake-contract-governing",
+        "concept-first-found-alias-wins",
+        "concept-model-routing-constraint"
+      ],
+      "relation": "conceptually_related_to",
+      "description": "The intake contract normalizer processes user task text through a pipeline: inferModelRoutingFromTask scans for model mentions, modelAliasFromText matches via regex, applyRoutingAlias maps to roles. The first-found alias wins with no role-specific override, and the resulting contract becomes the governing specification — even when it contradicts user intent. All components reside in src/index.ts.",
+      "source_file": "HANDOFF.md"
+    }
+  ]
+}

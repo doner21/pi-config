@@ -1,0 +1,9 @@
+[project]
+name = "orchestration-mock"
+version = "0.1.0"
+description = "Deterministic mock project for testing Pi orchestration."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

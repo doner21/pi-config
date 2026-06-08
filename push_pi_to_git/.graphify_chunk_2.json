@@ -1,0 +1,1382 @@
+{
+  "nodes": [
+    {
+      "id": "doc-dashboard-postmortem",
+      "label": "DASHBOARD_POSTMORTEM.md — Orchestration Dashboard Post-Mortem",
+      "file_type": "document",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "doc-dashboard-rebuild-brief",
+      "label": "DASHBOARD_REBUILD_BRIEF.md — Dashboard Rebuild Agent Brief",
+      "file_type": "document",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "comp-dashboard-widget",
+      "label": "Orchestration Status Dashboard Widget",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "comp-nenflow-orchestration-panel-ts",
+      "label": "nenflow-orchestration-panel.ts — Panel Extension",
+      "file_type": "code",
+      "source_file": "~/.pi/agent/extensions/nenflow-orchestration-panel.ts"
+    },
+    {
+      "id": "comp-pi-orchestrator-index-ts",
+      "label": "pi-orchestrator-extension/src/index.ts — Orchestrator Extension",
+      "file_type": "code",
+      "source_file": "pi-orchestrator-extension/src/index.ts"
+    },
+    {
+      "id": "comp-pi-orchestrator-substrate-ts",
+      "label": "pi-orchestrator-extension/src/substrate.ts — Subagent Substrate",
+      "file_type": "code",
+      "source_file": "pi-orchestrator-extension/src/substrate.ts"
+    },
+    {
+      "id": "comp-orchestration-state-json",
+      "label": "ORCHESTRATION_STATE.json — Run State File",
+      "file_type": "code",
+      "source_file": "ORCHESTRATION_STATE.json"
+    },
+    {
+      "id": "comp-run-dir-orchpanel",
+      "label": "RUN_20260603-ORCHPANEL — Stale Orchestration Run Directory",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "api-setwidget",
+      "label": "ctx.ui.setWidget(name, lines) — Widget API",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "api-custom-overlay",
+      "label": "ctx.ui.custom() with overlay:true — Overlay API (Modal)",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "api-setstatus",
+      "label": "ctx.ui.setStatus(name, text) — Status Line API",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "concept-widget-lifecycle",
+      "label": "Widget Lifecycle — Show→Update→Clear Contract",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "concept-widget-placement",
+      "label": "Widget Placement — aboveEditor vs belowEditor",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-overlay-blocking",
+      "label": "Overlay Blocking — Modal UI that blocks text input",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-jiti-cache",
+      "label": "Jiti Module Cache — Stale compiled .cjs/.mjs in %TEMP%\\jiti",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-session-start-handler",
+      "label": "session_start Event Handler — Auto-fires on Pi launch",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-session-shutdown-handler",
+      "label": "session_shutdown Event Handler — Cleanup on Pi close",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-try-catch-finally-pattern",
+      "label": "try/catch/finally Cleanup Pattern — Guaranteed widget cleanup",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "concept-settimeout-cleanup",
+      "label": "setTimeout-based Cleanup — Unreliable timer-based widget removal",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "func-findActiveRunDir",
+      "label": "findActiveRunDir() — Scans run dirs for active orchestrations",
+      "file_type": "code",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "func-buildDashboardLines",
+      "label": "buildDashboardLines(state, footer?) — Renders widget lines",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "func-createOrchestrateDashboard",
+      "label": "createOrchestrateDashboard(task) — Initializes dashboard state",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "func-updateDashboardFromProgress",
+      "label": "updateDashboardFromProgress(state, message) — Parses progress",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "func-dashboardStatusLine",
+      "label": "dashboardStatusLine(state) — Single status line renderer",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "func-inferOrchestrationControlsFromTask",
+      "label": "inferOrchestrationControlsFromTask() — Natural language parsing",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "func-normalizeParams",
+      "label": "normalizeParams() — Produces NormalizedParams from raw input",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "func-buildRoutingRequirements",
+      "label": "buildRoutingRequirements() — Model assignments per LLM role",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "datatype-dashboard-state",
+      "label": "DashboardState — Live state tracking for dashboard rendering",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "datatype-normalized-params",
+      "label": "NormalizedParams — Parsed orchestration control parameters",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "bug-hb1-overlay-blocks-input",
+      "label": "HB-1: ctx.ui.custom() overlay blocks text input",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-hb2-no-cleanup-session-start",
+      "label": "HB-2: No cleanup on session_start — Widget persists between sessions",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-hb3-findActiveRunDir-missing-state",
+      "label": "HB-3: findActiveRunDir() treats missing state as active",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-di1-widget-never-cleared",
+      "label": "DI-1: Widget set but never explicitly cleared",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-di2-settimeout-unreliable",
+      "label": "DI-2: setTimeout-based cleanup is unreliable",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-di3-placement-above-editor",
+      "label": "DI-3: Widget placement defaults to aboveEditor, pushes editor off-screen",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-di4-jiti-cache-hot-reload",
+      "label": "DI-4: Jiti module cache prevents hot-reload of extensions",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-oi1-verifier-trusts-text",
+      "label": "OI-1: Verifier trusts executor text output, not file artifacts",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-oi2-executor-tasks-too-large",
+      "label": "OI-2: Executor tasks >200 words cause narrative reports instead of code",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-oi3-routing-check-agent-name",
+      "label": "OI-3: Routing check counts spawns by agent name, not model/provider",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "bug-oi4-intake-normalizer-overrides",
+      "label": "OI-4: Intake normalizer overrides user model preferences",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "fix-use-setwidget-not-overlay",
+      "label": "Fix: Use setWidget, not ctx.ui.custom() overlay, for dashboard rendering",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "fix-finally-cleanup-guarantee",
+      "label": "Fix: finally block guarantees widget cleanup on all exit paths",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "fix-inline-dashboard-architecture",
+      "label": "Fix: Inline dashboard helpers in command handler, no separate extension",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "fix-clear-jiti-cache-workflow",
+      "label": "Fix: Delete %TEMP%\\jiti and %TEMP%\\node-jiti before testing changes",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "fix-artifact-check-verifier",
+      "label": "Fix: Verifier must check file artifacts (git diff, file existence), not just text",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "fix-phase-based-routing-check",
+      "label": "Fix: Phase-based routing check — count model/provider per executor phase",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "fix-nearest-role-model-pairing",
+      "label": "Fix: Nearest role-model pairing in intake normalizer",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "fix-active-run-state-contract",
+      "label": "Fix: Only treat run as active when both header + state exist AND state.completed is false",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "fix-no-auto-show-session-start",
+      "label": "Fix: Never auto-show widget on session_start; require explicit user action",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "fix-agent-ended-guard",
+      "label": "Fix: agentEnded guard in substrate.ts — ignore post-termination error events",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "fix-disabled-panel-extension",
+      "label": "Fix: Panel extension disabled — renamed to .ts.disabled",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "pattern-widget-lifecycle-contract",
+      "label": "Widget Lifecycle Contract — setWidget must be paired with undefined cleanup",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "pattern-command-handler-scoping",
+      "label": "Command Handler Scoping — Dashboard only active during /orchestrate runs",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "pattern-no-timer-cleanup",
+      "label": "No Timer Cleanup Pattern — Use synchronous finally, never setTimeout",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "pattern-below-editor-placement",
+      "label": "belowEditor Widget Placement — Prefer for status widgets on small terminals",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-orchestration-paradigm",
+      "label": "Orchestration Paradigm — plan-execute-verify or multi-verify-vote",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "concept-subagent-progress-events",
+      "label": "Subagent Progress Events — Live status from spawnSubagent",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "concept-context-tracking",
+      "label": "Context Usage Tracking — Monitor LLM context window consumption",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "concept-model-routing",
+      "label": "Model Routing — Provider/model assignment per LLM role",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "concept-natural-language-controls",
+      "label": "Natural Language Controls — Parse orchestration params from task text",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "concept-intake-normalizer",
+      "label": "Intake Normalizer — Parses and normalizes user orchestration input",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-verifier-gap",
+      "label": "Verifier Gap — Executor text output not verified against file artifacts",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "file-orchestrator-index-ts",
+      "label": "pi-orchestrator-extension/src/index.ts",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "file-substrate-ts",
+      "label": "pi-orchestrator-extension/src/substrate.ts",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "file-nenflow-panel-ts-disabled",
+      "label": "nenflow-orchestration-panel.ts.disabled",
+      "file_type": "code",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "file-plan-execute-verify-ts",
+      "label": "pi-orchestrator-extension/src/shapes/plan-execute-verify.ts",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "file-multi-verify-vote-ts",
+      "label": "pi-orchestrator-extension/src/shapes/multi-verify-vote.ts",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "file-test-natural-language-controls",
+      "label": "pi-orchestrator-extension/tests/test-natural-language-controls.cjs",
+      "file_type": "code",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "file-orchestration-state-json",
+      "label": "RUN_*/ORCHESTRATION_STATE.json",
+      "file_type": "code",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-compounding-failure-stack",
+      "label": "Compounding Failure: Panel overlay + missing completed field + jiti cache",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-stale-run-directories",
+      "label": "50+ Stale Run Directories — Old runs without ORCHESTRATION_STATE.json",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-executor-subagent",
+      "label": "Executor Subagent — Agent that implements orchestration tasks",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "concept-spawnSubagent",
+      "label": "spawnSubagent — Pi API for creating subagent processes",
+      "file_type": "rationale",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    }
+  ],
+  "edges": [
+    {
+      "source": "doc-dashboard-postmortem",
+      "target": "doc-dashboard-rebuild-brief",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "bug-hb1-overlay-blocks-input",
+      "target": "api-custom-overlay",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-hb1-overlay-blocks-input",
+      "target": "comp-nenflow-orchestration-panel-ts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-hb2-no-cleanup-session-start",
+      "target": "concept-session-start-handler",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-hb2-no-cleanup-session-start",
+      "target": "concept-session-shutdown-handler",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-hb3-findActiveRunDir-missing-state",
+      "target": "func-findActiveRunDir",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-hb3-findActiveRunDir-missing-state",
+      "target": "comp-orchestration-state-json",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-di1-widget-never-cleared",
+      "target": "api-setwidget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-di1-widget-never-cleared",
+      "target": "comp-pi-orchestrator-index-ts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-di2-settimeout-unreliable",
+      "target": "concept-settimeout-cleanup",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-di3-placement-above-editor",
+      "target": "concept-widget-placement",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-di4-jiti-cache-hot-reload",
+      "target": "concept-jiti-cache",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-oi1-verifier-trusts-text",
+      "target": "concept-verifier-gap",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-oi1-verifier-trusts-text",
+      "target": "fix-artifact-check-verifier",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-oi2-executor-tasks-too-large",
+      "target": "concept-executor-subagent",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-oi3-routing-check-agent-name",
+      "target": "fix-phase-based-routing-check",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-oi3-routing-check-agent-name",
+      "target": "concept-model-routing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-oi4-intake-normalizer-overrides",
+      "target": "concept-intake-normalizer",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "bug-oi4-intake-normalizer-overrides",
+      "target": "fix-nearest-role-model-pairing",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-use-setwidget-not-overlay",
+      "target": "api-setwidget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-use-setwidget-not-overlay",
+      "target": "bug-hb1-overlay-blocks-input",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-finally-cleanup-guarantee",
+      "target": "bug-di1-widget-never-cleared",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-finally-cleanup-guarantee",
+      "target": "bug-di2-settimeout-unreliable",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-finally-cleanup-guarantee",
+      "target": "concept-try-catch-finally-pattern",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-inline-dashboard-architecture",
+      "target": "bug-hb2-no-cleanup-session-start",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-inline-dashboard-architecture",
+      "target": "comp-nenflow-orchestration-panel-ts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-clear-jiti-cache-workflow",
+      "target": "bug-di4-jiti-cache-hot-reload",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-clear-jiti-cache-workflow",
+      "target": "concept-jiti-cache",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-active-run-state-contract",
+      "target": "bug-hb3-findActiveRunDir-missing-state",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-no-auto-show-session-start",
+      "target": "bug-hb2-no-cleanup-session-start",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-no-auto-show-session-start",
+      "target": "concept-session-start-handler",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-agent-ended-guard",
+      "target": "comp-pi-orchestrator-substrate-ts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-disabled-panel-extension",
+      "target": "comp-nenflow-orchestration-panel-ts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "api-setwidget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "concept-widget-lifecycle",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-widget-lifecycle",
+      "target": "pattern-widget-lifecycle-contract",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-try-catch-finally-pattern",
+      "target": "pattern-widget-lifecycle-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "api-setwidget",
+      "target": "api-setstatus",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "api-setwidget",
+      "target": "concept-widget-placement",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "api-custom-overlay",
+      "target": "api-setwidget",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-compounding-failure-stack",
+      "target": "bug-hb1-overlay-blocks-input",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-compounding-failure-stack",
+      "target": "bug-hb3-findActiveRunDir-missing-state",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-compounding-failure-stack",
+      "target": "bug-di4-jiti-cache-hot-reload",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-stale-run-directories",
+      "target": "bug-hb3-findActiveRunDir-missing-state",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-stale-run-directories",
+      "target": "comp-run-dir-orchpanel",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "func-createOrchestrateDashboard",
+      "target": "comp-dashboard-widget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-buildDashboardLines",
+      "target": "comp-dashboard-widget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-updateDashboardFromProgress",
+      "target": "comp-dashboard-widget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-dashboardStatusLine",
+      "target": "comp-dashboard-widget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "datatype-dashboard-state",
+      "target": "comp-dashboard-widget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-buildDashboardLines",
+      "target": "datatype-dashboard-state",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-updateDashboardFromProgress",
+      "target": "datatype-dashboard-state",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-createOrchestrateDashboard",
+      "target": "datatype-dashboard-state",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-dashboardStatusLine",
+      "target": "datatype-dashboard-state",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-buildDashboardLines",
+      "target": "api-setwidget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-dashboardStatusLine",
+      "target": "api-setstatus",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-updateDashboardFromProgress",
+      "target": "concept-subagent-progress-events",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-orchestration-paradigm",
+      "target": "file-plan-execute-verify-ts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-orchestration-paradigm",
+      "target": "file-multi-verify-vote-ts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-subagent-progress-events",
+      "target": "concept-spawnSubagent",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "concept-model-routing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "concept-context-tracking",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "concept-subagent-progress-events",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "datatype-normalized-params",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "concept-orchestration-paradigm",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "comp-pi-orchestrator-index-ts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "pattern-command-handler-scoping",
+      "target": "comp-pi-orchestrator-index-ts",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "pattern-widget-lifecycle-contract",
+      "target": "api-setwidget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "pattern-widget-lifecycle-contract",
+      "target": "concept-widget-lifecycle",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "pattern-no-timer-cleanup",
+      "target": "concept-settimeout-cleanup",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "pattern-below-editor-placement",
+      "target": "bug-di3-placement-above-editor",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "func-normalizeParams",
+      "target": "datatype-normalized-params",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-normalizeParams",
+      "target": "concept-intake-normalizer",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-inferOrchestrationControlsFromTask",
+      "target": "concept-natural-language-controls",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-buildRoutingRequirements",
+      "target": "concept-model-routing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-buildRoutingRequirements",
+      "target": "datatype-normalized-params",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "file-orchestrator-index-ts",
+      "target": "comp-pi-orchestrator-index-ts",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "file-substrate-ts",
+      "target": "comp-pi-orchestrator-substrate-ts",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "file-nenflow-panel-ts-disabled",
+      "target": "comp-nenflow-orchestration-panel-ts",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "file-test-natural-language-controls",
+      "target": "concept-natural-language-controls",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "file-test-natural-language-controls",
+      "target": "func-inferOrchestrationControlsFromTask",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "bug-oi1-verifier-trusts-text",
+      "target": "concept-executor-subagent",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-artifact-check-verifier",
+      "target": "concept-verifier-gap",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-phase-based-routing-check",
+      "target": "bug-oi3-routing-check-agent-name",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-nearest-role-model-pairing",
+      "target": "bug-oi4-intake-normalizer-overrides",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-active-run-state-contract",
+      "target": "func-findActiveRunDir",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-active-run-state-contract",
+      "target": "comp-orchestration-state-json",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-inline-dashboard-architecture",
+      "target": "pattern-command-handler-scoping",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-inline-dashboard-architecture",
+      "target": "fix-no-auto-show-session-start",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "fix-agent-ended-guard",
+      "target": "fix-disabled-panel-extension",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-verifier-gap",
+      "target": "concept-executor-subagent",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-intake-normalizer",
+      "target": "func-normalizeParams",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-intake-normalizer",
+      "target": "concept-natural-language-controls",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "concept-orchestration-paradigm",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "comp-dashboard-widget",
+      "target": "concept-subagent-progress-events",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-executor-subagent",
+      "target": "concept-spawnSubagent",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-session-start-handler",
+      "target": "comp-dashboard-widget",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-context-tracking",
+      "target": "concept-executor-subagent",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-dashboardStatusLine",
+      "target": "api-setstatus",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "pattern-below-editor-placement",
+      "target": "concept-widget-placement",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "file-orchestration-state-json",
+      "target": "comp-orchestration-state-json",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-overlay-blocking",
+      "target": "api-custom-overlay",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-jiti-cache",
+      "target": "fix-clear-jiti-cache-workflow",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "concept-jiti-cache",
+      "target": "bug-di4-jiti-cache-hot-reload",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "concept-compounding-failure-stack",
+      "target": "concept-stale-run-directories",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-disabled-panel-extension",
+      "target": "bug-hb1-overlay-blocks-input",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "fix-use-setwidget-not-overlay",
+      "target": "concept-overlay-blocking",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "pattern-no-timer-cleanup",
+      "target": "concept-try-catch-finally-pattern",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "source": "file-plan-execute-verify-ts",
+      "target": "concept-orchestration-paradigm",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "file-multi-verify-vote-ts",
+      "target": "concept-orchestration-paradigm",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "source": "func-inferOrchestrationControlsFromTask",
+      "target": "datatype-normalized-params",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "hyperedges-dashboard-hb-triad",
+      "label": "Hard Blocker Triad — Three problems that together made Pi unusable",
+      "members": ["bug-hb1-overlay-blocks-input", "bug-hb2-no-cleanup-session-start", "bug-hb3-findActiveRunDir-missing-state"],
+      "relation": "conceptually_related_to",
+      "description": "Three independent hard blockers that compounded: overlay blocking input, no cleanup on session_start, and findActiveRunDir treating missing state as active. Together they created an auto-showing modal overlay on every Pi launch.",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "hyperedges-design-issues-quad",
+      "label": "Design Issue Quad — Four reliability problems in widget implementation",
+      "members": ["bug-di1-widget-never-cleared", "bug-di2-settimeout-unreliable", "bug-di3-placement-above-editor", "bug-di4-jiti-cache-hot-reload"],
+      "relation": "conceptually_related_to",
+      "description": "Four design issues that would cause dashboard unreliability: no widget clearing, unreliable setTimeout cleanup, poor placement defaults, and jiti cache preventing hot-reload of fixes.",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "hyperedges-orchestrator-reliability-quad",
+      "label": "Orchestrator Reliability Quad — Four systemic orchestration bugs",
+      "members": ["bug-oi1-verifier-trusts-text", "bug-oi2-executor-tasks-too-large", "bug-oi3-routing-check-agent-name", "bug-oi4-intake-normalizer-overrides"],
+      "relation": "conceptually_related_to",
+      "description": "Four orchestration reliability issues: verifier trusts text output not artifacts, executor tasks too large producing reports not code, routing check uses agent name not model/provider, and intake normalizer overrides user model preferences.",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "hyperedges-dashboard-helper-functions",
+      "label": "Dashboard Helper Functions — Inline functions for widget lifecycle",
+      "members": ["func-createOrchestrateDashboard", "func-updateDashboardFromProgress", "func-buildDashboardLines", "func-dashboardStatusLine", "datatype-dashboard-state"],
+      "relation": "conceptually_related_to",
+      "description": "Set of inline helper functions that together manage the dashboard widget lifecycle: state creation, progress parsing, line rendering, and status display, all working on DashboardState.",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    },
+    {
+      "id": "hyperedges-compounding-failure-stack",
+      "label": "Compounding Failure Stack — Three independent problems stacked",
+      "members": ["bug-hb1-overlay-blocks-input", "concept-stale-run-directories", "concept-jiti-cache", "concept-compounding-failure-stack"],
+      "relation": "conceptually_related_to",
+      "description": "The compounding failure: panel overlay blocked input (bug), stale run directory with missing completed field kept overlay active, and jiti cache served broken code even after source fixes. Three independent problems in superposition.",
+      "source_file": "DASHBOARD_POSTMORTEM.md"
+    },
+    {
+      "id": "hyperedges-critical-fixes-triad",
+      "label": "Critical Fixes Triad — Three essential fixes for dashboard viability",
+      "members": ["fix-use-setwidget-not-overlay", "fix-finally-cleanup-guarantee", "fix-inline-dashboard-architecture"],
+      "relation": "conceptually_related_to",
+      "description": "Three critical fixes that together make the dashboard viable: use setWidget instead of overlay, guarantee cleanup via finally blocks, and keep dashboard inline in the command handler instead of a separate extension.",
+      "source_file": "DASHBOARD_REBUILD_BRIEF.md"
+    }
+  ]
+}

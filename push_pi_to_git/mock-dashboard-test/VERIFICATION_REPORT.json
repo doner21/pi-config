@@ -1,0 +1,80 @@
+{
+  "status": "pass",
+  "report_type": "VERIFIER_INDEPENDENT_REPORT",
+  "timestamp": "2026-06-04T11:58:00Z",
+  "methodology": "Verifier independently ran python scripts/validate.py AND python -m unittest discover -s tests, then independently inspected source code and executed additional inline validation to confirm invariants without trusting executor self-report.",
+  "test_results_summary": {
+    "validate_py": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "checks": [
+        "normal lifecycle: show→update→clear",
+        "error-path guarantees cleanup",
+        "abort-path guarantees cleanup",
+        "set_widget rejects overlay",
+        "session_start does not auto-show",
+        "implicit abort on context exit",
+        "all invariants pass (normal lifecycle)",
+        "all invariants pass (error path)",
+        "all invariants pass (abort path)"
+      ]
+    },
+    "unittest": {
+      "total": 21,
+      "passed": 21,
+      "failed": 0,
+      "suites": [
+        "NormalLifecycleTests (3 tests)",
+        "ErrorPathCleanupTests (2 tests)",
+        "AbortPathCleanupTests (3 tests)",
+        "OverlayDetectionTests (3 tests)",
+        "NoAutoShowGuardTests (3 tests)",
+        "InvalidTransitionTests (4 tests)",
+        "CleanupGuaranteedStatesTests (3 tests)"
+      ]
+    }
+  },
+  "lifecycle_invariant_checks": {
+    "invariant_1_no_overlay": {
+      "description": "setWidget never uses overlay — any overlay=True is rejected with ValueError",
+      "status": "PASS",
+      "evidence": [
+        "set_widget(overlay=True) raises ValueError with message 'set_widget: overlay mode is forbidden per dashboard invariant'",
+        "Python source line 86: if overlay: raise ValueError(...)",
+        "validate.py check 'set_widget rejects overlay' passed",
+        "Unit test test_set_widget_overlay_rejected passed"
+      ],
+      "verifier_independent_confirmation": "Verifier ran inline Python: called set_widget(overlay=True), observed ValueError raised. Confirmed _overlay_used flag is tracked for invariant validation."
+    },
+    "invariant_2_guaranteed_cleanup": {
+      "description": "Every show is paired with guaranteed cleanup via finally-equivalent state in show_command context manager",
+      "status": "PASS",
+      "evidence": [
+        "show_command() is a @contextmanager with try/yield/finally — the finally block guarantees cleanup runs on every exit path",
+        "Python source lines 108-126: try: yield self; finally: self._cleanup_count += 1; ...",
+        "All four exit paths verified by verifier: normal clear (cleanup_count matches), error (cleanup runs), abort (cleanup runs), implicit context exit (cleanup runs, auto-transitions to ABORTED)",
+        "CLEANUP_GUARANTEED_STATES = {CLEARED, ERROR, ABORTED} — all exit states from SHOWING land here",
+        "validate.py checks passed: error-path, abort-path, and implicit-abort all confirm cleanup_count==1",
+        "Unit tests: 6 cleanup-related tests all passed"
+      ],
+      "verifier_independent_confirmation": "Verifier ran 4 distinct lifecycle paths (normal, error, abort, implicit) and confirmed _cleanup_count increments exactly once per show_command() call. Confirmed finally block exists in source via inspect.getsource()."
+    },
+    "invariant_3_no_auto_show": {
+      "description": "Auto-show is never triggered without explicit command — session_start must not call show_command()",
+      "status": "PASS",
+      "evidence": [
+        "session_start() only checks state and logs — never calls show_command() or any variant",
+        "Python source lines 97-103: only checks if already SHOWING (raises) or logs no-op",
+        "Widget remains IDLE after session_start() — state verified before and after",
+        "If session_start is called while SHOWING, it raises RuntimeError mentioning 'auto-show guard'",
+        "validate.py check 'session_start does not auto-show' passed",
+        "Unit tests: 3 no-auto-show tests all passed"
+      ],
+      "verifier_independent_confirmation": "Verifier confirmed state(IDLE) unchanged after session_start(). Confirmed session_start source contains zero calls to show_command or any show-related method."
+    }
+  },
+  "all_invariants_satisfied": true,
+  "failures": [],
+  "verifier_notes": "All three dashboard invariants from DASHBOARD_REBUILD_BRIEF.md / DASHBOARD_POSTMORTEM.md are independently confirmed satisfied: (1) overlay rejected at API boundary, (2) finally-block cleanup on all four exit paths, (3) no implicit show from session_start. All 9 validate.py checks and all 21 unit tests pass. Zero failures. The implementation is deterministic and uses only stdlib (dataclasses, enum, contextlib, unittest)."
+}

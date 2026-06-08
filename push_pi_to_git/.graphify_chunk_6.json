@@ -1,0 +1,637 @@
+{
+  "nodes": [
+    {
+      "id": "nenflow-test-mock-project",
+      "label": "NenFlow Test Mock Project",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project"
+    },
+    {
+      "id": "nenflow-v3-pev-orchestration",
+      "label": "NenFlow v3 PEV Orchestration Framework",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/README.md"
+    },
+    {
+      "id": "multi-model-routing",
+      "label": "Multi-Model Subagent Routing",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/README.md"
+    },
+    {
+      "id": "deepseek-v4-flash-executor",
+      "label": "deepseek-v4-flash Executor Model",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "run-test-deepseek",
+      "label": "RUN_TEST_DEEPSEEK NenFlow v3 Run",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "calculator-module",
+      "label": "Calculator Module (calculator.js)",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "add-function",
+      "label": "add() — Basic Addition",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "subtract-function",
+      "label": "subtract() — Basic Subtraction",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "multiply-function",
+      "label": "multiply() — Basic Multiplication",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "divide-function",
+      "label": "divide() — Basic Division",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "advanced-module",
+      "label": "Advanced Module (advanced.js)",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "id": "power-function",
+      "label": "power() — Exponentiation",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "id": "squareRoot-function",
+      "label": "squareRoot() — Square Root",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "id": "factorial-function",
+      "label": "factorial() — Factorial Computation",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "id": "calculator-test-suite",
+      "label": "Calculator Test Suite (calculator.test.js)",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/test/calculator.test.js"
+    },
+    {
+      "id": "advanced-test-suite",
+      "label": "Advanced Test Suite (advanced.test.js)",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "error-handling-pattern",
+      "label": "Semantic Error Handling Pattern (throw with descriptive message)",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "division-by-zero-guard",
+      "label": "Division-by-Zero Guard (b===0 check, descriptive error)",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "negative-sqrt-guard",
+      "label": "Negative Square Root Guard (n<0 check, descriptive error)",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "id": "factorial-input-validation",
+      "label": "Factorial Input Validation (non-negative integer check)",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "id": "factorial-composition-pattern",
+      "label": "Factorial via multiply() Composition Pattern",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "id": "edge-case-power-zero-zero",
+      "label": "Edge Case: 0^0 = 1",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "edge-case-power-zero-exp",
+      "label": "Edge Case: base^0 = 1",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "edge-case-sqrt-zero",
+      "label": "Edge Case: sqrt(0) = 0",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "edge-case-sqrt-irrational",
+      "label": "Edge Case: sqrt(2) — Irrational Result",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "edge-case-factorial-zero",
+      "label": "Edge Case: factorial(0) = 1",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "edge-case-factorial-one",
+      "label": "Edge Case: factorial(1) = 1",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "edge-case-large-factorial",
+      "label": "Edge Case: factorial(10) = 3628800",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "invariant-power-identity",
+      "label": "Arithmetic Invariant: Power 0 yields 1",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "invariant-factorial-base",
+      "label": "Arithmetic Invariant: 0! = 1, 1! = 1",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "id": "invariant-divide-by-zero",
+      "label": "Error Invariant: Division by zero always throws",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/test/calculator.test.js"
+    },
+    {
+      "id": "node-test-framework",
+      "label": "Node.js Built-in Test Framework (node:test)",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/test/calculator.test.js"
+    },
+    {
+      "id": "assert-strict-module",
+      "label": "Node.js assert/strict Assertion Module",
+      "file_type": "code",
+      "source_file": "nenflow-test-mock-project/test/calculator.test.js"
+    },
+    {
+      "id": "pev-executor-role-1",
+      "label": "Executer #1 (deepseek-v4-flash) — Calculator Module",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "id": "pev-executor-role-2",
+      "label": "Executer #2 (deepseek-v4-flash) — Advanced Module",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "id": "modular-arithmetic-architecture",
+      "label": "Modular Arithmetic Architecture (basic → advanced composition)",
+      "file_type": "rationale",
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    }
+  ],
+  "edges": [
+    {
+      "source": "calculator-module",
+      "target": "deepseek-v4-flash-executor",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "source": "advanced-module",
+      "target": "deepseek-v4-flash-executor",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "calculator-module",
+      "target": "run-test-deepseek",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "source": "advanced-module",
+      "target": "run-test-deepseek",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "run-test-deepseek",
+      "target": "nenflow-v3-pev-orchestration",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "nenflow-test-mock-project/README.md"
+    },
+    {
+      "source": "multi-model-routing",
+      "target": "nenflow-v3-pev-orchestration",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/README.md"
+    },
+    {
+      "source": "deepseek-v4-flash-executor",
+      "target": "multi-model-routing",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "nenflow-test-mock-project/README.md"
+    },
+    {
+      "source": "nenflow-test-mock-project",
+      "target": "nenflow-v3-pev-orchestration",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/README.md"
+    },
+    {
+      "source": "nenflow-test-mock-project",
+      "target": "multi-model-routing",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "nenflow-test-mock-project/README.md"
+    },
+    {
+      "source": "pev-executor-role-1",
+      "target": "calculator-module",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "source": "pev-executor-role-1",
+      "target": "deepseek-v4-flash-executor",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "source": "pev-executor-role-2",
+      "target": "advanced-module",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "pev-executor-role-2",
+      "target": "deepseek-v4-flash-executor",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "pev-executor-role-1",
+      "target": "pev-executor-role-2",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.6,
+      "source_file": "nenflow-test-mock-project/README.md"
+    },
+    {
+      "source": "advanced-module",
+      "target": "calculator-module",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "factorial-function",
+      "target": "multiply-function",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "factorial-function",
+      "target": "factorial-composition-pattern",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "factorial-composition-pattern",
+      "target": "modular-arithmetic-architecture",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "add-function",
+      "target": "calculator-module",
+      "relation": "conceptually_related_to",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.3,
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "source": "subtract-function",
+      "target": "calculator-module",
+      "relation": "conceptually_related_to",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.3,
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "source": "calculator-test-suite",
+      "target": "calculator-module",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/test/calculator.test.js"
+    },
+    {
+      "source": "advanced-test-suite",
+      "target": "advanced-module",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "division-by-zero-guard",
+      "target": "error-handling-pattern",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "source": "negative-sqrt-guard",
+      "target": "error-handling-pattern",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "factorial-input-validation",
+      "target": "error-handling-pattern",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "division-by-zero-guard",
+      "target": "divide-function",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/calculator.js"
+    },
+    {
+      "source": "negative-sqrt-guard",
+      "target": "squareRoot-function",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "factorial-input-validation",
+      "target": "factorial-function",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "invariant-divide-by-zero",
+      "target": "division-by-zero-guard",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "nenflow-test-mock-project/test/calculator.test.js"
+    },
+    {
+      "source": "invariant-power-identity",
+      "target": "power-function",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "invariant-factorial-base",
+      "target": "factorial-function",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "edge-case-power-zero-zero",
+      "target": "invariant-power-identity",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "edge-case-power-zero-exp",
+      "target": "invariant-power-identity",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "edge-case-factorial-zero",
+      "target": "invariant-factorial-base",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "edge-case-factorial-one",
+      "target": "invariant-factorial-base",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "edge-case-sqrt-zero",
+      "target": "squareRoot-function",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "edge-case-sqrt-irrational",
+      "target": "squareRoot-function",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "edge-case-large-factorial",
+      "target": "factorial-function",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "edge-case-large-factorial",
+      "target": "factorial-composition-pattern",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.6,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "node-test-framework",
+      "target": "calculator-test-suite",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/test/calculator.test.js"
+    },
+    {
+      "source": "node-test-framework",
+      "target": "advanced-test-suite",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/test/advanced.test.js"
+    },
+    {
+      "source": "assert-strict-module",
+      "target": "node-test-framework",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "nenflow-test-mock-project/test/calculator.test.js"
+    },
+    {
+      "source": "modular-arithmetic-architecture",
+      "target": "calculator-module",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "modular-arithmetic-architecture",
+      "target": "advanced-module",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "power-function",
+      "target": "add-function",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.6,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    },
+    {
+      "source": "factorial-function",
+      "target": "add-function",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.6,
+      "source_file": "nenflow-test-mock-project/src/advanced.js"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "he-error-handling-triad",
+      "nodes": [
+        "division-by-zero-guard",
+        "negative-sqrt-guard",
+        "factorial-input-validation"
+      ],
+      "label": "Semantic Error Guard Triad — all three functions validate inputs and throw descriptive errors for invalid values before computation",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "he-arithmetic-edge-case-triplet",
+      "nodes": [
+        "edge-case-power-zero-zero",
+        "edge-case-sqrt-zero",
+        "edge-case-factorial-zero"
+      ],
+      "label": "Arithmetic Zero Edge Case Triplet — each tests boundary behavior where zero input yields a defined non-error result (0^0=1, sqrt(0)=0, 0!=1)",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "id": "he-pev-executor-dual-assignment",
+      "nodes": [
+        "pev-executor-role-1",
+        "pev-executor-role-2",
+        "deepseek-v4-flash-executor"
+      ],
+      "label": "PEV Executor Dual Assignment — both Calculator and Advanced modules are assigned to Executor roles using the same deepseek-v4-flash model under RUN_TEST_DEEPSEEK",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "id": "he-modular-composition-chain",
+      "nodes": [
+        "calculator-module",
+        "advanced-module",
+        "factorial-composition-pattern",
+        "multiply-function"
+      ],
+      "label": "Modular Composition Chain — advanced module builds factorial on top of calculator's multiply, demonstrating layered arithmetic architecture",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0
+    }
+  ]
+}

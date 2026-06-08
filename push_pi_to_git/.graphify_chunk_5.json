@@ -1,0 +1,773 @@
+{
+  "nodes": [
+    {
+      "id": "mop-ledger-py",
+      "label": "src/orchestration_mock/ledger.py — Deterministic Orchestration Ledger",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-init-py",
+      "label": "src/orchestration_mock/__init__.py — Package init, re-exports ledger API",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/__init__.py"
+    },
+    {
+      "id": "mop-main-py",
+      "label": "src/orchestration_mock/__main__.py — CLI entry point, prints contract JSON summary",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/__main__.py"
+    },
+    {
+      "id": "mop-validate-py",
+      "label": "scripts/validate.py — Dependency-free validation script for verifiers",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/scripts/validate.py"
+    },
+    {
+      "id": "mop-test-ledger-py",
+      "label": "tests/test_ledger.py — unittest suite for ledger, contract, routing, CLI",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "id": "mop-readme-md",
+      "label": "README.md — Project purpose, structure, and validation instructions",
+      "file_type": "document",
+      "source_file": "mock-orchestration-project/README.md"
+    },
+    {
+      "id": "mop-pyproject-toml",
+      "label": "pyproject.toml — Minimal project metadata and pytest config",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/pyproject.toml"
+    },
+    {
+      "id": "mop-att6-verification",
+      "label": "ATT_6_VERIFICATION.md — Full verification report with 6 criteria (A-F)",
+      "file_type": "document",
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "id": "mop-latest-verification",
+      "label": "LATEST_VERIFICATION.md — Alias for ATT_6_VERIFICATION.md, confirms PASS",
+      "file_type": "document",
+      "source_file": "mock-orchestration-project/LATEST_VERIFICATION.md"
+    },
+    {
+      "id": "mop-concept-orchestration-contract",
+      "label": "Orchestration Contract — 6 tasks, 2/2/2 role distribution, dependency chain",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-concept-model-routing",
+      "label": "Model Routing Pattern — planning→GPT 5.5 codecs, execution/verifier→deep-seek V4 flash",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-concept-subagent-limit",
+      "label": "Subagent Limit Constraint — MAX_SUBAGENTS=8, actual=6, within_limit=true",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-concept-dependency-chain",
+      "label": "Dependency Chain Validation — forward-only acyclic chain, no dangling refs",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-dataclass-taskrecord",
+      "label": "TaskRecord dataclass — frozen, fields: task_id, role, model, depends_on",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-constant-tasks",
+      "label": "TASKS tuple — 6 immutable TaskRecord instances defining the contract",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-constant-max-subagents",
+      "label": "MAX_SUBAGENTS constant — hard limit of 8 subagents",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-constant-planning-model",
+      "label": "PLANNING_MODEL constant — 'GPT 5.5 codecs' for planning tasks",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-constant-exec-verify-model",
+      "label": "EXECUTION_VERIFICATION_MODEL constant — 'deep-seek V4 flash' for exec/verify",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-func-summarize-run",
+      "label": "summarize_run() — pure function, returns stable contract summary dict",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-func-validate-contract",
+      "label": "validate_contract() — returns list of contract violations, empty when valid",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-func-main",
+      "label": "main() CLI — prints deterministic JSON of summarize_run + errors",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/__main__.py"
+    },
+    {
+      "id": "mop-func-validate-script-main",
+      "label": "scripts/validate.py main() — extended validation with expected roles/IDs check",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/scripts/validate.py"
+    },
+    {
+      "id": "mop-class-ledger-contract-tests",
+      "label": "LedgerContractTests — unittest.TestCase with 6 test methods",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "id": "mop-test-summary-shape",
+      "label": "test_summary_matches_expected_orchestration_shape — validates summary dict shape",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "id": "mop-test-contract-valid",
+      "label": "test_contract_is_valid_for_default_tasks — asserts validate_contract returns empty",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "id": "mop-test-model-routing",
+      "label": "test_model_routing_matches_requested_roles — asserts correct model per role",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "id": "mop-test-dependencies",
+      "label": "test_dependencies_only_reference_known_prior_tasks — forward-only acyclic chain",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "id": "mop-test-validator-errors",
+      "label": "test_validator_reports_model_and_dependency_errors — error detection proof",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "id": "mop-test-cli-json",
+      "label": "test_cli_outputs_deterministic_valid_json_summary — CLI subprocess test",
+      "file_type": "code",
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "id": "mop-concept-verification-criteria",
+      "label": "Verification Criteria A-F — validate.py pass, tests pass, 6-task contract, model routing, dependency edges, subagent limit",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "id": "mop-concept-pass-verdict",
+      "label": "PASS Verdict — all 6 criteria independently verified via source inspection",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "id": "mop-concept-error-detection",
+      "label": "Error Detection Capability — validator catches wrong model and missing dependency",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-concept-role-distribution",
+      "label": "Role Distribution 2/2/2 — planning:2, execution:2, verifier:2",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-concept-task-linear-chain",
+      "label": "Linear Task Dependency Chain — task-1→task-2→task-3→task-4→task-5→task-6",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "mop-concept-verifier-independence",
+      "label": "Verifier Independence — all evidence from direct source inspection, not prior reports",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "id": "mop-concept-det-output",
+      "label": "Deterministic Output — pure functions, no network, stable JSON summaries",
+      "file_type": "rationale",
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    }
+  ],
+  "edges": [
+    {
+      "source": "mop-dataclass-taskrecord",
+      "target": "mop-constant-tasks",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-constant-tasks",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-constant-tasks",
+      "target": "mop-concept-task-linear-chain",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-constant-tasks",
+      "target": "mop-concept-role-distribution",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-constant-planning-model",
+      "target": "mop-concept-model-routing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-constant-exec-verify-model",
+      "target": "mop-concept-model-routing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-constant-max-subagents",
+      "target": "mop-concept-subagent-limit",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-func-summarize-run",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-func-summarize-run",
+      "target": "mop-concept-det-output",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-func-validate-contract",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-func-validate-contract",
+      "target": "mop-concept-error-detection",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-func-validate-contract",
+      "target": "mop-concept-dependency-chain",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-func-validate-contract",
+      "target": "mop-concept-model-routing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-func-main",
+      "target": "mop-ledger-py",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/__main__.py"
+    },
+    {
+      "source": "mop-func-main",
+      "target": "mop-concept-det-output",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/__main__.py"
+    },
+    {
+      "source": "mop-func-validate-script-main",
+      "target": "mop-concept-role-distribution",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/scripts/validate.py"
+    },
+    {
+      "source": "mop-func-validate-script-main",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/scripts/validate.py"
+    },
+    {
+      "source": "mop-func-validate-script-main",
+      "target": "mop-func-validate-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/scripts/validate.py"
+    },
+    {
+      "source": "mop-test-summary-shape",
+      "target": "mop-func-summarize-run",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-test-contract-valid",
+      "target": "mop-func-validate-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-test-model-routing",
+      "target": "mop-concept-model-routing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-test-dependencies",
+      "target": "mop-concept-dependency-chain",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-test-validator-errors",
+      "target": "mop-concept-error-detection",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-test-cli-json",
+      "target": "mop-func-main",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-class-ledger-contract-tests",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-att6-verification",
+      "target": "mop-concept-verification-criteria",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-att6-verification",
+      "target": "mop-concept-pass-verdict",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-att6-verification",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-att6-verification",
+      "target": "mop-concept-model-routing",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-att6-verification",
+      "target": "mop-concept-subagent-limit",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-att6-verification",
+      "target": "mop-concept-dependency-chain",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-att6-verification",
+      "target": "mop-concept-error-detection",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-att6-verification",
+      "target": "mop-concept-role-distribution",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-att6-verification",
+      "target": "mop-concept-verifier-independence",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-latest-verification",
+      "target": "mop-att6-verification",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/LATEST_VERIFICATION.md"
+    },
+    {
+      "source": "mop-latest-verification",
+      "target": "mop-concept-pass-verdict",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/LATEST_VERIFICATION.md"
+    },
+    {
+      "source": "mop-readme-md",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/README.md"
+    },
+    {
+      "source": "mop-readme-md",
+      "target": "mop-concept-model-routing",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/README.md"
+    },
+    {
+      "source": "mop-readme-md",
+      "target": "mop-func-validate-script-main",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/README.md"
+    },
+    {
+      "source": "mop-readme-md",
+      "target": "mop-class-ledger-contract-tests",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/README.md"
+    },
+    {
+      "source": "mop-init-py",
+      "target": "mop-ledger-py",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/__init__.py"
+    },
+    {
+      "source": "mop-concept-verification-criteria",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-concept-pass-verdict",
+      "target": "mop-concept-verification-criteria",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-concept-task-linear-chain",
+      "target": "mop-concept-dependency-chain",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-concept-role-distribution",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-concept-error-detection",
+      "target": "mop-func-validate-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-test-cli-json",
+      "target": "mop-concept-det-output",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-concept-verifier-independence",
+      "target": "mop-func-validate-script-main",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-concept-det-output",
+      "target": "mop-concept-verifier-independence",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-test-validator-errors",
+      "target": "mop-test-contract-valid",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-test-summary-shape",
+      "target": "mop-concept-role-distribution",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-test-summary-shape",
+      "target": "mop-concept-subagent-limit",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-test-dependencies",
+      "target": "mop-concept-task-linear-chain",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "source": "mop-constant-planning-model",
+      "target": "mop-constant-exec-verify-model",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "source": "mop-validate-py",
+      "target": "mop-func-validate-script-main",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/scripts/validate.py"
+    },
+    {
+      "source": "mop-validate-py",
+      "target": "mop-ledger-py",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/scripts/validate.py"
+    },
+    {
+      "source": "mop-concept-model-routing",
+      "target": "mop-concept-orchestration-contract",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-concept-error-detection",
+      "target": "mop-concept-verifier-independence",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "source": "mop-readme-md",
+      "target": "mop-concept-subagent-limit",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/README.md"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "hyperedge-orchestration-contract",
+      "label": "Orchestration Contract System",
+      "nodes": [
+        "mop-concept-orchestration-contract",
+        "mop-constant-tasks",
+        "mop-dataclass-taskrecord",
+        "mop-concept-role-distribution",
+        "mop-concept-task-linear-chain"
+      ],
+      "relation": "The TASKS tuple encodes the orchestration contract as 6 TaskRecord instances in a linear dependency chain with 2/2/2 role distribution",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "hyperedge-model-routing-validation",
+      "label": "Model Routing Validation Ecosystem",
+      "nodes": [
+        "mop-concept-model-routing",
+        "mop-constant-planning-model",
+        "mop-constant-exec-verify-model",
+        "mop-func-validate-contract",
+        "mop-test-model-routing"
+      ],
+      "relation": "Model routing is enforced by constants (PLANNING_MODEL for planning, EXECUTION_VERIFICATION_MODEL for exec/verify), validated by validate_contract, and tested by test_model_routing_matches_requested_roles",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    },
+    {
+      "id": "hyperedge-verification-evidence-chain",
+      "label": "Verification Evidence Chain",
+      "nodes": [
+        "mop-att6-verification",
+        "mop-concept-verification-criteria",
+        "mop-concept-pass-verdict",
+        "mop-concept-verifier-independence",
+        "mop-func-validate-script-main"
+      ],
+      "relation": "The ATT_6 verification report independently verifies 6 criteria using scripts/validate.py and direct source inspection, concluding with a PASS verdict while maintaining verifier independence from prior execution reports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/ATT_6_VERIFICATION.md"
+    },
+    {
+      "id": "hyperedge-test-coverage",
+      "label": "Test Coverage of Orchestration Contract",
+      "nodes": [
+        "mop-class-ledger-contract-tests",
+        "mop-test-summary-shape",
+        "mop-test-contract-valid",
+        "mop-test-model-routing",
+        "mop-test-dependencies",
+        "mop-test-validator-errors",
+        "mop-test-cli-json"
+      ],
+      "relation": "LedgerContractTests provides comprehensive coverage: shape validation, contract validity, model routing correctness, dependency chain integrity, error detection proof, and deterministic CLI output",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/tests/test_ledger.py"
+    },
+    {
+      "id": "hyperedge-constraint-enforcement",
+      "label": "Subagent Limit and Contract Constraint Enforcement",
+      "nodes": [
+        "mop-concept-subagent-limit",
+        "mop-constant-max-subagents",
+        "mop-func-validate-contract",
+        "mop-func-summarize-run",
+        "mop-func-validate-script-main"
+      ],
+      "relation": "The subagent limit (MAX_SUBAGENTS=8) is enforced through validate_contract warnings, reflected in summarize_run within_limit field, and double-checked by scripts/validate.py for the expected 6-task count",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "mock-orchestration-project/src/orchestration_mock/ledger.py"
+    }
+  ]
+}
