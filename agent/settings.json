@@ -6,6 +6,6 @@
   "lastChangelogVersion": "0.78.0",
   "packages": [
     "npm:@ollama/pi-web-search",
-    "..\\..\\pi-orchestrator-extension"
+    "../pi-orchestrator-extension"
   ]
 }
