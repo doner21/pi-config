@@ -374,7 +374,7 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.registerCommand("orchestrate", {
-    description: "Run deterministic planner/executor/verifier orchestration. Flags: --max-subagents N, --max-retries N, --concurrency N.",
+    description: "Run deterministic planner/executor/verifier orchestration. Flags: --max-subagents N, --max-retries N, --concurrency N, --planner-model, --executor-model, --verifier-model, --planner-fallback-model (comma-sep chain), etc.",
     handler: async (args, ctx) => {
       let commandParams: Record<string, unknown>;
       try {
