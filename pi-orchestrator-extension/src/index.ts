@@ -334,12 +334,12 @@ const orchestrateParamsSchema = Type.Object({
   paradigm: Type.Optional(Type.String({ description: "Explicitly select the orchestration paradigm/shape. Valid values: plan-execute-verify, multi-verify-vote, composable-pipeline, verify-only. When omitted, the paradigm is inferred from task keywords." })),
   hardGates: Type.Optional(Type.String({ description: 'Hard-gate mode: "strict" | "advisory" | "off". Default "advisory": text-shape heuristics are demoted to warnings, the verifier verdict gates, and only effect-based contradictions (zero observed mutations for implementation work) can force FAIL.' })),
   preflight: Type.Optional(Type.Boolean({ description: "Run a 1-token provider health ping for each routed provider/model before spawning any subagent (default true). Failures produce a structured machine-readable error and a partial report." })),
-  plannerFallbackModel: Type.Optional(Type.String({ description: "Fallback model for the planner when its primary route fails pre-flight." })),
-  plannerFallbackProvider: Type.Optional(Type.String({ description: "Fallback provider for the planner when its primary route fails pre-flight." })),
-  executorFallbackModel: Type.Optional(Type.String({ description: "Fallback model for executors when their primary route fails pre-flight." })),
-  executorFallbackProvider: Type.Optional(Type.String({ description: "Fallback provider for executors when their primary route fails pre-flight." })),
-  verifierFallbackModel: Type.Optional(Type.String({ description: "Fallback model for the verifier when its primary route fails pre-flight." })),
-  verifierFallbackProvider: Type.Optional(Type.String({ description: "Fallback provider for the verifier when its primary route fails pre-flight." })),
+  plannerFallbackModel: Type.Optional(Type.String({ description: "Fallback model(s) for the planner when its primary route fails pre-flight. Comma-separated for a chain (e.g. 'claude-opus-4-20250514,deepseek-v4-pro,deepseek-v4-flash')." })),
+  plannerFallbackProvider: Type.Optional(Type.String({ description: "Fallback provider(s) for the planner when its primary route fails pre-flight. Comma-separated, paired positionally with plannerFallbackModel." })),
+  executorFallbackModel: Type.Optional(Type.String({ description: "Fallback model(s) for executors when their primary route fails pre-flight. Comma-separated for a chain." })),
+  executorFallbackProvider: Type.Optional(Type.String({ description: "Fallback provider(s) for executors when their primary route fails pre-flight. Comma-separated, paired positionally with executorFallbackModel." })),
+  verifierFallbackModel: Type.Optional(Type.String({ description: "Fallback model(s) for the verifier when its primary route fails pre-flight. Comma-separated for a chain." })),
+  verifierFallbackProvider: Type.Optional(Type.String({ description: "Fallback provider(s) for the verifier when its primary route fails pre-flight. Comma-separated, paired positionally with verifierFallbackModel." })),
 });
 
 export default function (pi: ExtensionAPI) {
