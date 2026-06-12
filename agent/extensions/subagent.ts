@@ -240,7 +240,7 @@ function resolveModelSelection(agent: AgentDef, ctx: any, allowLocalModel?: bool
 			].join("\n"),
 		);
 	}
-	return { provider, model };
+	return { provider, model, thinkingLevel };
 }
 
 function saveAgent(agent: Omit<AgentDef, "sourceFile">): { filePath: string; agent: AgentDef } {
