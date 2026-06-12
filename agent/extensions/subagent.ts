@@ -21,11 +21,20 @@ interface JsonEventMessage {
 	role?: string;
 	content?: Array<{ type: string; text?: string }>;
 	errorMessage?: string;
+	stopReason?: string;
+	error?: { message?: string };
 }
 
 interface ResolvedModelSelection {
 	provider?: string;
 	model?: string;
+	thinkingLevel?: string;
+}
+
+interface SubagentOverride {
+	model?: string;
+	provider?: string;
+	thinkingLevel?: string;
 }
 
 const agentsDir = join(homedir(), ".pi", "agent", "agents");
@@ -212,9 +221,10 @@ function isLocalModel(provider?: string, model?: string): boolean {
 	return p === "ollama" || m.includes("llama") || m.includes("gemma");
 }
 
-function resolveModelSelection(agent: AgentDef, ctx: any, allowLocalModel?: boolean): ResolvedModelSelection {
-	const provider = agent.provider ?? ctx.model?.provider;
-	const model = agent.model ?? ctx.model?.id;
+function resolveModelSelection(agent: AgentDef, ctx: any, allowLocalModel?: boolean, overrides?: SubagentOverride): ResolvedModelSelection {
+	const provider = overrides?.provider ?? agent.provider ?? ctx.model?.provider;
+	const model = overrides?.model ?? agent.model ?? ctx.model?.id;
+	const thinkingLevel = overrides?.thinkingLevel;
 	if (!allowLocalModel && isLocalModel(provider, model)) {
 		const source = agent.provider || agent.model ? "subagent config" : "current parent session model";
 		throw new Error(
@@ -269,12 +279,14 @@ async function runSubagent(
 	ctx: any,
 	signal?: AbortSignal,
 	allowLocalModel?: boolean,
+	modelOverride?: SubagentOverride,
 ): Promise<string> {
 	const cli = ensureCliPath();
 	const args: string[] = ["--mode", "json", "-p", "--no-session"];
-	const { provider, model } = resolveModelSelection(agent, ctx, allowLocalModel);
+	const { provider, model, thinkingLevel } = resolveModelSelection(agent, ctx, allowLocalModel, modelOverride);
 	if (provider) args.push("--provider", provider);
 	if (model) args.push("--model", model);
+	if (thinkingLevel) args.push("--thinking", thinkingLevel);
 	if (agent.tools && agent.tools.length > 0) args.push("--tools", agent.tools.join(","));
 	for (const skill of agent.skills ?? []) {
 		const skillPath = join(skillsDir, skill);
@@ -293,12 +305,48 @@ async function runSubagent(
 		let stdoutBuffer = "";
 		let stderr = "";
 		let aborted = false;
+		let agentEnded = false;
+		const assistantFailures: string[] = [];
 
 		const parseLine = (line: string) => {
 			if (!line.trim()) return;
 			try {
-				const event = JSON.parse(line) as { type?: string; message?: JsonEventMessage };
-				if (event.type === "message_end" && event.message) messages.push(event.message);
+				const event = JSON.parse(line) as {
+					type?: string;
+					message?: JsonEventMessage;
+					stopReason?: string;
+					errorMessage?: string;
+					error?: { message?: string };
+				};
+
+				// F3: Track agent_end so post-termination message_end is not
+				// mistaken for a failure (mirrors substrate.ts event-tracking).
+				if (event.type === "agent_end") {
+					agentEnded = true;
+				}
+
+				if (event.type === "message_end" && event.message) {
+					messages.push(event.message);
+
+					// F3: Extract stopReason / errorMessage from assistant
+					// message_end events before agent_end (mirrors
+					// substrate.ts failure-detection machinery).
+					if (event.message.role === "assistant" && !agentEnded) {
+						const stopReason =
+							event.message.stopReason ??
+							event.stopReason;
+						const errorMessage =
+							event.message.errorMessage ??
+							event.errorMessage ??
+							event.message.error?.message ??
+							event.error?.message;
+						const normalizedStopReason = stopReason?.toLowerCase();
+						if (normalizedStopReason === "error" || normalizedStopReason === "aborted") {
+							assistantFailures.push(`assistant stopReason=${stopReason}`);
+						}
+						if (errorMessage) assistantFailures.push(`assistant errorMessage=${errorMessage}`);
+					}
+				}
 			} catch {}
 		};
 
@@ -319,9 +367,36 @@ async function runSubagent(
 			if (aborted) return reject(new Error(`Subagent ${agent.name} aborted`));
 			const finalText = getFinalAssistantText(messages);
 			const errorMessage = getLastErrorMessage(messages);
+
 			if (code !== 0 && !finalText) {
 				return reject(new Error(errorMessage || stderr || `Subagent ${agent.name} exited with code ${code ?? 1}`));
 			}
+
+			// F3: Exit 0 + no assistant text + no stderr = silent-empty
+			// failure (observed under openai-codex OAuth where the
+			// subagent auth path differs from orchestrate subprocesses).
+			if (!finalText && !stderr.trim()) {
+				const failureDetail = assistantFailures.length > 0
+					? assistantFailures.join("; ")
+					: "no assistant text produced";
+				return reject(new Error(
+					`Subagent ${agent.name} produced no output despite exit code 0. ` +
+					`${failureDetail}. ` +
+					`This usually indicates an auth/provider issue (e.g. OAuth token refresh, missing API key).`,
+				));
+			}
+
+			// F3: Assistant-reported errors despite exit code 0
+			if (assistantFailures.length > 0) {
+				const stderrSuffix = stderr.trim()
+					? ` stderr: ${stderr.trim().slice(0, 500)}`
+					: "";
+				return reject(new Error(
+					`Subagent ${agent.name} reported assistant failure despite exit code 0: ` +
+					`${assistantFailures.join("; ")}.${stderrSuffix}`,
+				));
+			}
+
 			resolve(finalText || stderr || `(subagent ${agent.name} produced no output)`);
 		});
 
@@ -400,12 +475,16 @@ export default function subagentExtension(pi: ExtensionAPI) {
 		promptGuidelines: [
 			"Use subagent for research, planning, review, or isolated implementation tasks that should not consume the main context window.",
 			"Pass a focused task and a known agent name.",
+			"Optional: pass model / provider / thinkingLevel to override the subagent's configured model per-call (e.g. model: 'gpt-5.5', provider: 'openai-codex').",
 		],
 		parameters: Type.Object({
 			agent: Type.String({ description: "The subagent name from ~/.pi/agent/agents" }),
 			task: Type.String({ description: "The delegated task for the subagent" }),
 			cwd: Type.Optional(Type.String({ description: "Optional working directory override" })),
 			allowLocalModel: Type.Optional(Type.Boolean({ description: "Set true only when you explicitly want to allow a local Ollama/Llama/Gemma model for this subagent." })),
+			model: Type.Optional(Type.String({ description: "Override model for this subagent call (e.g. gpt-5.5, deepseek-v4-pro). If omitted, the agent's configured model or the parent session model is used." })),
+			provider: Type.Optional(Type.String({ description: "Override provider for this subagent call (e.g. openai-codex, deepseek). If omitted, the agent's configured provider or the parent session provider is used." })),
+			thinkingLevel: Type.Optional(Type.String({ description: "Optional thinking level override for this subagent call." })),
 		}),
 		async execute(_toolCallId, params, signal, _onUpdate, ctx) {
 			const agents = loadAgents();
@@ -418,8 +497,19 @@ export default function subagentExtension(pi: ExtensionAPI) {
 					details: { availableAgents: agents.map((entry) => entry.name) },
 				};
 			}
+
+			// F4: Build per-call model/provider/thinkingLevel overrides.
+			const modelOverride: SubagentOverride | undefined =
+				params.model || params.provider || params.thinkingLevel
+					? {
+							model: params.model as string | undefined,
+							provider: params.provider as string | undefined,
+							thinkingLevel: params.thinkingLevel as string | undefined,
+					  }
+					: undefined;
+
 			// Emit subagent:spawn event for orchestration status panel
-			const resolvedModel = resolveModelSelection(agent, ctx, params.allowLocalModel);
+			const resolvedModel = resolveModelSelection(agent, ctx, params.allowLocalModel, modelOverride);
 			try {
 				pi.events.emit("subagent:spawn", {
 					agentName: agent.name,
@@ -430,14 +520,14 @@ export default function subagentExtension(pi: ExtensionAPI) {
 				});
 			} catch { /* events are best-effort; never break the main flow */ }
 			try {
-				const result = await runSubagent(agent, params.task, params.cwd, ctx, signal, params.allowLocalModel);
+				const result = await runSubagent(agent, params.task, params.cwd, ctx, signal, params.allowLocalModel, modelOverride);
 				try {
 					pi.events.emit("subagent:exit", {
 						agentName: agent.name,
 						exitCode: 0,
 						endTime: new Date().toISOString(),
-						model: agent.model ?? ctx.model?.id,
-						provider: agent.provider ?? ctx.model?.provider,
+						model: resolvedModel.model ?? ctx.model?.id,
+						provider: resolvedModel.provider ?? ctx.model?.provider,
 					});
 				} catch { /* events are best-effort */ }
 				return {
@@ -446,16 +536,16 @@ export default function subagentExtension(pi: ExtensionAPI) {
 						agent: agent.name,
 						description: agent.description,
 						agencyLevel: agent.agencyLevel,
-						model: agent.model ?? ctx.model?.id,
-						provider: agent.provider ?? ctx.model?.provider,
+						model: resolvedModel.model ?? ctx.model?.id,
+						provider: resolvedModel.provider ?? ctx.model?.provider,
 						tools: agent.tools ?? [],
 						sourceFile: agent.sourceFile,
 					},
 					metadata: {
 						agent: agent.name,
 						agencyLevel: agent.agencyLevel,
-						model: agent.model ?? ctx.model?.id ?? "unknown",
-						provider: agent.provider ?? ctx.model?.provider ?? "unknown",
+						model: resolvedModel.model ?? ctx.model?.id ?? "unknown",
+						provider: resolvedModel.provider ?? ctx.model?.provider ?? "unknown",
 						sourceFile: agent.sourceFile,
 						resultLength: result.length,
 						cwd: params.cwd ?? ctx.cwd,
