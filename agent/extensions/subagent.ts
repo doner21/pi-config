@@ -508,8 +508,34 @@ export default function subagentExtension(pi: ExtensionAPI) {
 					  }
 					: undefined;
 
+			// F4: Resolve model inside try so local-model blocking errors
+			// are caught by the structured error path (was outside, causing
+			// unhandled promise rejections in the no-override path).
+			let resolvedModel: ResolvedModelSelection;
+			try {
+				resolvedModel = resolveModelSelection(agent, ctx, params.allowLocalModel, modelOverride);
+			} catch (error: any) {
+				// resolveModelSelection can throw for local-model blocking —
+				// surface it through the same structured error path as runSubagent failures.
+				try {
+					pi.events.emit("subagent:exit", {
+						agentName: params.agent,
+						exitCode: 1,
+						endTime: new Date().toISOString(),
+						errorMessage: error?.message,
+						model: modelOverride?.model ?? agent.model ?? ctx.model?.id,
+						provider: modelOverride?.provider ?? agent.provider ?? ctx.model?.provider,
+					});
+				} catch { /* events are best-effort */ }
+				return {
+					content: [{ type: "text", text: error?.message || `Subagent ${agent.name} failed` }],
+					isError: true,
+					details: { agent: agent.name, sourceFile: agent.sourceFile },
+					metadata: { agent: agent.name, sourceFile: agent.sourceFile },
+				};
+			}
+
 			// Emit subagent:spawn event for orchestration status panel
-			const resolvedModel = resolveModelSelection(agent, ctx, params.allowLocalModel, modelOverride);
 			try {
 				pi.events.emit("subagent:spawn", {
 					agentName: agent.name,
@@ -519,6 +545,7 @@ export default function subagentExtension(pi: ExtensionAPI) {
 					startTime: new Date().toISOString(),
 				});
 			} catch { /* events are best-effort; never break the main flow */ }
+
 			try {
 				const result = await runSubagent(agent, params.task, params.cwd, ctx, signal, params.allowLocalModel, modelOverride);
 				try {
@@ -558,6 +585,8 @@ export default function subagentExtension(pi: ExtensionAPI) {
 						exitCode: 1,
 						endTime: new Date().toISOString(),
 						errorMessage: error?.message,
+						model: resolvedModel.model ?? ctx.model?.id,
+						provider: resolvedModel.provider ?? ctx.model?.provider,
 					});
 				} catch { /* events are best-effort */ }
 				return {
