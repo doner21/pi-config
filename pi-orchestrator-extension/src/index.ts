@@ -2771,8 +2771,10 @@ function normalizeRoutingText(text: string): string {
 
 function modelAliasFromText(text: string): RoleModelOverride | undefined {
   const normalized = normalizeRoutingText(text);
-  if (/\bgpt[-\s]*5(?:\.5)?\b/.test(normalized) || /\bcodex\b/.test(normalized)) return { provider: "openai-codex", model: "gpt-5.5" };
+  // GPT 5.5 Fast must be checked BEFORE generic GPT 5.5 so "gpt 5.5 fast"
+  // doesn't match the broader pattern first and return gpt-5.5.
   if (/\bgpt[-\s]*5(?:\.5)?\b.{0,20}\bfast\b|\bfast\b.{0,20}\bgpt[-\s]*5(?:\.5)?\b/.test(normalized)) return { provider: "openai-codex", model: "gpt-5.5-fast" };
+  if (/\bgpt[-\s]*5(?:\.5)?\b/.test(normalized) || /\bcodex\b/.test(normalized)) return { provider: "openai-codex", model: "gpt-5.5" };
   if (/\bdeepseek\b/.test(normalized) && /\bv?4\b/.test(normalized) && /\bpro\b/.test(normalized)) return { provider: "deepseek", model: "deepseek-v4-pro" };
   if (/\bdeepseek\b/.test(normalized) && /\bv?4\b/.test(normalized) && /\bflash\b/.test(normalized)) return { provider: "deepseek", model: "deepseek-v4-flash" };
   // Anthropic model aliases — prompt-based routing flexibility.
