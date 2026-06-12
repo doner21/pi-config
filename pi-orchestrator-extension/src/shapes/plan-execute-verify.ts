@@ -53,6 +53,16 @@ import {
 
 import { buildRecoveryMetadata } from "../executor-recovery/metadata";
 
+import {
+  resolveGateDecision,
+  buildZeroEffectFindings,
+  detectFalsePassContradiction,
+  formatToolCallSummary,
+  type GateFinding,
+  type TaskEffectEvidence,
+  type ToolCallSummary,
+} from "../judgment";
+
 import type {
   OrchestrationShape,
   OrchestrationShapeContext,
@@ -112,6 +122,11 @@ interface ExecutorOutput {
   preExecSnapshot?: GitSnapshot;
   /** Parsed output suffix contract from the executor response (Change 3). */
   outputSuffix?: ExecutorOutputSuffix;
+  /** Effect evidence: tool-call telemetry for this task's subagent(s) (F1). */
+  toolCalls?: ToolCallSummary;
+  /** Effect evidence: worktree files changed during this task's window (F1). */
+  filesChanged?: number;
+  changedFiles?: string[];
 }
 
 /**
@@ -270,6 +285,8 @@ interface OrchestrationState {
   recoveryLog: string[];
   recoveryDepth: number;
   maxRecoveryDepth: number;
+  /** Demoted text-shape findings carried in the report (F1). */
+  gateWarnings: string[];
 }
 
 // ── Termination policy (Phase 4) ───────────────────────────────────────────
@@ -344,6 +361,7 @@ async function runPlanExecuteVerify(
     recoveryLog: [],
     recoveryDepth: 0,
     maxRecoveryDepth: 3,
+    gateWarnings: [],
   };
 
   const emit = (text: string) => {
@@ -489,10 +507,51 @@ async function runPlanExecuteVerify(
       },
     );
     const qualityFailures = detectExecutorOutputQualityFailures(executorOutputs, artifactEvidence);
-    const allHardFailures = [...(artifactEvidence?.hardGateFailures ?? []), ...qualityFailures];
+
+    // ── Judgment layer (F1): classify findings, demote text-shape heuristics ─
+    const effectEvidenceByTask = new Map<string, TaskEffectEvidence>();
+    for (const output of executorOutputs) {
+      effectEvidenceByTask.set(output.taskId, {
+        taskId: output.taskId,
+        isImplementationTask: isImplementationTask(output),
+        mutatingToolCalls: output.toolCalls?.mutating ?? 0,
+        totalToolCalls: output.toolCalls?.total ?? 0,
+        filesChanged: output.filesChanged,
+      });
+    }
+    const isEffectFinding = (message: string) =>
+      /EXECUTOR DIFF GATE FAILURE|POST-EXECUTION GATE FAILURE|SUFFIX-GIT CROSS-REFERENCE FAILURE/.test(message);
+    const findingTaskId = (message: string) => {
+      const match = message.match(/\b(task[-_][\w.-]+)/i);
+      return match && executorOutputs.some((o) => o.taskId === match[1]) ? match[1] : undefined;
+    };
+    const textShapeFindings: GateFinding[] = [];
+    const effectFindingList: GateFinding[] = [];
+    for (const message of [...(artifactEvidence?.hardGateFailures ?? []), ...qualityFailures]) {
+      const finding: GateFinding = { message, kind: isEffectFinding(message) ? "effect" : "text-shape" };
+      const taskId = findingTaskId(message);
+      if (taskId) finding.taskId = taskId;
+      (finding.kind === "effect" ? effectFindingList : textShapeFindings).push(finding);
+    }
+    for (const finding of buildZeroEffectFindings(effectEvidenceByTask)) {
+      if (!effectFindingList.some((existing) => existing.taskId === finding.taskId)) {
+        effectFindingList.push(finding);
+      }
+    }
+    const gateDecision = resolveGateDecision({
+      mode: params.hardGates,
+      textShapeFindings,
+      effectFindings: effectFindingList,
+      effectEvidenceByTask,
+    });
+    if (gateDecision.warnings.length > 0) {
+      state.gateWarnings.push(...gateDecision.warnings.map((warning) => `Attempt ${attempt}: ${warning}`));
+      emit(`Attempt ${attempt}: ${gateDecision.warnings.length} gate warning(s) recorded (advisory — never verdict-determining on their own).`);
+    }
+    const allHardFailures = gateDecision.preVerifierFailures;
 
     if (allHardFailures.length > 0) {
-      emit(`Attempt ${attempt}: HARD GATE failures detected before verification — ${allHardFailures.length} failure(s): ${allHardFailures.join("; ")}`);
+      emit(`Attempt ${attempt}: HARD GATE failures (mode=strict) detected before verification — ${allHardFailures.length} failure(s): ${allHardFailures.join("; ")}`);
       const verifierResult = {
         status: "fail" as const,
         reasons: allHardFailures.map((f) => `Post-execution hard gate: ${f}`),
@@ -555,6 +614,28 @@ async function runPlanExecuteVerify(
           (reason) => `Deterministic model routing check failed: ${reason}`,
         ),
       );
+    }
+
+    // ── False-PASS guard (F1 #3 / 2026-06-03 case): hard gates may only
+    //    escalate on effect-based contradictions. ────────────────────────
+    if (verifierResult.status === "pass" && params.hardGates !== "off") {
+      const escalations = [...gateDecision.escalations];
+      if (escalations.length === 0) {
+        const contradiction = detectFalsePassContradiction({
+          hasImplementationTask: artifactEvidence?.hasImplementationTask ?? false,
+          anyMutatingToolCalls: executorOutputs.some((o) => (o.toolCalls?.mutating ?? 0) > 0),
+          anyFilesChanged: executorOutputs.some((o) => (o.filesChanged ?? 0) > 0),
+          gitAvailable: !((artifactEvidence?.diskStatus ?? "").startsWith("(git")),
+        });
+        if (contradiction) escalations.push(contradiction);
+      }
+      if (escalations.length > 0) {
+        verifierResult.status = "fail";
+        verifierResult.reasons.push(
+          ...escalations.map((e) => `Post-verification effect contradiction (false-PASS guard): ${e}`),
+        );
+        emit(`Attempt ${attempt}: verifier returned PASS but effect evidence contradicts it — forcing FAIL (${escalations.length} contradiction(s)).`);
+      }
     }
     state.verifierResult = verifierResult;
 
@@ -1115,8 +1196,15 @@ function summarizeTask(task: string): string {
 }
 
 function inferIntent(task: string): string {
-  if (/smoke test|mock/i.test(task))
+  // F6: classify as a smoke/mock validation run only when the task literally
+  // asks for one — the mere presence of "mock"/"smoke" somewhere in a real
+  // task must not reclassify the user's intent.
+  if (
+    /^\s*(?:smoke|mock)\s+test\b/i.test(task) ||
+    /\b(?:run|perform|execute|do|this is)\s+(?:a\s+|an\s+)?(?:low[-\s]?cost\s+)?(?:smoke|mock)\s+test\b/i.test(task)
+  ) {
     return "Validate orchestration behavior with a low-cost mock/smoke task.";
+  }
   return "Complete the user task while preserving explicit constraints and success criteria.";
 }
 
@@ -1397,6 +1485,14 @@ function buildFinalResult(
     );
   }
 
+  if (state.gateWarnings.length) {
+    lines.push(
+      "",
+      "## Gate warnings (advisory — not verdict-determining)",
+      ...state.gateWarnings.map((warning) => `- ${warning}`),
+    );
+  }
+
   if (state.progressLog.length) {
     lines.push(
       "",
@@ -1436,6 +1532,10 @@ function buildDetails(
   return {
     status,
     params: { ...params, task: truncateWithNotice(params.task, MAX_DETAIL_TEXT_CHARS, "task") },
+    hardGates: params.hardGates,
+    gateWarnings: state.gateWarnings.map((warning) =>
+      truncateWithNotice(warning, MAX_DETAIL_TEXT_CHARS, "gate warning"),
+    ),
     deterministicState: {
       attempt: state.attempt,
       spawnedCount: state.spawnGuard.spawned,
@@ -3197,15 +3297,19 @@ async function executeExecutorTaskWithRecovery(
     contextExhaustionSignal: result.contextExhaustionSignal,
     preExecSnapshot,
     outputSuffix: outputSuffix ?? undefined,
+    toolCalls: result.toolCalls,
   };
 
   // ── Post-execution git diff (Change 1) ───────────────────────────
   if (preExecSnapshot.success) {
     const postSnapshot = capturePreExecutionGitSnapshot(params.cwd);
     const diff = computePostExecutionDiff(preExecSnapshot, postSnapshot);
+    output.filesChanged = diff.filesChanged;
+    output.changedFiles = [...diff.newFiles, ...diff.modifiedFiles, ...diff.deletedFiles];
     emit(
       `Task ${task.id}: post-exec git diff — ${diff.filesChanged} file(s) changed ` +
-      `(new=${diff.newFiles.length}, mod=${diff.modifiedFiles.length}, del=${diff.deletedFiles.length}).`,
+      `(new=${diff.newFiles.length}, mod=${diff.modifiedFiles.length}, del=${diff.deletedFiles.length}); ` +
+      `tool calls ${formatToolCallSummary(result.toolCalls)}.`,
     );
     if (diff.filesChanged === 0 && isImplementationTask(task)) {
       emit(

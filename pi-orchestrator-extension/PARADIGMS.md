@@ -8,6 +8,38 @@ This document describes the orchestration paradigms (shapes) available in the Pi
 |------|-------------|
 | `plan-execute-verify` | Classic planner → executor waves → verifier flow. Default paradigm. Supports retries with failure feedback and deterministic model routing checks. |
 | `multi-verify-vote` | Planner → executor waves → multiple verifiers (odd count) → majority vote. Each verifier independently judges pass/fail; outcome is decided by majority. |
+| `composable-pipeline` | Dynamic pipeline composition via natural language (hypothesize → critique → synthesize → plan → execute → verify, with per-phase counts). |
+| `verify-only` | Verification-only: input is an evidence checklist + paths; spawns verifier(s) ONLY (no planner, no executors); output is per-check verdicts with citations. Supports multi-verifier majority vote ("3 verifiers" in the task text). Exempt from all implementation-task heuristics — verification output is legitimately text-only. Verifiers are granted read/bash/grep tools so they can gather and cite evidence independently. |
+
+### `verify-only` usage
+
+```text
+/orchestrate --paradigm verify-only "Evidence checklist: 1) src/app.ts exports startServer 2) tests pass via npm test. Paths: src/, tests/"
+```
+
+It is also auto-selected when the task contains `verify-only`, `verification only`,
+`just verify`, `only verify`, or `re-verify`.
+
+## Judgment layer: hard gates and effect evidence
+
+All paradigms run under the judgment layer introduced by the 2026-06-12
+hardening (effect-based verdicts):
+
+- **`hardGates: "strict" | "advisory" | "off"`** (default `advisory`):
+  - `advisory` — text-shape heuristics (truncation signals, "text-only
+    response", short-output checks, escape-clause scans, file-claim regexes)
+    are demoted to report warnings; the verifier's evidenced verdict is the
+    gate; hard gates only escalate (force FAIL) on effect-based
+    contradictions (e.g. verifier PASS with zero observed mutations for
+    implementation work — the 2026-06-03 false-PASS class).
+  - `strict` — effect findings and non-immune text-shape findings fail fast
+    before the verifier spawn.
+  - `off` — everything is a warning; the verifier verdict is final.
+- **Effect-evidence immunity**: a task with ≥1 successful mutating tool call
+  (write/edit/bash) or ≥1 worktree file change can NEVER be failed by a
+  text-shape heuristic, in any mode.
+- Per-task tool-call counts and worktree deltas are exposed in the report and
+  in the verifier's ARTIFACT EVIDENCE block.
 
 ## Selecting a Paradigm
 

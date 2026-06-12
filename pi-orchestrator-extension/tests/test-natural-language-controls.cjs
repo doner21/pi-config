@@ -136,7 +136,10 @@ async function runNaturalLanguageControlsRegression() {
   // assert.equal(researcherCalls.length, 2, "should spawn exactly two researchers");
 
   assert.equal(reviewerCalls.length, 1, "should spawn exactly one verifier");
-  assert.ok(calls.every((call) => call.promptHasIntake), "all subagent prompts should receive the intake contract");
+  // Preflight provider health pings (F5 hardening) are 1-token probes, not
+  // work subagents — they intentionally carry no intake contract.
+  const workCalls = calls.filter((call) => call.agentName !== "preflight");
+  assert.ok(workCalls.every((call) => call.promptHasIntake), "all work subagent prompts should receive the intake contract");
 }
 
 async function runEssentialRoutingContractRegression() {

@@ -32,6 +32,7 @@ import { buildRecoveryMetadata } from "./executor-recovery/metadata";
 import { composablePipelineShape } from "./shapes/composable-pipeline";
 import { multiVerifyVoteShape } from "./shapes/multi-verify-vote";
 import { planExecuteVerifyShape } from "./shapes/plan-execute-verify";
+import { verifyOnlyShape } from "./shapes/verify-only";
 import type {
   OrchestrationShape,
   OrchestrationShapeContext,
@@ -39,11 +40,33 @@ import type {
   NaturalLanguageOrchestrationControls,
 } from "./types";
 
+// ── Judgment-layer imports (effect-based verdicts; F1/F2/F5/F6) ───────
+import {
+  normalizeHardGatesMode,
+  emptyToolCallSummary,
+  recordToolCall,
+  formatToolCallSummary,
+  resolveGateDecision,
+  buildZeroEffectFindings,
+  detectFalsePassContradiction,
+  parseProviderError,
+  formatProviderError,
+  extractReferencedTaskIds,
+  type HardGatesMode,
+  type ToolCallSummary,
+  type GateFinding,
+  type TaskEffectEvidence,
+  type ProviderHealthError,
+} from "./judgment";
+
+import { preflightProviderHealth } from "./substrate";
+
 // ── Shape registry (maps paradigm names to orchestration shapes) ─────
 const shapeRegistry = new Map<string, OrchestrationShape>([
   ["plan-execute-verify", planExecuteVerifyShape],
   ["multi-verify-vote", multiVerifyVoteShape],
   ["composable-pipeline", composablePipelineShape],
+  ["verify-only", verifyOnlyShape],
 ]);
 
 interface AgentProfile {
@@ -77,6 +100,8 @@ interface SubagentResult {
   exitCode: number | null;
   durationMs: number;
   events: number;
+  /** Effect-evidence telemetry: tool executions observed in the child stream. */
+  toolCalls?: ToolCallSummary;
 }
 
 interface ResolvedPiCommand {
@@ -96,6 +121,13 @@ interface ExecutorOutput {
   contextBudget?: ContextBudget;
   truncated?: boolean;
   contextExhaustionSignal?: boolean;
+  /** Effect evidence: tool-call telemetry for this task's subagent(s). */
+  toolCalls?: ToolCallSummary;
+  /** Effect evidence: worktree files changed during this task's window. */
+  filesChanged?: number;
+  changedFiles?: string[];
+  /** Set when the output was reused from a prior attempt (F2 retry targeting). */
+  reusedFromAttempt?: number;
 }
 
 interface ArtifactEvidence {
@@ -105,6 +137,17 @@ interface ArtifactEvidence {
   diskFiles: string[];
   fileClaims: string[];
   hardGateFailures: string[];
+  /** Whether git ground truth was available for this evidence collection. */
+  gitAvailable: boolean;
+}
+
+/** Per-task pass/fail state persisted across attempts (F2 retry targeting). */
+interface TaskLedgerEntry {
+  taskId: string;
+  description: string;
+  verdict: "passed" | "failed";
+  attempt: number;
+  output: ExecutorOutput;
 }
 
 interface RoleModelOverride {
@@ -137,6 +180,15 @@ interface Intake {
   routingDecision: string;
   routingRequirements: RoutingRequirement[];
   executorOutputContract?: string;
+  /** Provenance of the executor output contract (F6). */
+  executorOutputContractSource?: "explicit" | "inferred";
+  /**
+   * Inferred advisory criteria (F6): synthesized hints that may produce
+   * warnings but MUST NOT cause a FAIL on their own.
+   */
+  inferredAdvisoryCriteria: string[];
+  /** Provenance tags for every derived criterion (F6). */
+  criteriaProvenance: Array<{ text: string; kind: "success" | "failure"; source: "explicit" | "inferred" }>;
 }
 
 interface RoutingCheck {
@@ -170,6 +222,16 @@ interface NormalizedParams {
   allowLocalModel: boolean;
   orchestrationControls: NaturalLanguageOrchestrationControls;
   paradigm?: string;
+  /** Hard-gate mode (F1). Default "advisory". */
+  hardGates: HardGatesMode;
+  /** Run provider health pings before spawning subagents (F5). Default true. */
+  preflight: boolean;
+  plannerFallbackModel?: string;
+  plannerFallbackProvider?: string;
+  executorFallbackModel?: string;
+  executorFallbackProvider?: string;
+  verifierFallbackModel?: string;
+  verifierFallbackProvider?: string;
 }
 
 interface OrchestrationState {
@@ -184,6 +246,16 @@ interface OrchestrationState {
   progressLog: string[];
   intake: Intake | null;
   routingCheck: RoutingCheck | null;
+  /** Unique run identifier included in reports and commit evidence (F7). */
+  runId: string;
+  /** Demoted text-shape findings carried in the report (F1). */
+  gateWarnings: string[];
+  /** Per-task pass/fail state across attempts (F2). */
+  taskLedger: Map<string, TaskLedgerEntry>;
+  /** Pre/post-execution commit hashes per attempt (F7). */
+  commitEvidence: Array<{ attempt: number; preHash: string | null; postHash: string | null }>;
+  /** Set when the run aborted and a partial report was emitted (F5). */
+  abortReason?: string;
   attempts: Array<{
     attempt: number;
     plan: Plan;
@@ -259,7 +331,15 @@ const orchestrateParamsSchema = Type.Object({
   executorProvider: Type.Optional(Type.String({ description: "Override provider for executor agent(s) (e.g. deepseek)." })),
   verifierModel: Type.Optional(Type.String({ description: "Override model for the verifier agent (e.g. gpt-5.5 for thorough review)." })),
   verifierProvider: Type.Optional(Type.String({ description: "Override provider for the verifier agent (e.g. openai-codex)." })),
-  paradigm: Type.Optional(Type.String({ description: "Explicitly select the orchestration paradigm/shape. Valid values: plan-execute-verify, multi-verify-vote, composable-pipeline. When omitted, the paradigm is inferred from task keywords." })),
+  paradigm: Type.Optional(Type.String({ description: "Explicitly select the orchestration paradigm/shape. Valid values: plan-execute-verify, multi-verify-vote, composable-pipeline, verify-only. When omitted, the paradigm is inferred from task keywords." })),
+  hardGates: Type.Optional(Type.String({ description: 'Hard-gate mode: "strict" | "advisory" | "off". Default "advisory": text-shape heuristics are demoted to warnings, the verifier verdict gates, and only effect-based contradictions (zero observed mutations for implementation work) can force FAIL.' })),
+  preflight: Type.Optional(Type.Boolean({ description: "Run a 1-token provider health ping for each routed provider/model before spawning any subagent (default true). Failures produce a structured machine-readable error and a partial report." })),
+  plannerFallbackModel: Type.Optional(Type.String({ description: "Fallback model for the planner when its primary route fails pre-flight." })),
+  plannerFallbackProvider: Type.Optional(Type.String({ description: "Fallback provider for the planner when its primary route fails pre-flight." })),
+  executorFallbackModel: Type.Optional(Type.String({ description: "Fallback model for executors when their primary route fails pre-flight." })),
+  executorFallbackProvider: Type.Optional(Type.String({ description: "Fallback provider for executors when their primary route fails pre-flight." })),
+  verifierFallbackModel: Type.Optional(Type.String({ description: "Fallback model for the verifier when its primary route fails pre-flight." })),
+  verifierFallbackProvider: Type.Optional(Type.String({ description: "Fallback provider for the verifier when its primary route fails pre-flight." })),
 });
 
 export default function (pi: ExtensionAPI) {
@@ -438,6 +518,14 @@ function parseOrchestrateCommandArgs(args: string): Record<string, unknown> {
       params.allowLocalModel = false;
       continue;
     }
+    if (normalized === "preflight") {
+      params.preflight = true;
+      continue;
+    }
+    if (normalized === "noPreflight") {
+      params.preflight = false;
+      continue;
+    }
 
     const { value, nextIndex } = takeValue(i, `--${flag}`, inlineValue);
     i = nextIndex;
@@ -484,8 +572,29 @@ function parseOrchestrateCommandArgs(args: string): Record<string, unknown> {
       case "paradigm":
         params.paradigm = value;
         break;
+      case "hardGates":
+        params.hardGates = value;
+        break;
+      case "plannerFallbackModel":
+        params.plannerFallbackModel = value;
+        break;
+      case "plannerFallbackProvider":
+        params.plannerFallbackProvider = value;
+        break;
+      case "executorFallbackModel":
+        params.executorFallbackModel = value;
+        break;
+      case "executorFallbackProvider":
+        params.executorFallbackProvider = value;
+        break;
+      case "verifierFallbackModel":
+        params.verifierFallbackModel = value;
+        break;
+      case "verifierFallbackProvider":
+        params.verifierFallbackProvider = value;
+        break;
       default:
-        throw new Error(`Unknown flag --${flag}. Supported flags: --max-subagents, --max-retries, --concurrency, --planner-agent, --executor-agent, --verifier-agent, --cwd, --allow-local-model, --paradigm, --planner-model, --planner-provider, --executor-model, --executor-provider, --verifier-model, --verifier-provider.`);
+        throw new Error(`Unknown flag --${flag}. Supported flags: --max-subagents, --max-retries, --concurrency, --planner-agent, --executor-agent, --verifier-agent, --cwd, --allow-local-model, --paradigm, --hard-gates, --preflight/--no-preflight, --planner-model, --planner-provider, --executor-model, --executor-provider, --verifier-model, --verifier-provider, --planner-fallback-model, --planner-fallback-provider, --executor-fallback-model, --executor-fallback-provider, --verifier-fallback-model, --verifier-fallback-provider.`);
     }
   }
 
@@ -560,6 +669,14 @@ function normalizeParams(params: Record<string, unknown>, defaultCwd: string): N
     verifierProvider: optionalString(params.verifierProvider) ?? inferredRouting.verifier?.provider,
     orchestrationControls,
     paradigm: typeof params.paradigm === "string" ? params.paradigm : undefined,
+    hardGates: normalizeHardGatesMode(params.hardGates),
+    preflight: typeof params.preflight === "boolean" ? params.preflight : true,
+    plannerFallbackModel: optionalString(params.plannerFallbackModel),
+    plannerFallbackProvider: optionalString(params.plannerFallbackProvider),
+    executorFallbackModel: optionalString(params.executorFallbackModel),
+    executorFallbackProvider: optionalString(params.executorFallbackProvider),
+    verifierFallbackModel: optionalString(params.verifierFallbackModel),
+    verifierFallbackProvider: optionalString(params.verifierFallbackProvider),
   };
 }
 
@@ -571,8 +688,46 @@ async function runOrchestration(
 ) {
   const agents = await loadAgents();
 
-  // ── Shape-based orchestration dispatch ────────────────────────────────
+  // ── Run/judgment state is created up-front so even early failures
+  //    (pre-flight, planning) ALWAYS yield a partial report (F5). ────────
+  const state: OrchestrationState = {
+    attempt: 0,
+    spawnedCount: 0,
+    plan: null,
+    planText: "",
+    executorOutputs: [],
+    verifierResult: null,
+    failureReasons: [],
+    finalResult: "",
+    progressLog: [],
+    intake: null,
+    routingCheck: null,
+    runId: `orc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+    gateWarnings: [],
+    taskLedger: new Map(),
+    commitEvidence: [],
+    attempts: [],
+    recoveryLog: [],
+    recoveryDepth: 0,
+    maxRecoveryDepth: 3,
+  };
+
+  const emit = (text: string) => {
+    const line = `[${new Date().toISOString()}] ${text}`;
+    state.progressLog.push(line);
+    onUpdate?.({ content: [{ type: "text", text }] });
+  };
+
   const paradigm = inferOrchestrationParadigm(params);
+  emit(`Run ${state.runId}: paradigm=${paradigm}, hardGates=${params.hardGates}, preflight=${params.preflight}.`);
+
+  try {
+  // ── Pre-flight provider health checks (F5) ──────────────────────────
+  if (params.preflight) {
+    await runProviderPreflight(params, agents, inheritedModel, signal, emit);
+  }
+
+  // ── Shape-based orchestration dispatch ────────────────────────────────
   if (paradigm !== "plan-execute-verify") {
     const shape = shapeRegistry.get(paradigm);
     if (!shape) {
@@ -606,29 +761,6 @@ async function runOrchestration(
   }
 
   // ── Default inline plan-execute-verify orchestration ─────────────────
-  const state: OrchestrationState = {
-    attempt: 0,
-    spawnedCount: 0,
-    plan: null,
-    planText: "",
-    executorOutputs: [],
-    verifierResult: null,
-    failureReasons: [],
-    finalResult: "",
-    progressLog: [],
-    intake: null,
-    routingCheck: null,
-    attempts: [],
-    recoveryLog: [],
-    recoveryDepth: 0,
-    maxRecoveryDepth: 3,
-  };
-
-  const emit = (text: string) => {
-    const line = `[${new Date().toISOString()}] ${text}`;
-    state.progressLog.push(line);
-    onUpdate?.({ content: [{ type: "text", text }] });
-  };
   state.intake = buildIntake(params, agents, inheritedModel);
   emit(`Intake complete: ${state.intake.taskSummary}`);
   if (state.intake.routingRequirements.length) {
@@ -640,8 +772,10 @@ async function runOrchestration(
     throwIfAborted(signal);
     state.attempt = attempt;
     emit(`Orchestration attempt ${attempt}/${maxAttempts}: planning...`);
+    const preAttemptHead = gitHeadHash(params.cwd);
 
-    const plannerPrompt = buildPlanningPrompt(state.intake, attempt, state.failureReasons);
+    const completedTasks = [...state.taskLedger.values()].filter((entry) => entry.verdict === "passed");
+    const plannerPrompt = buildPlanningPrompt(state.intake, attempt, state.failureReasons, completedTasks);
     const planner = await spawnChecked(state, params, agents, params.plannerAgent, plannerPrompt, signal, emit, inheritedModel, toModelOverride(params.plannerModel, params.plannerProvider));
     state.planText = planner.text;
     let plan = parsePlan(planner.text, params.task);
@@ -687,13 +821,35 @@ async function runOrchestration(
     );
     state.executorOutputs = executorOutputs;
 
-    emit(`Attempt ${attempt}: verifying executor outputs...`);
-    const artifactEvidence = collectArtifactEvidence(params.cwd, executorOutputs);
-    const qualityFailures = detectExecutorOutputQualityFailures(executorOutputs, artifactEvidence);
-    const allHardFailures = [...artifactEvidence.hardGateFailures, ...qualityFailures];
+    // ── Commit evidence (F7): pre/post-execution HEAD hashes per attempt ──
+    const postExecHead = gitHeadHash(params.cwd);
+    state.commitEvidence.push({ attempt, preHash: preAttemptHead, postHash: postExecHead });
+    if (preAttemptHead || postExecHead) {
+      emit(`Attempt ${attempt}: commit evidence (run ${state.runId}) — pre=${preAttemptHead ?? "(none)"} post=${postExecHead ?? "(none)"}.`);
+    }
 
-    if (allHardFailures.length > 0) {
-      emit(`Attempt ${attempt}: HARD GATE failures detected before verification — ${allHardFailures.length} failure(s): ${allHardFailures.join("; ")}`);
+    // ── Judgment layer (F1): effect evidence first, text shape demoted ───
+    emit(`Attempt ${attempt}: collecting effect evidence (git deltas + tool-call telemetry)...`);
+    const artifactEvidence = collectArtifactEvidence(params.cwd, executorOutputs);
+    const textFindings = detectExecutorOutputQualityFindings(executorOutputs, artifactEvidence);
+    const effectEvidenceByTask = buildTaskEffectEvidenceMap(executorOutputs);
+    const effectFindings = buildZeroEffectFindings(effectEvidenceByTask);
+    const gateDecision = resolveGateDecision({
+      mode: params.hardGates,
+      textShapeFindings: textFindings,
+      effectFindings,
+      effectEvidenceByTask,
+    });
+    if (gateDecision.warnings.length > 0) {
+      state.gateWarnings.push(...gateDecision.warnings.map((warning) => `Attempt ${attempt}: ${warning}`));
+      emit(`Attempt ${attempt}: ${gateDecision.warnings.length} gate warning(s) recorded (advisory — never verdict-determining on their own).`);
+    }
+
+    if (gateDecision.preVerifierFailures.length > 0) {
+      // hardGates="strict" only: effect-based findings (and non-immune
+      // text-shape findings) abort the attempt before the verifier spawn.
+      const allHardFailures = gateDecision.preVerifierFailures;
+      emit(`Attempt ${attempt}: HARD GATE failures (mode=strict) detected before verification — ${allHardFailures.length} failure(s): ${allHardFailures.join("; ")}`);
       const verifierResult = {
         status: "fail" as const,
         reasons: allHardFailures.map((f) => `Post-execution hard gate: ${f}`),
@@ -706,6 +862,7 @@ async function runOrchestration(
       state.verifierResult = verifierResult;
       state.attempts.push({ attempt, plan, plannerText: planner.text, executorOutputs, verifierResult });
       state.failureReasons.push(...verifierResult.reasons.map((reason) => `Attempt ${attempt}: ${reason}`));
+      updateTaskLedgerFromFailure(state, plan, executorOutputs, verifierResult.reasons, attempt, emit);
 
       if (attempt >= maxAttempts) break;
       if (state.spawnedCount >= params.maxSubagents) {
@@ -714,6 +871,7 @@ async function runOrchestration(
       continue;
     }
 
+    emit(`Attempt ${attempt}: verifying executor outputs...`);
     const verifierPrompt = buildVerificationPrompt(state.intake!, plan, executorOutputs, buildRoutingEvidenceForVerifier(params, state), artifactEvidence.summary);
     const verifier = await spawnChecked(state, params, agents, params.verifierAgent, verifierPrompt, signal, emit, inheritedModel, toModelOverride(params.verifierModel, params.verifierProvider));
     const verifierResult = parseVerifierResult(verifier.text);
@@ -722,11 +880,34 @@ async function runOrchestration(
       verifierResult.status = "fail";
       verifierResult.reasons.push(...state.routingCheck.reasons.map((reason) => `Deterministic model routing check failed: ${reason}`));
     }
+
+    // ── False-PASS guard (F1 #3 / 2026-06-03 case): the verifier verdict is
+    //    the gate, but hard gates escalate on effect-based contradictions. ──
+    if (verifierResult.status === "pass" && params.hardGates !== "off") {
+      const escalations = [...gateDecision.escalations];
+      if (escalations.length === 0) {
+        const contradiction = detectFalsePassContradiction({
+          hasImplementationTask: artifactEvidence.hasImplementationTask,
+          anyMutatingToolCalls: executorOutputs.some((o) => (o.toolCalls?.mutating ?? 0) > 0),
+          anyFilesChanged: executorOutputs.some((o) => (o.filesChanged ?? 0) > 0),
+          gitAvailable: artifactEvidence.gitAvailable,
+        });
+        if (contradiction) escalations.push(contradiction);
+      }
+      if (escalations.length > 0) {
+        verifierResult.status = "fail";
+        verifierResult.reasons.push(...escalations.map((e) => `Post-verification effect contradiction (false-PASS guard): ${e}`));
+        emit(`Attempt ${attempt}: verifier returned PASS but effect evidence contradicts it — forcing FAIL (${escalations.length} contradiction(s)).`);
+      }
+    }
     state.verifierResult = verifierResult;
 
     state.attempts.push({ attempt, plan, plannerText: planner.text, executorOutputs, verifierResult });
 
     if (verifierResult.status === "pass") {
+      for (const output of executorOutputs) {
+        state.taskLedger.set(output.taskId, { taskId: output.taskId, description: output.description, verdict: "passed", attempt, output });
+      }
       state.finalResult = buildFinalResult("pass", params, state);
       return {
         markdown: state.finalResult,
@@ -737,6 +918,7 @@ async function runOrchestration(
     const reasons = verifierResult.reasons.length ? verifierResult.reasons : ["Verifier did not return a pass result."];
     state.failureReasons.push(...reasons.map((reason) => `Attempt ${attempt}: ${reason}`));
     emit(`Attempt ${attempt}: verification failed (${reasons.join("; ")}).`);
+    updateTaskLedgerFromFailure(state, plan, executorOutputs, reasons, attempt, emit);
 
     if (attempt >= maxAttempts) break;
     if (state.spawnedCount >= params.maxSubagents) {
@@ -749,6 +931,135 @@ async function runOrchestration(
     markdown: state.finalResult,
     details: buildDetails("fail", params, state),
   };
+  } catch (error) {
+    // ── ALWAYS emit a partial report on abort (F5) ──────────────────────
+    const message = error instanceof Error ? error.message : String(error);
+    const providerError =
+      (error as { providerError?: ProviderHealthError }).providerError ??
+      parseProviderError(message);
+    state.abortReason = message;
+    state.failureReasons.push(`Run aborted: ${message}`);
+    emit(
+      `Orchestration aborted — emitting partial report. Structured error: ${formatProviderError(providerError)}`,
+    );
+    state.finalResult = buildFinalResult("fail", params, state);
+    return {
+      markdown: state.finalResult,
+      details: {
+        ...buildDetails("fail", params, state),
+        aborted: true,
+        abortReason: message,
+        providerError,
+        paradigm,
+      },
+    };
+  }
+}
+
+/**
+ * Pre-flight provider health checks (F5): a 1-token ping per unique routed
+ * provider/model pair, run BEFORE any work subagent is spawned. On primary
+ * failure, per-role fallback routes are tried; remaining failures abort the
+ * run with a structured machine-readable error (and a partial report).
+ * Pings do not count against the maxSubagents budget.
+ */
+async function runProviderPreflight(
+  params: NormalizedParams,
+  agents: Map<string, AgentProfile>,
+  inheritedModel: { provider?: string; model?: string } | undefined,
+  signal: AbortSignal | undefined,
+  emit: (text: string) => void,
+): Promise<void> {
+  const resolveRoute = (agentName: string, model?: string, provider?: string) => {
+    const profile = agents.get(agentName);
+    return {
+      provider: provider ?? profile?.provider ?? inheritedModel?.provider,
+      model: model ?? profile?.model ?? inheritedModel?.model,
+    };
+  };
+
+  const roles = [
+    {
+      role: "planner",
+      ...resolveRoute(params.plannerAgent, params.plannerModel, params.plannerProvider),
+      fallbackModel: params.plannerFallbackModel,
+      fallbackProvider: params.plannerFallbackProvider,
+      applyFallback: (model?: string, provider?: string) => {
+        if (model) params.plannerModel = model;
+        if (provider) params.plannerProvider = provider;
+      },
+    },
+    {
+      role: "executor",
+      ...resolveRoute(params.executorAgent, params.executorModel, params.executorProvider),
+      fallbackModel: params.executorFallbackModel,
+      fallbackProvider: params.executorFallbackProvider,
+      applyFallback: (model?: string, provider?: string) => {
+        if (model) params.executorModel = model;
+        if (provider) params.executorProvider = provider;
+      },
+    },
+    {
+      role: "verifier",
+      ...resolveRoute(params.verifierAgent, params.verifierModel, params.verifierProvider),
+      fallbackModel: params.verifierFallbackModel,
+      fallbackProvider: params.verifierFallbackProvider,
+      applyFallback: (model?: string, provider?: string) => {
+        if (model) params.verifierModel = model;
+        if (provider) params.verifierProvider = provider;
+      },
+    },
+  ].filter((role) => role.provider || role.model);
+
+  if (roles.length === 0) {
+    emit("Preflight: no explicitly routed provider/model pairs — skipping health pings.");
+    return;
+  }
+
+  const results = await preflightProviderHealth(
+    roles.map((role) => ({ roles: [role.role], provider: role.provider, model: role.model })),
+    { cwd: params.cwd, allowLocalModel: params.allowLocalModel, signal, onProgress: emit },
+  );
+
+  const unrecovered: ProviderHealthError[] = [];
+  for (const result of results.filter((r) => !r.ok)) {
+    for (const roleName of result.roles) {
+      const role = roles.find((r) => r.role === roleName);
+      if (!role) continue;
+      if (role.fallbackModel || role.fallbackProvider) {
+        emit(
+          `Preflight: ${roleName} primary route ${formatRoutedModel(role.provider, role.model)} failed — trying fallback ${formatRoutedModel(role.fallbackProvider, role.fallbackModel)}...`,
+        );
+        const fallbackResults = await preflightProviderHealth(
+          [{ roles: [roleName], provider: role.fallbackProvider, model: role.fallbackModel }],
+          { cwd: params.cwd, allowLocalModel: params.allowLocalModel, signal, onProgress: emit },
+        );
+        if (fallbackResults[0]?.ok) {
+          role.applyFallback(role.fallbackModel, role.fallbackProvider);
+          emit(
+            `Preflight: ${roleName} re-routed to fallback ${formatRoutedModel(role.fallbackProvider, role.fallbackModel)} (graceful degradation).`,
+          );
+          continue;
+        }
+        if (fallbackResults[0]?.error) unrecovered.push(fallbackResults[0].error);
+        if (result.error) unrecovered.push(result.error);
+        continue;
+      }
+      if (result.error) unrecovered.push(result.error);
+    }
+  }
+
+  if (unrecovered.length > 0) {
+    const error = new Error(
+      `PREFLIGHT FAILURE — provider health check failed before any subagent was spawned: ${unrecovered
+        .map((e) => formatProviderError(e))
+        .join(" | ")}`,
+    ) as Error & { providerError?: ProviderHealthError };
+    error.providerError = unrecovered[0];
+    throw error;
+  }
+
+  emit(`Preflight: all ${roles.length} routed role route(s) healthy.`);
 }
 
 function computeRequiredSubagentBudget(spawnedThroughCurrentPlanner: number, executorTaskCount: number, currentAttempt: number, maxAttempts: number): number {
@@ -756,6 +1067,118 @@ function computeRequiredSubagentBudget(spawnedThroughCurrentPlanner: number, exe
   const remainingAttempts = Math.max(0, maxAttempts - currentAttempt);
   const fullFutureAttempt = executorTaskCount + 2; // planner + executors + verifier.
   return spawnedThroughCurrentPlanner + finishCurrentAttempt + remainingAttempts * fullFutureAttempt;
+}
+
+// ── Judgment-layer helpers (effect evidence, ledger, commit evidence) ─────
+
+/** Current git HEAD hash, or null when git/HEAD is unavailable (F7). */
+function gitHeadHash(cwd: string): string | null {
+  try {
+    const result = spawnSync("git", ["-C", cwd, "rev-parse", "HEAD"], {
+      timeout: 5000,
+      encoding: "utf8",
+      windowsHide: true,
+    });
+    if (result.status === 0) return (result.stdout ?? "").trim() || null;
+  } catch {
+    // git unavailable
+  }
+  return null;
+}
+
+/** Snapshot of `git status --short` lines, or null when git is unavailable. */
+function captureGitStatusEntries(cwd: string): Set<string> | null {
+  try {
+    const result = spawnSync("git", ["-C", cwd, "status", "--short"], {
+      timeout: 5000,
+      encoding: "utf8",
+      windowsHide: true,
+    });
+    if (result.status !== 0) return null;
+    return new Set(
+      (result.stdout ?? "")
+        .split("\n")
+        .map((line) => line.trimEnd())
+        .filter(Boolean),
+    );
+  } catch {
+    return null;
+  }
+}
+
+/** Paths that appear/changed in `after` relative to `before` (per-task delta). */
+function diffGitStatusEntries(before: Set<string> | null, after: Set<string> | null): string[] | undefined {
+  if (!before || !after) return undefined;
+  const changed: string[] = [];
+  for (const entry of after) {
+    if (!before.has(entry)) {
+      const file = entry.slice(3).trim() || entry.trim();
+      if (file && !changed.includes(file)) changed.push(file);
+    }
+  }
+  return changed;
+}
+
+/** Build the per-task effect-evidence map consumed by the judgment layer. */
+function buildTaskEffectEvidenceMap(executorOutputs: ExecutorOutput[]): Map<string, TaskEffectEvidence> {
+  const map = new Map<string, TaskEffectEvidence>();
+  for (const output of executorOutputs) {
+    map.set(output.taskId, {
+      taskId: output.taskId,
+      isImplementationTask: isImplementationTask(output.description),
+      mutatingToolCalls: output.toolCalls?.mutating ?? 0,
+      totalToolCalls: output.toolCalls?.total ?? 0,
+      filesChanged: output.filesChanged,
+    });
+  }
+  return map;
+}
+
+/**
+ * F2: persist per-task pass/fail state across attempts. Tasks referenced in
+ * failure reasons are marked failed; the rest are carried forward and reused
+ * (re-verified, not regenerated) on the next attempt. When no per-task
+ * attribution is possible, all tasks are conservatively retried.
+ */
+function updateTaskLedgerFromFailure(
+  state: OrchestrationState,
+  plan: Plan,
+  executorOutputs: ExecutorOutput[],
+  reasons: string[],
+  attempt: number,
+  emit: (text: string) => void,
+): void {
+  const failedIds = extractReferencedTaskIds(reasons, plan.tasks.map((task) => task.id));
+  const failAll = failedIds.size === 0;
+  const passed: string[] = [];
+  const failed: string[] = [];
+  for (const output of executorOutputs) {
+    const verdict: TaskLedgerEntry["verdict"] = failAll || failedIds.has(output.taskId) ? "failed" : "passed";
+    state.taskLedger.set(output.taskId, {
+      taskId: output.taskId,
+      description: output.description,
+      verdict,
+      attempt,
+      output,
+    });
+    (verdict === "passed" ? passed : failed).push(output.taskId);
+  }
+  if (passed.length > 0) {
+    emit(
+      `Retry targeting (F2): failed=[${failed.join(", ") || "(none)"}]; carried forward=[${passed.join(", ")}] — carried-forward tasks will be reused and re-verified, not re-executed.`,
+    );
+  } else if (failed.length > 0) {
+    emit(
+      `Retry targeting (F2): no per-task attribution found in failure reasons — all ${failed.length} task(s) will be retried.`,
+    );
+  }
+}
+
+/** Check that a previously-passed task's artifacts still exist on disk. */
+function ledgerArtifactsStillPresent(entry: TaskLedgerEntry, cwd: string): boolean {
+  const files = entry.output.changedFiles ?? [];
+  if (files.length === 0) return true;
+  return files.some((file) => existsSync(path.isAbsolute(file) ? file : path.join(cwd, file)));
 }
 
 
@@ -788,6 +1211,23 @@ async function executeExecutorTaskWithRecovery(
   emit: (text: string) => void,
   inheritedModel: { provider?: string; model?: string } | undefined,
 ): Promise<ExecutorOutput> {
+  // ── F2 retry targeting: reuse previously-passed task outputs ──────────
+  const ledgerEntry = state.taskLedger.get(task.id);
+  if (ledgerEntry?.verdict === "passed" && ledgerArtifactsStillPresent(ledgerEntry, params.cwd)) {
+    emit(
+      "Task " + task.id + ": previously completed on attempt " + ledgerEntry.attempt +
+      " and artifacts are still present — reusing prior output and routing to re-verification instead of regeneration (F2).",
+    );
+    return {
+      ...ledgerEntry.output,
+      reusedFromAttempt: ledgerEntry.attempt,
+      output:
+        ledgerEntry.output.output +
+        "\n\n[orchestrator note: output reused from attempt " + ledgerEntry.attempt +
+        "; task previously passed and its artifacts are still present — re-verification only]",
+    };
+  }
+
   const prompt = buildExecutorPrompt(state.intake!, plan, task);
 
   // Tier 0: Pre-spawn budget estimation
@@ -831,6 +1271,9 @@ async function executeExecutorTaskWithRecovery(
     };
   }
 
+  // ── Effect evidence: per-task worktree snapshot before dispatch (F1) ──
+  const preStatusEntries = captureGitStatusEntries(params.cwd);
+
   let result: SubagentResult;
   try {
     result = await spawnChecked(
@@ -848,7 +1291,17 @@ async function executeExecutorTaskWithRecovery(
       exitCode: 1,
       durationMs: 0,
       contextBudget: budget,
+      toolCalls: emptyToolCallSummary(),
     };
+  }
+
+  // ── Effect evidence: per-task worktree delta + tool-call telemetry ────
+  const changedFiles = diffGitStatusEntries(preStatusEntries, captureGitStatusEntries(params.cwd));
+  if (result.toolCalls || changedFiles) {
+    emit(
+      "Task " + task.id + ": effect evidence — tool calls " + formatToolCallSummary(result.toolCalls) +
+      "; worktree delta " + (changedFiles ? changedFiles.length + " file(s)" + (changedFiles.length ? " (" + changedFiles.join(", ") + ")" : "") : "unknown (git unavailable)") + ".",
+    );
   }
 
   const output: ExecutorOutput = {
@@ -862,6 +1315,9 @@ async function executeExecutorTaskWithRecovery(
     contextBudget: budget,
     truncated: result.truncated,
     contextExhaustionSignal: result.contextExhaustionSignal,
+    toolCalls: result.toolCalls,
+    filesChanged: changedFiles ? changedFiles.length : undefined,
+    changedFiles,
   };
 
   // Post-spawn: check for context exhaustion
@@ -1211,6 +1667,30 @@ function mergeExecutorOutputs(
     contextBudget: first.contextBudget,
     truncated: second.truncated ?? first.truncated,
     contextExhaustionSignal: second.contextExhaustionSignal ?? first.contextExhaustionSignal,
+    toolCalls: sumToolCallSummaries(first.toolCalls, second.toolCalls),
+    filesChanged: first.filesChanged === undefined && second.filesChanged === undefined
+      ? undefined
+      : (first.filesChanged ?? 0) + (second.filesChanged ?? 0),
+    changedFiles: first.changedFiles || second.changedFiles
+      ? [...new Set([...(first.changedFiles ?? []), ...(second.changedFiles ?? [])])]
+      : undefined,
+  };
+}
+
+function sumToolCallSummaries(
+  first: ToolCallSummary | undefined,
+  second: ToolCallSummary | undefined,
+): ToolCallSummary | undefined {
+  if (!first) return second;
+  if (!second) return first;
+  const byTool: Record<string, number> = { ...first.byTool };
+  for (const [tool, count] of Object.entries(second.byTool)) {
+    byTool[tool] = (byTool[tool] ?? 0) + count;
+  }
+  return {
+    total: first.total + second.total,
+    mutating: first.mutating + second.mutating,
+    byTool,
   };
 }
 
@@ -1412,6 +1892,7 @@ async function runSubagent(
   let eventCount = 0;
   let killedByAbort = false;
   const assistantFailures: string[] = [];
+  const toolCalls = emptyToolCallSummary();
 
   const child = spawn(command.command, args, {
     cwd: options.cwd,
@@ -1448,6 +1929,11 @@ async function runSubagent(
       eventCount++;
       const progress = describeJsonEvent(profile.name, event);
       if (progress) options.onProgress?.(progress);
+      // Effect-evidence telemetry: count tool executions by tool name (F1).
+      if (event?.type === "tool_execution_start") {
+        const toolName = optionalString((event as Record<string, unknown>).toolName);
+        if (toolName) recordToolCall(toolCalls, toolName);
+      }
       if (event?.type === "message_end" && event.message?.role === "assistant") {
         lastAssistantText = extractMessageText(event.message);
         const stopReason = optionalString(event.message.stopReason) ?? optionalString(event.stopReason);
@@ -1499,6 +1985,7 @@ async function runSubagent(
     exitCode,
     durationMs: Date.now() - startedAt,
     events: eventCount,
+    toolCalls,
   };
 }
 
@@ -1548,20 +2035,43 @@ function buildIntake(
   inheritedModel?: { provider?: string; model?: string },
 ): Intake {
   const constraints = extractConstraintLines(params.task);
-  const executorOutputContract = extractExecutorOutputContract(params.task);
+  // F6: contract extraction carries provenance — only literal task markers
+  // produce an explicit (verdict-determining) contract; generic synthesis is
+  // demoted to an inferred advisory criterion that can warn but never fail.
+  const contractInfo = extractExecutorOutputContract(params.task);
+  const executorOutputContract = contractInfo?.contract;
+  const executorOutputContractSource = contractInfo?.source;
+  const inferredAdvisoryCriteria: string[] = [];
+  const criteriaProvenance: Intake["criteriaProvenance"] = [];
   const routingRequirements = buildRoutingRequirements(params, agents, inheritedModel);
   const essentialRoutingRequirements = routingRequirements.filter((req) => req.essential);
   const successCriteria = extractSuccessCriteria(params.task);
+  for (const criterion of successCriteria) criteriaProvenance.push({ text: criterion, kind: "success", source: "explicit" });
   if (essentialRoutingRequirements.length) {
-    successCriteria.unshift(
-      ...essentialRoutingRequirements.map((req) => `Model routing evidence must show ${req.role} (${req.agentName}) used ${formatRoutedModel(req.provider, req.model)}.`),
-    );
+    const routingCriteria = essentialRoutingRequirements.map((req) => `Model routing evidence must show ${req.role} (${req.agentName}) used ${formatRoutedModel(req.provider, req.model)}.`);
+    successCriteria.unshift(...routingCriteria);
+    for (const criterion of routingCriteria) criteriaProvenance.push({ text: criterion, kind: "success", source: "explicit" });
   }
-  if (executorOutputContract) successCriteria.push(`Executor outputs must satisfy this output contract: ${executorOutputContract}`);
+  if (executorOutputContract && executorOutputContractSource === "explicit") {
+    const criterion = `Executor outputs must satisfy this output contract: ${executorOutputContract}`;
+    successCriteria.push(criterion);
+    criteriaProvenance.push({ text: criterion, kind: "success", source: "explicit" });
+  } else if (executorOutputContract) {
+    inferredAdvisoryCriteria.push(`(inferred) Executor outputs should follow the output format implied by the task: ${executorOutputContract} — advisory only; violations are warnings, never failures.`);
+  }
 
   const failureCriteria = extractFailureCriteria(params.task);
-  if (essentialRoutingRequirements.length) failureCriteria.push("Any required model routing mismatch is a deterministic FAIL, even if task outputs are otherwise correct.");
-  if (executorOutputContract) failureCriteria.push("Executor output that violates the output contract is a FAIL, even if semantically correct.");
+  for (const criterion of failureCriteria) criteriaProvenance.push({ text: criterion, kind: "failure", source: "explicit" });
+  if (essentialRoutingRequirements.length) {
+    const criterion = "Any required model routing mismatch is a deterministic FAIL, even if task outputs are otherwise correct.";
+    failureCriteria.push(criterion);
+    criteriaProvenance.push({ text: criterion, kind: "failure", source: "explicit" });
+  }
+  if (executorOutputContract && executorOutputContractSource === "explicit") {
+    const criterion = "Executor output that violates the output contract is a FAIL, even if semantically correct.";
+    failureCriteria.push(criterion);
+    criteriaProvenance.push({ text: criterion, kind: "failure", source: "explicit" });
+  }
 
   return {
     originalTask: params.task,
@@ -1585,6 +2095,9 @@ function buildIntake(
       : "No explicit or inferred essential model routing was requested; use profile/inherited/default routing.",
     routingRequirements,
     executorOutputContract,
+    executorOutputContractSource,
+    inferredAdvisoryCriteria,
+    criteriaProvenance,
   };
 }
 
@@ -1605,6 +2118,9 @@ function formatIntakeForPrompt(intake: Intake): string {
     routing_requirements: intake.routingRequirements,
     orchestration_controls: intake.orchestrationControls,
     executor_output_contract: intake.executorOutputContract,
+    executor_output_contract_source: intake.executorOutputContractSource,
+    inferred_advisory_criteria: intake.inferredAdvisoryCriteria,
+    criteria_provenance: intake.criteriaProvenance,
     original_task: intake.originalTask,
   }, null, 2);
 }
@@ -1786,20 +2302,25 @@ function collectArtifactEvidence(
     summaryLines.push("Files mentioned in executor outputs: " + fileClaims.join(", "));
   }
 
+  // ── Per-task effect telemetry (F1): tool calls + worktree deltas ───────
+  summaryLines.push("Per-task effect evidence (mechanical ground truth):");
+  for (const output of executorOutputs) {
+    const delta = output.filesChanged === undefined
+      ? "worktree delta unknown"
+      : `${output.filesChanged} file(s) changed${output.changedFiles?.length ? ` (${output.changedFiles.join(", ")})` : ""}`;
+    summaryLines.push(`- ${output.taskId}: tool calls ${formatToolCallSummary(output.toolCalls)}; ${delta}${output.reusedFromAttempt ? `; reused from attempt ${output.reusedFromAttempt}` : ""}`);
+  }
+
   // Determine implementation tasks
   const hasImplementationTask = executorOutputs.some((output) => isImplementationTask(output.description));
 
-  // Hard gate: implementation task with no detectable file artifacts
+  // NOTE (F1 hardening): this collector no longer produces verdict-determining
+  // hard-gate failures. Zero-effect findings for implementation tasks are
+  // computed by the judgment layer (buildZeroEffectFindings) from tool-call
+  // telemetry + per-task worktree deltas, and applied per the hardGates mode.
   if (hasImplementationTask) {
     const hasGitChanges = gitAvailable && /\S/.test(diskStatus) && !/\(working tree clean\)/.test(diskStatus) && !/\(not a git repository\)/.test(diskStatus);
-    const hasFileClaims = fileClaims.length > 0;
-
-    if (!hasGitChanges && !hasFileClaims) {
-      const failure = "HARD GATE: Implementation task(s) detected but no file artifacts found — no git changes on disk and no file claims in executor outputs.";
-      hardGateFailures.push(failure);
-      summaryLines.push(failure);
-    } else if (!hasGitChanges) {
-      // git has no changes but file claims exist — flag as suspicious
+    if (!hasGitChanges && fileClaims.length > 0) {
       summaryLines.push("CAUTION: Implementation task(s) detected with file claims in text but no git changes on disk.");
     }
   }
@@ -1811,7 +2332,27 @@ function collectArtifactEvidence(
     diskFiles,
     fileClaims,
     hardGateFailures,
+    gitAvailable,
   };
+}
+
+/**
+ * Wrap the legacy reply-text quality scan as TEXT-SHAPE findings (F1).
+ * Every finding from this scanner is heuristic and is therefore demoted by
+ * the judgment layer: warnings in "advisory"/"off" modes, and verdict-eligible
+ * only in "strict" mode for tasks WITHOUT positive effect evidence.
+ */
+function detectExecutorOutputQualityFindings(
+  executorOutputs: ExecutorOutput[],
+  artifactEvidence?: ArtifactEvidence,
+): GateFinding[] {
+  return detectExecutorOutputQualityFailures(executorOutputs, artifactEvidence).map((message) => {
+    const match = message.match(/^([^\s:]+):\s/);
+    const taskId = match && executorOutputs.some((output) => output.taskId === match[1]) ? match[1] : undefined;
+    const finding: GateFinding = { message, kind: "text-shape" };
+    if (taskId) finding.taskId = taskId;
+    return finding;
+  });
 }
 
 // ── Executor output quality detection ─────────────────────────────────────
@@ -2281,7 +2822,15 @@ function summarizeTask(task: string): string {
 }
 
 function inferIntent(task: string): string {
-  if (/smoke test|mock/i.test(task)) return "Validate orchestration behavior with a low-cost mock/smoke task.";
+  // F6: classify as a smoke/mock validation run only when the task literally
+  // asks for one — the mere presence of "mock"/"smoke" somewhere in a real
+  // task must not reclassify the user's intent.
+  if (
+    /^\s*(?:smoke|mock)\s+test\b/i.test(task) ||
+    /\b(?:run|perform|execute|do|this is)\s+(?:a\s+|an\s+)?(?:low[-\s]?cost\s+)?(?:smoke|mock)\s+test\b/i.test(task)
+  ) {
+    return "Validate orchestration behavior with a low-cost mock/smoke task.";
+  }
   return "Complete the user task while preserving explicit constraints and success criteria.";
 }
 
@@ -2327,7 +2876,7 @@ function extractNonGoals(task: string): string[] {
   return nonGoals;
 }
 
-function extractExecutorOutputContract(task: string): string | undefined {
+function extractExecutorOutputContract(task: string): { contract: string; source: "explicit" | "inferred" } | undefined {
   if (!/RESULT\s+task-N|RESULT\s+task-\d+|exactly one/i.test(task)) return undefined;
   const rules: string[] = [];
   if (/exactly one (?:plain-text )?line/i.test(task) || /one short line/i.test(task)) rules.push("Each executor must output exactly one plain-text line and nothing else.");
@@ -2339,14 +2888,24 @@ function extractExecutorOutputContract(task: string): string | undefined {
   if (/no headings/i.test(task)) rules.push("No headings.");
   if (/no separator lines/i.test(task)) rules.push("No separator lines.");
   if (/files touched|commands run|remaining issues/i.test(task)) rules.push("Do not include files touched, commands run, remaining issues, or other report sections unless explicitly required as the single answer line.");
-  return rules.length ? rules.join(" ") : "Each executor must follow the explicit output format in the original task.";
+  // F6: only literal markers yield an explicit (verdict-determining) contract.
+  // The generic fallback is synthesized — mark it inferred so it can warn but
+  // never fail.
+  return rules.length
+    ? { contract: rules.join(" "), source: "explicit" }
+    : { contract: "Each executor must follow the explicit output format in the original task.", source: "inferred" };
 }
 
-function buildPlanningPrompt(intake: Intake, attempt: number, failureReasons: string[]): string {
+function buildPlanningPrompt(intake: Intake, attempt: number, failureReasons: string[], completedTasks: TaskLedgerEntry[] = []): string {
   const retryBlock = failureReasons.length
     ? `\nPrevious verifier failure reasons to address deterministically:\n${failureReasons.map((reason) => `- ${reason}`).join("\n")}\n`
     : "";
-  return `Plan the following task for executor subagents. Return JSON if possible, exactly shaped as:\n{"tasks":[{"id":"...","description":"...","dependsOn":[]}],"notes":"..."}\n\nINTAKE CONTRACT:\n${formatIntakeForPrompt(intake)}\n\nRules:\n- Keep task IDs stable and simple (task-1, task-2, ...).\n- Make each description self-contained.\n- Do not execute the task.\n- Carry forward all intake constraints, invariants, success criteria, failure criteria, and executor output contract into the task descriptions/notes.\n- If model routing requirements exist in intake, treat them as essential orchestrator constraints, not executor work.\n- If the task cannot be safely split, return one task.\n- **Task-size cap**: each executor task description MUST be under ~200 words. Tasks exceeding this should be split into multiple smaller tasks. Small tasks ensure executor subagents have enough context budget to use write/edit/bash tools and produce actual file artifacts rather than text reports.\n- An executor task that only describes/analyzes and never touches files is NOT sufficient for CREATE or IMPLEMENT work — the verifier will check for actual file artifacts.\n\nAttempt: ${attempt}${retryBlock}`;
+  // F2: completed tasks from prior attempts must NOT be re-created. The
+  // orchestrator reuses their outputs and routes them to re-verification.
+  const completedBlock = completedTasks.length
+    ? `\nTasks ALREADY COMPLETED successfully in a previous attempt (their artifacts exist on disk). Keep their IDs stable, do NOT instruct executors to re-create or re-do their work, and plan only the remaining/failed work. The orchestrator will reuse their results automatically:\n${completedTasks.map((entry) => `- ${entry.taskId}: ${entry.description}`).join("\n")}\n`
+    : "";
+  return `Plan the following task for executor subagents. Return JSON if possible, exactly shaped as:\n{"tasks":[{"id":"...","description":"...","dependsOn":[]}],"notes":"..."}\n\nINTAKE CONTRACT:\n${formatIntakeForPrompt(intake)}\n\nRules:\n- Keep task IDs stable and simple (task-1, task-2, ...).\n- Make each description self-contained.\n- Do not execute the task.\n- Carry forward all intake constraints, invariants, success criteria, failure criteria, and executor output contract into the task descriptions/notes.\n- If model routing requirements exist in intake, treat them as essential orchestrator constraints, not executor work.\n- If the task cannot be safely split, return one task.\n- **Task-size cap**: each executor task description MUST be under ~200 words. Tasks exceeding this should be split into multiple smaller tasks. Small tasks ensure executor subagents have enough context budget to use write/edit/bash tools and produce actual file artifacts rather than text reports.\n- An executor task that only describes/analyzes and never touches files is NOT sufficient for CREATE or IMPLEMENT work — the verifier will check for actual file artifacts.\n\nAttempt: ${attempt}${completedBlock}${retryBlock}`;
 }
 
 function buildExecutorPrompt(intake: Intake, plan: Plan, task: PlanTask): string {
@@ -2374,7 +2933,7 @@ function buildVerificationPrompt(intake: Intake, plan: Plan, outputs: ExecutorOu
   const artifactBlock = artifactEvidence
     ? `\n\nARTIFACT EVIDENCE (collected post-execution by orchestrator):\n${artifactEvidence}`
     : "";
-  return `Verify the orchestration result against the intake contract.\n\nINTAKE CONTRACT:\n${formatIntakeForPrompt(intake)}\n\nPlan:\n${JSON.stringify(plan, null, 2)}\n\nExecutor outputs:\n${JSON.stringify(outputs, null, 2)}\n\nModel routing evidence/configuration supplied by orchestrator:\n${routingEvidence}${artifactBlock}\n\nReturn JSON exactly and only in this shape:\n{"status":"pass"|"fail","reasons":["..."]}\n\nUse status "pass" only if the plan, outputs, and supplied routing evidence/configuration satisfy the intake success criteria and do not violate any constraints, invariants, or failure criteria. Use "fail" with concrete reasons for missing, unclear, or incorrect work.\n\nFILE ARTIFACT VERIFICATION RULE: If any executor task description contains CREATE, IMPLEMENT, BUILD, MODIFY, ADD, WRITE, or GENERATE (case-insensitive), the executor output MUST reference actual file artifacts (files created, modified, or edited). A text-only response that describes what was done without mentioning any specific files created/modified is INSUFFICIENT — treat it as FAIL with reason "no file artifacts produced for implementation task". The ARTIFACT EVIDENCE block (if present) shows what files actually changed on disk — use it as ground truth, overriding any text claims.`;
+  return `Verify the orchestration result against the intake contract.\n\nINTAKE CONTRACT:\n${formatIntakeForPrompt(intake)}\n\nPlan:\n${JSON.stringify(plan, null, 2)}\n\nExecutor outputs:\n${JSON.stringify(outputs, null, 2)}\n\nModel routing evidence/configuration supplied by orchestrator:\n${routingEvidence}${artifactBlock}\n\nReturn JSON exactly and only in this shape:\n{"status":"pass"|"fail","reasons":["..."]}\n\nUse status "pass" only if the plan, outputs, and supplied routing evidence/configuration satisfy the intake success criteria and do not violate any constraints, invariants, or failure criteria. Use "fail" with concrete reasons for missing, unclear, or incorrect work.\n\nEFFECT EVIDENCE RULE: The ARTIFACT EVIDENCE block (if present) contains mechanical ground truth — per-task tool-call telemetry (write/edit/bash executions) and worktree file deltas. Judge implementation work by these OBSERVED EFFECTS, not by the shape or length of the executor's reply text. An executor that performed real tool-based file mutations and answered with a brief summary (or a table) is VALID. Conversely, prose claiming files were created is INSUFFICIENT when the effect evidence shows zero mutations — treat that as FAIL with reason "no observed effects for implementation task".\n\nADVISORY CRITERIA RULE (F6): entries under inferred_advisory_criteria (and any criterion tagged source="inferred" in criteria_provenance) are advisory only — you may mention violations as warnings inside reasons, but they MUST NOT cause status "fail" on their own.`;
 }
 
 function parsePlan(text: string, originalTask: string): Plan {
@@ -2578,6 +3137,10 @@ function buildFinalResult(status: "pass" | "fail", params: NormalizedParams, sta
     `**Task:** ${params.task}`,
     `**Attempts:** ${state.attempt}`,
     `**Subagents spawned:** ${state.spawnedCount}/${params.maxSubagents}`,
+    `**Run:** ${state.runId} | **Hard gates:** ${params.hardGates}`,
+    ...(state.abortReason
+      ? ["", "## Orchestration aborted (partial report)", `- ${state.abortReason}`]
+      : []),
     "",
     "## Intake contract",
     state.intake ? "```json\n" + JSON.stringify(compactIntake(state.intake), null, 2) + "\n```" : "No intake produced.",
@@ -2600,6 +3163,8 @@ function buildFinalResult(status: "pass" | "fail", params: NormalizedParams, sta
     ...state.executorOutputs.map((output) => [
       `### ${output.taskId}: ${output.description}`,
       "",
+      `_Effect evidence: tool calls ${formatToolCallSummary(output.toolCalls)}; files changed ${output.filesChanged ?? "unknown"}${output.reusedFromAttempt ? `; reused from attempt ${output.reusedFromAttempt}` : ""}_`,
+      "",
       output.output ? truncateWithNotice(output.output, MAX_EXECUTOR_MARKDOWN_CHARS, `executor output ${output.taskId}`) : "_(No assistant text captured.)_",
       output.stderr ? `\n_stderr:_\n\`\`\`\n${truncateWithNotice(output.stderr, 2000, `stderr ${output.taskId}`)}\n\`\`\`` : "",
     ].join("\n")),
@@ -2607,6 +3172,23 @@ function buildFinalResult(status: "pass" | "fail", params: NormalizedParams, sta
 
   if (state.failureReasons.length) {
     lines.push("", "## Failure reasons across attempts", ...state.failureReasons.map((reason) => `- ${reason}`));
+  }
+
+  if (state.gateWarnings.length) {
+    lines.push("", "## Gate warnings (advisory — not verdict-determining)", ...state.gateWarnings.map((warning) => `- ${warning}`));
+  }
+
+  if (state.commitEvidence.length) {
+    lines.push(
+      "",
+      `## Commit evidence (run ${state.runId})`,
+      ...state.commitEvidence.map((entry) => {
+        const diffHint = entry.preHash && entry.postHash && entry.preHash !== entry.postHash
+          ? ` (diff: git diff ${entry.preHash.slice(0, 12)}..${entry.postHash.slice(0, 12)})`
+          : "";
+        return `- attempt ${entry.attempt}: pre=${entry.preHash ?? "(unavailable)"} post=${entry.postHash ?? "(unavailable)"}${diffHint}`;
+      }),
+    );
   }
 
   if (state.progressLog.length) {
@@ -2640,6 +3222,17 @@ function buildDetails(status: "pass" | "fail", params: NormalizedParams, state: 
   return {
     status,
     params: { ...params, task: truncateWithNotice(params.task, MAX_DETAIL_TEXT_CHARS, "task") },
+    runId: state.runId,
+    hardGates: params.hardGates,
+    gateWarnings: state.gateWarnings.map((warning) => truncateWithNotice(warning, MAX_DETAIL_TEXT_CHARS, "gate warning")),
+    commitEvidence: state.commitEvidence,
+    taskLedger: [...state.taskLedger.values()].map((entry) => ({
+      taskId: entry.taskId,
+      verdict: entry.verdict,
+      attempt: entry.attempt,
+      filesChanged: entry.output.filesChanged,
+      mutatingToolCalls: entry.output.toolCalls?.mutating ?? 0,
+    })),
     deterministicState: {
       attempt: state.attempt,
       spawnedCount: state.spawnedCount,
@@ -3086,6 +3679,12 @@ function inferOrchestrationParadigm(params: NormalizedParams): string {
   if (params.paradigm) return params.paradigm;
 
   const task = params.task.toLowerCase();
+
+  // Detect verify-only keywords (F8) — checked first because generic
+  // "verify" terms also appear in other paradigm triggers.
+  if (/\b(?:verify[-\s]?only|verification[-\s]?only|only\s+verify|just\s+verify|re-?verif(?:y|ication))\b/i.test(task)) {
+    return "verify-only";
+  }
 
   // Detect composable-pipeline keywords
   // Phase-specific triggers (hypothesize, criticize, synthesize)

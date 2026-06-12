@@ -22,6 +22,15 @@ import { existsSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
+import {
+  emptyToolCallSummary,
+  recordToolCall,
+  parseProviderError,
+  formatProviderError,
+  type ToolCallSummary,
+  type ProviderHealthError,
+} from "./judgment";
+
 // ── Re-exported agent profile (role-agnostic shape) ────────────────────────
 
 export interface AgentProfile {
@@ -161,6 +170,11 @@ export interface SubagentResult {
   truncated?: boolean;
   /** Set by recovery layer when the subagent signalled context exhaustion. */
   contextExhaustionSignal?: boolean;
+  /**
+   * Effect-evidence telemetry: tool executions observed in the child's
+   * JSONL stream. `mutating` counts write/edit/bash-class tools.
+   */
+  toolCalls?: ToolCallSummary;
 }
 
 // ── spawnSubagent ──────────────────────────────────────────────────────────
@@ -263,6 +277,7 @@ export async function spawnSubagent(
   let killedByAbort = false;
   let agentEnded = false;
   const assistantFailures: string[] = [];
+  const toolCalls = emptyToolCallSummary();
 
   const child = spawn(command.command, args, {
     cwd: options.cwd,
@@ -299,6 +314,12 @@ export async function spawnSubagent(
       eventCount++;
       const progress = describeJsonEvent(profile.name, event);
       if (progress) options.onProgress?.(progress);
+
+      // Effect-evidence telemetry: count tool executions by tool name.
+      if (event?.type === "tool_execution_start") {
+        const toolName = optionalString((event as Record<string, unknown>).toolName);
+        if (toolName) recordToolCall(toolCalls, toolName);
+      }
 
       // Once agent_end is emitted, the subagent has finished its work.
       // Any further message_end events (e.g. from internal shutdown/retries)
@@ -369,10 +390,100 @@ export async function spawnSubagent(
     exitCode,
     durationMs: Date.now() - startedAt,
     events: eventCount,
+    toolCalls,
   };
   if (profile.provider) result.provider = profile.provider;
   if (profile.model) result.model = profile.model;
   return result;
+}
+
+// ── Pre-flight provider health checks (F5) ────────────────────────────────
+
+export interface PreflightRoute {
+  /** Role(s) this route serves — for reporting only. */
+  roles: string[];
+  provider?: string;
+  model?: string;
+}
+
+export interface PreflightResult {
+  roles: string[];
+  provider?: string;
+  model?: string;
+  ok: boolean;
+  durationMs: number;
+  error?: ProviderHealthError;
+}
+
+/**
+ * Run a 1-token health ping for each unique routed provider/model pair
+ * BEFORE any work subagent is spawned (F5). Failures are returned as
+ * structured, machine-readable errors (provider, type, resets_at) instead
+ * of raw payload dumps. Pings do not count against orchestration budgets.
+ */
+export async function preflightProviderHealth(
+  routes: PreflightRoute[],
+  options: {
+    cwd: string;
+    allowLocalModel: boolean;
+    signal?: AbortSignal;
+    onProgress?: (text: string) => void;
+  },
+): Promise<PreflightResult[]> {
+  // Dedupe identical provider/model pairs, merging role labels.
+  const unique = new Map<string, PreflightRoute>();
+  for (const route of routes) {
+    if (!route.provider && !route.model) continue;
+    const key = `${route.provider ?? ""}::${route.model ?? ""}`;
+    const existing = unique.get(key);
+    if (existing) existing.roles.push(...route.roles.filter((r) => !existing.roles.includes(r)));
+    else unique.set(key, { roles: [...route.roles], provider: route.provider, model: route.model });
+  }
+
+  const results: PreflightResult[] = [];
+  const preflightAgents = new Map<string, AgentProfile>([
+    ["preflight", { name: "preflight", description: "Provider health ping", tools: [] }],
+  ]);
+
+  for (const route of unique.values()) {
+    const startedAt = Date.now();
+    const label = formatRoutedModel(route.provider, route.model);
+    options.onProgress?.(`Preflight ping: checking ${label} (roles: ${route.roles.join(", ")})...`);
+    try {
+      const ping = await spawnSubagent("preflight", "Reply with the single word: pong", {
+        agents: preflightAgents,
+        cwd: options.cwd,
+        allowLocalModel: options.allowLocalModel,
+        signal: options.signal,
+        // Suppress per-spawn progress so preflight lines can never be
+        // mistaken for model-routing attestation evidence
+        // ("Subagent X: using ...") in the final report.
+        onProgress: undefined,
+        modelOverride: { model: route.model, provider: route.provider },
+      });
+      results.push({
+        roles: route.roles,
+        provider: route.provider,
+        model: route.model,
+        ok: true,
+        durationMs: Date.now() - startedAt,
+      });
+      options.onProgress?.(`Preflight ping: ${label} healthy (${Date.now() - startedAt}ms, ${ping.events} event(s)).`);
+    } catch (err) {
+      const error = parseProviderError(String(err), route.provider, route.model);
+      results.push({
+        roles: route.roles,
+        provider: route.provider,
+        model: route.model,
+        ok: false,
+        durationMs: Date.now() - startedAt,
+        error,
+      });
+      options.onProgress?.(`Preflight ping FAILED: ${formatProviderError(error)}`);
+    }
+  }
+
+  return results;
 }
 
 // ── runBoundedPool ─────────────────────────────────────────────────────────

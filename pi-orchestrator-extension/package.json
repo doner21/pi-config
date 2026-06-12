@@ -4,7 +4,7 @@
   "description": "Deterministic multi-agent orchestration extension for Pi using isolated Pi JSON-mode subprocesses.",
   "type": "module",
   "scripts": {
-    "test": "node tests/test-natural-language-controls.cjs"
+    "test": "node tests/test-natural-language-controls.cjs && node tests/test-judgment-hardening.cjs"
   },
   "keywords": ["pi-package"],
   "pi": {

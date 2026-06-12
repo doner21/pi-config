@@ -53,10 +53,61 @@ Supported command flags:
 - `--verifier-model M`, `--verifier-provider P` — per-run model override for the verifier.
 - `--cwd PATH` — child subprocess working directory.
 - `--allow-local-model` / `--no-allow-local-model` — local model guard override.
+- `--paradigm NAME` — orchestration shape: `plan-execute-verify` (default), `multi-verify-vote`, `composable-pipeline`, `verify-only`.
+- `--hard-gates MODE` — judgment-layer gate mode: `strict` | `advisory` (default) | `off`. See "Judgment layer" below.
+- `--preflight` / `--no-preflight` — toggle the 1-token provider health pings run before any subagent spawn (default on).
+- `--planner-fallback-model M`, `--planner-fallback-provider P` (and the `executor`/`verifier` variants) — per-role fallback route applied when the primary route fails pre-flight (graceful degradation).
 
 If no task is provided, `/orchestrate` prompts for one. While running, it now surfaces visible progress in the Pi window: status/footer text, a live widget, durable `orchestrate-progress` messages, and child JSON-mode events such as subagent launches, assistant starts/finishes, and tool-call starts. When complete, it notifies a summary, sends a durable visible `orchestrate-result` message, places the final markdown report in the editor when UI is available, and includes a `Progress evidence` section in the report.
 
 If `--max-subagents` is omitted, the extension auto-raises the ceiling after planning when the discovered plan size and retry budget require more than the default. Example: 6 executor tasks with `--max-retries 2` needs `3 * (1 planner + 6 executors + 1 verifier) = 24` subprocesses, so the default ceiling auto-raises from 12 to 24. If `--max-subagents` is provided explicitly, that number is honored and auto-raise is disabled.
+
+## Judgment layer: effect-based verdicts (2026-06-12 hardening)
+
+Verdicts derive from **observed effects** — per-task tool-call telemetry
+(write/edit/bash executions counted from the child JSONL stream) and per-task
+worktree deltas (`git status` snapshots before/after each executor) — not from
+reply-text shape heuristics.
+
+- **`hardGates` (default `advisory`)**: text-shape heuristics (truncation
+  signals, "text-only response for implementation task", "suspiciously short
+  output", escape-clause scans, file-claim regexes) are demoted to report
+  warnings and can never determine a verdict on their own. The verifier's
+  evidenced verdict is the gate. Hard gates only escalate (force FAIL) on
+  effect-based contradictions: a verifier PASS while implementation tasks show
+  zero mutating tool calls and zero worktree changes is forced to FAIL (the
+  documented 2026-06-03 false-PASS class). `strict` restores fail-fast
+  pre-verifier gates; `off` makes everything advisory.
+- **Effect-evidence immunity**: a task with ≥1 successful mutating tool call
+  or ≥1 observed file change is immune from all text-shape findings in every
+  mode. Executors that do real work and reply with a summary table PASS.
+- **Targeted retries (F2)**: per-task pass/fail state persists across
+  attempts. Tasks referenced in failure reasons are retried; the rest are
+  reused (their prior outputs are routed to re-verification, never
+  regenerated) as long as their artifacts still exist on disk. The planner is
+  told which tasks are already complete and must not re-create them.
+- **Pre-flight + structured failures (F5)**: before spawning any subagent, a
+  1-token health ping runs for each routed provider/model pair. Failures
+  produce a machine-readable error (`provider`, `type`, `resets_at`) instead
+  of raw payload dumps, per-role fallback routes are tried, and a **partial
+  report is always emitted on abort** (`details.aborted`,
+  `details.providerError`).
+- **Intake provenance (F6)**: every derived criterion carries
+  `source: explicit | inferred` (`intake.criteriaProvenance`). Synthesized
+  criteria (e.g. a generic executor output contract without literal format
+  markers in the task) are demoted to `inferredAdvisoryCriteria` — they may
+  warn but can never cause a FAIL.
+- **Commit evidence (F7)**: the report exposes pre/post-execution `HEAD`
+  hashes per attempt (plus a run id), so verifiers can diff reliably despite
+  interleaved checkpoint auto-commits.
+- **`verify-only` paradigm (F8)**: input is an evidence checklist + paths;
+  spawns verifier(s) only; output is per-check verdicts with citations; exempt
+  from implementation-task heuristics. See `PARADIGMS.md`.
+
+The per-spawn model-routing attestation lines (`Subagent X: using
+provider/model.`) and the deterministic routing check are unchanged and remain
+byte-compatible in the report. Pre-flight pings do not count against
+`maxSubagents` and never emit attestation-shaped lines.
 
 ## Per-run model routing and natural-language controls
 

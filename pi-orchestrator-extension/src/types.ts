@@ -13,6 +13,7 @@
  */
 
 import type { AgentProfile } from "./substrate";
+import type { HardGatesMode } from "./judgment";
 
 // ── OrchestrationShape interface ───────────────────────────────────────────
 
@@ -84,6 +85,23 @@ export interface NormalizedParams {
   orchestrationControls: NaturalLanguageOrchestrationControls;
   /** Orchestration paradigm to use (defaults to plan-execute-verify). */
   paradigm?: string;
+  /**
+   * Hard-gate mode (F1): "advisory" (default) demotes text-shape heuristics
+   * to warnings and lets the verifier verdict gate, escalating only on
+   * effect-based contradictions; "strict" restores pre-verifier hard gates
+   * (still immune for tasks with positive effect evidence); "off" disables
+   * gates entirely (warnings only).
+   */
+  hardGates: HardGatesMode;
+  /** Run 1-token provider health pings before spawning subagents (F5). */
+  preflight: boolean;
+  /** Optional per-role fallback routes for graceful degradation (F5). */
+  plannerFallbackModel?: string;
+  plannerFallbackProvider?: string;
+  executorFallbackModel?: string;
+  executorFallbackProvider?: string;
+  verifierFallbackModel?: string;
+  verifierFallbackProvider?: string;
 }
 
 export interface RoleModelHint {
