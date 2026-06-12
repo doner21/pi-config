@@ -2738,8 +2738,14 @@ function normalizeRoutingText(text: string): string {
 function modelAliasFromText(text: string): RoleModelOverride | undefined {
   const normalized = normalizeRoutingText(text);
   if (/\bgpt[-\s]*5(?:\.5)?\b/.test(normalized) || /\bcodex\b/.test(normalized)) return { provider: "openai-codex", model: "gpt-5.5" };
+  if (/\bgpt[-\s]*5(?:\.5)?\b.{0,20}\bfast\b|\bfast\b.{0,20}\bgpt[-\s]*5(?:\.5)?\b/.test(normalized)) return { provider: "openai-codex", model: "gpt-5.5-fast" };
   if (/\bdeepseek\b/.test(normalized) && /\bv?4\b/.test(normalized) && /\bpro\b/.test(normalized)) return { provider: "deepseek", model: "deepseek-v4-pro" };
   if (/\bdeepseek\b/.test(normalized) && /\bv?4\b/.test(normalized) && /\bflash\b/.test(normalized)) return { provider: "deepseek", model: "deepseek-v4-flash" };
+  // Anthropic model aliases — prompt-based routing flexibility.
+  if (/\bopus\b.{0,20}\b4\.?8\b|\b4\.?8\b.{0,20}\bopus\b|\bclaude\b.{0,20}\bopus\b/i.test(normalized)) return { provider: "anthropic", model: "claude-opus-4-20250514" };
+  if (/\bsonnet\b|\bclaude\s+sonnet\b/i.test(normalized)) return { provider: "anthropic", model: "claude-sonnet-4-20250514" };
+  if (/\bhaiku\b|\bclaude\s+haiku\b/i.test(normalized)) return { provider: "anthropic", model: "claude-3-5-haiku-20241022" };
+  if (/\bfable\b|\bclaude\s+fable\b/i.test(normalized)) return { provider: "anthropic", model: "fable" };
   return undefined;
 }
 
@@ -2797,8 +2803,14 @@ function findModelAliases(task: string): Array<{ index: number; provider: string
     while ((match = regex.exec(normalized))) aliases.push({ index: match.index, provider, model });
   };
   addMatches(/\b(?:openai[-\s]*)?codex\b.{0,30}\b(?:gpt|pt)[-\s]*5(?:\.5)?\b|\b(?:gpt|pt)[-\s]*5(?:\.5)?\b.{0,30}\b(?:openai[-\s]*)?codex\b|\b(?:gpt|pt)[-\s]*5\.5\b/gi, "openai-codex", "gpt-5.5");
+  addMatches(/\b(?:gpt|pt)[-\s]*5(?:\.5)?\b.{0,20}\bfast\b|\bfast\b.{0,20}\b(?:gpt|pt)[-\s]*5(?:\.5)?\b/gi, "openai-codex", "gpt-5.5-fast");
   addMatches(/\bdeepseek\b[^,;\n!?]{0,40}\bv?4\b[^,;\n!?]{0,20}\bpro\b|\bv?4\b[^,;\n!?]{0,20}\bpro\b[^,;\n!?]{0,40}\bdeepseek\b/gi, "deepseek", "deepseek-v4-pro");
   addMatches(/\bdeepseek\b[^,;\n!?]{0,40}\bv?4\b[^,;\n!?]{0,20}\bflash\b|\bv?4\b[^,;\n!?]{0,20}\bflash\b[^,;\n!?]{0,40}\bdeepseek\b/gi, "deepseek", "deepseek-v4-flash");
+  // Anthropic model aliases — prompt-based routing flexibility.
+  addMatches(/\bopus\b.{0,20}\b4\.?8\b|\b4\.?8\b.{0,20}\bopus\b|\bclaude\b.{0,20}\bopus\b/gi, "anthropic", "claude-opus-4-20250514");
+  addMatches(/\bsonnet\b/gi, "anthropic", "claude-sonnet-4-20250514");
+  addMatches(/\bhaiku\b/gi, "anthropic", "claude-3-5-haiku-20241022");
+  addMatches(/\bfable\b/gi, "anthropic", "fable");
   return aliases.sort((a, b) => a.index - b.index);
 }
 
