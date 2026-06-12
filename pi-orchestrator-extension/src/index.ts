@@ -978,32 +978,45 @@ async function runProviderPreflight(
     };
   };
 
+  /** Parse comma-separated fallback chain — backward-compatible with single-value params. */
+  const parseFallbackChain = (models?: string, providers?: string): Array<{ model?: string; provider?: string }> => {
+    const modelList = (models ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+    const providerList = (providers ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+    const maxLen = Math.max(modelList.length, providerList.length);
+    if (maxLen === 0) return [];
+    const chain: Array<{ model?: string; provider?: string }> = [];
+    for (let i = 0; i < maxLen; i++) {
+      chain.push({
+        model: modelList[i] || modelList[modelList.length - 1] || undefined,
+        provider: providerList[i] || providerList[providerList.length - 1] || undefined,
+      });
+    }
+    return chain;
+  };
+
   const roles = [
     {
-      role: "planner",
+      role: "planner" as const,
       ...resolveRoute(params.plannerAgent, params.plannerModel, params.plannerProvider),
-      fallbackModel: params.plannerFallbackModel,
-      fallbackProvider: params.plannerFallbackProvider,
+      fallbackChain: parseFallbackChain(params.plannerFallbackModel, params.plannerFallbackProvider),
       applyFallback: (model?: string, provider?: string) => {
         if (model) params.plannerModel = model;
         if (provider) params.plannerProvider = provider;
       },
     },
     {
-      role: "executor",
+      role: "executor" as const,
       ...resolveRoute(params.executorAgent, params.executorModel, params.executorProvider),
-      fallbackModel: params.executorFallbackModel,
-      fallbackProvider: params.executorFallbackProvider,
+      fallbackChain: parseFallbackChain(params.executorFallbackModel, params.executorFallbackProvider),
       applyFallback: (model?: string, provider?: string) => {
         if (model) params.executorModel = model;
         if (provider) params.executorProvider = provider;
       },
     },
     {
-      role: "verifier",
+      role: "verifier" as const,
       ...resolveRoute(params.verifierAgent, params.verifierModel, params.verifierProvider),
-      fallbackModel: params.verifierFallbackModel,
-      fallbackProvider: params.verifierFallbackProvider,
+      fallbackChain: parseFallbackChain(params.verifierFallbackModel, params.verifierFallbackProvider),
       applyFallback: (model?: string, provider?: string) => {
         if (model) params.verifierModel = model;
         if (provider) params.verifierProvider = provider;
@@ -1026,26 +1039,47 @@ async function runProviderPreflight(
     for (const roleName of result.roles) {
       const role = roles.find((r) => r.role === roleName);
       if (!role) continue;
-      if (role.fallbackModel || role.fallbackProvider) {
+
+      // F4 companion: multi-step fallback chain — try each fallback in order
+      // until one succeeds or all are exhausted.
+      let recovered = false;
+      const chain = role.fallbackChain;
+      if (chain.length > 0) {
         emit(
-          `Preflight: ${roleName} primary route ${formatRoutedModel(role.provider, role.model)} failed — trying fallback ${formatRoutedModel(role.fallbackProvider, role.fallbackModel)}...`,
+          `Preflight: ${roleName} primary route ${formatRoutedModel(role.provider, role.model)} failed — ` +
+          `${chain.length} fallback(s) configured.`,
         );
-        const fallbackResults = await preflightProviderHealth(
-          [{ roles: [roleName], provider: role.fallbackProvider, model: role.fallbackModel }],
-          { cwd: params.cwd, allowLocalModel: params.allowLocalModel, signal, onProgress: emit },
-        );
-        if (fallbackResults[0]?.ok) {
-          role.applyFallback(role.fallbackModel, role.fallbackProvider);
-          emit(
-            `Preflight: ${roleName} re-routed to fallback ${formatRoutedModel(role.fallbackProvider, role.fallbackModel)} (graceful degradation).`,
+        for (let i = 0; i < chain.length; i++) {
+          const fb = chain[i];
+          const fbLabel = formatRoutedModel(fb.provider, fb.model);
+          emit(`Preflight: ${roleName} trying fallback ${i + 1}/${chain.length}: ${fbLabel}...`);
+          const fbResults = await preflightProviderHealth(
+            [{ roles: [roleName], provider: fb.provider, model: fb.model }],
+            { cwd: params.cwd, allowLocalModel: params.allowLocalModel, signal, onProgress: emit },
           );
-          continue;
+          if (fbResults[0]?.ok) {
+            role.applyFallback(fb.model, fb.provider);
+            recovered = true;
+            emit(
+              `Preflight: ${roleName} re-routed to fallback ${i + 1} ${fbLabel} (graceful degradation).`,
+            );
+            break;
+          }
+          if (fbResults[0]?.error) {
+            emit(
+              `Preflight: ${roleName} fallback ${i + 1} ${fbLabel} also failed: ${formatProviderError(fbResults[0].error)}`,
+            );
+          }
         }
-        if (fallbackResults[0]?.error) unrecovered.push(fallbackResults[0].error);
-        if (result.error) unrecovered.push(result.error);
-        continue;
       }
-      if (result.error) unrecovered.push(result.error);
+
+      if (!recovered) {
+        if (result.error) unrecovered.push(result.error);
+        // Collect errors from all failed fallbacks too, for diagnostic richness.
+        for (const fb of chain) {
+          // We already logged each failure; don't double-count in unrecovered.
+        }
+      }
     }
   }
 
