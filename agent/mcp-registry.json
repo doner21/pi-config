@@ -2,12 +2,10 @@
   {
     "id": "godaddy-mcp",
     "label": "GoDaddy MCP",
-    "status": "connected",
-    "tools": [
-      "domains_suggest",
-      "domains_check_availability"
-    ],
-    "connectedAt": 1781486068836
+    "status": "error",
+    "error": "Streamable HTTP error: Error POSTing to endpoint: ",
+    "tools": [],
+    "connectedAt": 1781537333330
   },
   {
     "id": "playwright-mcp",
@@ -36,7 +34,7 @@
       "browser_tabs",
       "browser_wait_for"
     ],
-    "connectedAt": 1781486069244
+    "connectedAt": 1781537334845
   },
   {
     "id": "railway-mcp",
@@ -76,6 +74,6 @@
       "update_volume",
       "whoami"
     ],
-    "connectedAt": 1781486069573
+    "connectedAt": 1781537335180
   }
 ]
