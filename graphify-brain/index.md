@@ -2,19 +2,7 @@
 
 > Path: `C:\Users\doner\.pi\graphify-brain`
 
-10 project graph(s) saved.
-
-## pi-orchestrator-extension
-- **Project path**: `C:\Users\doner\pi-orchestrator-extension`
-- **Saved**: 2026-06-12
-- **Artifacts**: GRAPH_REPORT.md
-- **Nodes**: 331  |  **Edges**: 756
-
-## pi-agent-extensions
-- **Project path**: `C:\Users\doner\.pi\agent`
-- **Saved**: 2026-06-12
-- **Artifacts**: GRAPH_REPORT.md
-- **Nodes**: 3010  |  **Edges**: 5461
+8.4 project graph(s) saved.
 
 ## kraokebox_song_generator
 - **Project path**: `C:\Users\doner\kraokebox_song_generator`
