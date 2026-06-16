@@ -1,28 +1,38 @@
 ---
 name: "internet-research"
-description: "PROCEDURE: Search the internet using DuckDuckGo. Use this to find current information, documentation, or solutions to coding problems."
+description: "PROCEDURE: Search the internet using DuckDuckGo/browser-backed search. Use this to find current information, documentation, or solutions to coding problems."
 ---
 
 # Internet Research Procedure
 
 > [!IMPORTANT]
-> **This is a PROCEDURE, not a tool.** You do **not** have a tool named `web-search` or `internet-research`. 
-> To perform an internet search, you must manually use your **`bash`** tool to run the following commands.
+> **This is a PROCEDURE, not a tool.** You do **not** have a tool named `web-search` or `internet-research`.
+> Prefer the Pi tool **`browser_web_search`** when it is available. It is provided by this config's `browser-picture-search` extension, uses DuckDuckGo Lite/direct HTTP with a Playwright fallback, and does **not** require Ollama, Llama, or a local model.
 
 ## How to Search
 
-1.  **Formulate a Query**: Determine the search terms you want to use.
-2.  **Execute via Bash**: Run the DuckDuckGo CLI tool (`ddgr`) using the `bash` tool. Always use the `--json` flag for structured output.
+1. **Formulate a Query**: Determine the search terms you want to use.
+2. **Preferred tool path**: Call `browser_web_search` with `query` and `max_results`. Use `browser_navigate`/`browser_snapshot` on promising result URLs when you need full-page evidence.
+3. **Fallback CLI path**: If `browser_web_search` is unavailable, use `bash` to run the DuckDuckGo CLI tool (`ddgr`) with `--json` for structured output.
 
-**Search Command:**
+**Fallback Search Command:**
 ```bash
 ddgr --json -n 5 "your search query here"
 ```
 
-3.  **Process Results**: The `bash` tool will return a JSON list of results (titles, URLs, and abstracts).
-4.  **Synthesize**: Read the abstracts and titles to answer the user's question. If you need more detail, you can use the `bash` tool to `curl` a specific URL from the results.
+4. **Synthesize**: Use result titles, URLs, snippets, and opened pages to answer the user's question. Cite URLs for current or externally sourced claims.
+
+## Notes
+
+- `web_search` / `web_fetch` are legacy Ollama-backed tools only when `npm:@ollama/pi-web-search` is installed and a local Ollama instance has web search/fetch enabled.
+- If a DeepSeek-backed subagent such as `browser-agent` performs the search, DeepSeek is the reasoning model interpreting results; the search backend is still DuckDuckGo/browser automation.
 
 ## Example
-If the user asks about Gemma 4, run:
-`ddgr --json -n 5 "Google Gemma 4 models latest details"`
-Then parse the list of results provided by the `bash` output.
+
+If the user asks about Gemma 4, call `browser_web_search` with:
+
+```json
+{ "query": "Google Gemma 4 models latest details", "max_results": 5 }
+```
+
+Then inspect authoritative result pages as needed.

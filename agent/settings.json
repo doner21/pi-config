@@ -5,7 +5,6 @@
   "hideThinkingBlock": false,
   "lastChangelogVersion": "0.79.3",
   "packages": [
-    "npm:@ollama/pi-web-search",
     "../pi-orchestrator-extension",
     "npm:pi-mcp-adapter",
     "npm:gentle-engram@0.1.8"

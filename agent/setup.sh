@@ -7,6 +7,9 @@
 #
 # Usage:
 #   cd ~/.pi/agent && bash setup.sh
+#
+# Optional legacy Ollama web_search/web_fetch tools:
+#   INSTALL_OLLAMA_WEB_SEARCH=1 bash setup.sh
 
 set -euo pipefail
 
@@ -41,13 +44,20 @@ else
     echo "[2/3] auth.json already exists — skipping."
 fi
 
-# 3. Install the web search package
+# 3. Web search note / optional legacy package
 echo ""
-echo "[3/3] Installing web search package..."
-if command -v pi &> /dev/null; then
-    pi install npm:@ollama/pi-web-search 2>/dev/null || echo "  (pi not running — install manually: pi install npm:@ollama/pi-web-search)"
+echo "[3/3] Web search setup..."
+echo "  Default browser_web_search is bundled; no Ollama/Llama install required."
+if [ "${INSTALL_OLLAMA_WEB_SEARCH:-}" = "1" ]; then
+    echo "  Installing optional legacy Ollama web_search/web_fetch package..."
+    if command -v pi &> /dev/null; then
+        pi install npm:@ollama/pi-web-search 2>/dev/null || echo "  (pi not running — install manually: pi install npm:@ollama/pi-web-search)"
+    else
+        echo "  (pi not found in PATH — run 'pi install npm:@ollama/pi-web-search' after starting pi)"
+    fi
 else
-    echo "  (pi not found in PATH — run 'pi install npm:@ollama/pi-web-search' after starting pi)"
+    echo "  Skipping optional legacy Ollama web_search/web_fetch package."
+    echo "  To install it later: pi install npm:@ollama/pi-web-search"
 fi
 
 echo ""

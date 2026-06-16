@@ -58,13 +58,23 @@ The `auth.json` file is **not included** (secrets). Create it manually:
 
 ---
 
-## Install Web Search (Optional)
+## Web Search Setup
+
+This config now includes browser-backed search tools by default via `agent/extensions/browser-picture-search.ts`:
+
+- `browser_web_search` — DuckDuckGo Lite/direct HTTP search, with a Playwright-browser fallback
+- `browser_image_search` — Google Images workflow helper
+- `browser_reverse_image_search` — reverse-image workflow helper
+
+These tools do **not** require Ollama, Llama, or any local model. If a DeepSeek-backed agent such as `browser-agent` uses them, DeepSeek is the reasoning model interpreting the results; the search itself is still DuckDuckGo/Playwright-backed.
+
+Optional legacy tools:
 
 ```bash
 pi install npm:@ollama/pi-web-search
 ```
 
-Requires Ollama running locally with web search enabled.
+Install that only if you specifically want the older `web_search` / `web_fetch` tools. Those require Ollama running locally with web search/fetch enabled.
 
 ---
 
@@ -130,7 +140,9 @@ powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.pi\agent\setup.ps1"
 These will:
 1. Install extension npm dependencies
 2. Prompt for your `auth.json` API keys
-3. Install the web search package
+3. Leave browser-backed web search ready via the bundled extension
+
+They do not install the legacy Ollama web-search package by default. Install `npm:@ollama/pi-web-search` manually only if you need the older `web_search` / `web_fetch` tools.
 
 ---
 
@@ -178,4 +190,4 @@ After cloning, your `~/.pi` should look like:
 - **Pi** coding agent: `npm install -g @earendil-works/pi-coding-agent`
 - **Git**
 - (Optional) **ripgrep** (`rg`), **fd** for bundled search
-- (Optional) **Ollama** for local models and web search
+- (Optional) **Ollama** for local models or the legacy `web_search` / `web_fetch` package

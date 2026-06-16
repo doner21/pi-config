@@ -86,7 +86,7 @@ Intercepts dangerous commands (rm -rf, dd, mkfs, etc.) and prompts for confirmat
 Automatically creates a git commit before any LLM-issued `write` or `edit` tool call, providing automatic rollback points.
 
 ### 🌐 Web Search Integration
-Ollama-powered web search and fetch tools for real-time information retrieval.
+Browser-backed web search is included by default via `browser_web_search` (DuckDuckGo Lite/direct HTTP with Playwright fallback). It does not require Ollama, Llama, or a local model. The older Ollama-backed `web_search` / `web_fetch` tools remain optional for users who install `npm:@ollama/pi-web-search` themselves.
 
 ## Prerequisites
 
@@ -151,14 +151,24 @@ EOF
 
 > **Note:** Copy your real API keys from your original machine's `~/.pi/agent/auth.json`. Never commit this file.
 
-### 4. Install web search package
+### 4. Web search tools
+
+No extra install is required for the default web search path. This config includes `browser-picture-search.ts`, which registers:
+
+- `browser_web_search` — DuckDuckGo Lite/direct HTTP search with Playwright fallback
+- `browser_image_search` — browser-assisted Google Images workflow
+- `browser_reverse_image_search` — browser-assisted reverse-image workflow
+
+These tools do **not** use Ollama/Llama. If a DeepSeek-backed agent such as `browser-agent` performs the search, DeepSeek is the reasoning model interpreting results; the search backend remains DuckDuckGo/Playwright.
+
+Optional legacy install:
 
 ```bash
 cd ~/.pi/agent
 pi install npm:@ollama/pi-web-search
 ```
 
-This adds web search and fetch capabilities (requires Ollama running locally with web search/fetch enabled).
+Install that only if you specifically want `web_search` / `web_fetch`, which require Ollama running locally with web search/fetch enabled.
 
 ### 5. Verify the installation
 
@@ -271,7 +281,7 @@ Complete NenFlow v3 configuration including:
 | File | Purpose |
 |------|---------|
 | `settings.json` | Pi settings (model, provider, packages) |
-| `models.json` | Model definitions (Ollama local models) |
+| `models.json` | Model definitions (cloud routes plus optional Ollama/local models) |
 | `mcp-registry.json` | MCP server registry |
 | `AGENTS.md` | Global agent policy (Capati memory + Graphify) |
 
