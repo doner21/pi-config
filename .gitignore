@@ -16,6 +16,11 @@ node_modules/
 verbosity-state.json
 agent/verbosity-state.json
 *.disabled
+.playwright-mcp/
+agent/mcp-cache.json
+agent/trust.json
+agent/nenflow-v3/runs/
+graphify-brain/Bussiness_Plan/
 
 # Health check
 .nenflow_context_health.json
