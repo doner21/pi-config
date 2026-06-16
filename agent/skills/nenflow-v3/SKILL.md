@@ -12,11 +12,13 @@ Important operating mode:
 - Do **not** switch to hidden/background JSON orchestration.
 - Do **not** spawn an INTAKE subagent.
 - The ORCHESTRATOR performs **INTAKE itself** in the current context window.
-- Use subagents only for:
+- Use the PEV subagents as the primary phase spine:
   - `pev-researcher`
   - `pev-planner`
   - `pev-executor`
   - `pev-verifier`
+- When materially useful, you may also call optional specialist sidecar agents from `~/.pi/agent/orchestration/SPECIALIST_REGISTRY.json`.
+- Specialist sidecars must not replace the canonical PEV artifacts or final `pev-verifier` verdict unless the user explicitly requests a non-PEV run.
 
 ## NenFlow Global Home
 
@@ -264,12 +266,20 @@ These supplements are additive — they enrich the specification without breakin
 
 Use the `subagent` tool to invoke the role agents. Use the project being worked on as the working directory when helpful, but keep artifact paths in the global NenFlow home.
 
-Subagents to use:
+Primary phase subagents to use:
 - `pev-researcher`
 - `pev-planner`
 - `pev-executor`
 - `pev-verifier`
 - `pev-intake-ecological` (only for ecological intake mode)
+
+Optional specialist sidecars:
+- Load routing guidance from `~/.pi/agent/orchestration/SPECIALIST_REGISTRY.json` and `~/.pi/agent/orchestration/README.md` when the task would benefit from specialized intake, research, planning, execution, verification, observation, witnessing, or postmortem capture.
+- Use `orch-*` sidecars sparingly, normally 1-3 per small run.
+- Save sidecar outputs in the current run directory as `ATT_SIDE_<PHASE>_<AGENT>.md` when an artifact is needed.
+- Sidecar verifier agents advise; `pev-verifier` still owns the final NenFlow PASS/FAIL verdict.
+- Observer/witness sidecars record evidence and drift; they do not judge correctness.
+- Implementation sidecars may only be used for bounded mutation tasks and their work must be represented in the normal EXECUTION report / VERIFIER brief.
 
 Do not call `pev-intake`.
 
