@@ -7,7 +7,7 @@
       "domains_suggest",
       "domains_check_availability"
     ],
-    "connectedAt": 1781649078737
+    "connectedAt": 1781649358163
   },
   {
     "id": "playwright-mcp",
@@ -36,7 +36,7 @@
       "browser_tabs",
       "browser_wait_for"
     ],
-    "connectedAt": 1781649079123
+    "connectedAt": 1781649358532
   },
   {
     "id": "railway-mcp",
@@ -76,6 +76,6 @@
       "update_volume",
       "whoami"
     ],
-    "connectedAt": 1781649079220
+    "connectedAt": 1781649358633
   }
 ]
