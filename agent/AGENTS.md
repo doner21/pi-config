@@ -1,5 +1,31 @@
 # Global Pi Agent Policy
 
+## Engram Persistent Memory
+
+This Pi installation uses Engram for persistent memory. The binary ships at `agent/bin/engram.exe`
+and the `gentle-engram` npm package provides Pi-native `mem_*` tools.
+
+### If Engram tools are unavailable
+
+1. Check `$env:ENGRAM_BIN` (Windows) or `$ENGRAM_BIN` (Linux/macOS) is set to the binary path
+2. Run `agent/setup.sh` or `agent/setup.ps1` to reconfigure
+3. Verify the binary exists: `agent/bin/engram.exe` (Windows) or `agent/bin/engram` (Linux/macOS)
+4. Run `mem_doctor` to diagnose connection issues
+5. The MCP server config at `agent/mcp.json` uses `ENGRAM_BIN || 'engram'` — if the env var is missing
+   and 'engram' isn't on PATH, the MCP server won't start
+
+### Quick fix (per-session)
+
+```powershell
+# Windows PowerShell
+$env:ENGRAM_BIN = "$env:USERPROFILE\.pi\agent\bin\engram.exe"
+```
+
+```bash
+# Linux / macOS
+export ENGRAM_BIN="$HOME/.pi/agent/bin/engram"
+```
+
 ## Graphify Brain is first-class project memory context
 
 This Pi installation uses the Graphify Brain at `C:\Users\doner\.pi\graphify-brain` as its global project memory system.
