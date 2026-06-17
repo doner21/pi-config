@@ -6,6 +6,7 @@ agent/sessions/
 
 # Binary tools
 agent/bin/
+!agent/bin/engram.exe
 
 # Dependencies
 agent/extensions/node_modules/
