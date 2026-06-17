@@ -1,12 +1,13 @@
 {
-  "defaultModel": "deepseek-v4-flash",
+  "defaultModel": "deepseek-v4-pro",
   "defaultProvider": "deepseek",
   "defaultThinkingLevel": "high",
   "hideThinkingBlock": false,
-  "lastChangelogVersion": "0.79.3",
+  "lastChangelogVersion": "0.79.6",
   "packages": [
     "../pi-orchestrator-extension",
     "npm:pi-mcp-adapter",
     "npm:gentle-engram@0.1.8"
-  ]
+  ],
+  "theme": "dark"
 }
