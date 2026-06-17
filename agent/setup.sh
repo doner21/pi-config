@@ -1,67 +1,34 @@
 #!/usr/bin/env bash
-#
-# Pi Agent Configuration Setup
-# =============================
-# Run this after cloning the repo to restore dependencies.
-# Works on macOS, Linux, and Windows (Git Bash / WSL).
-#
-# Usage:
-#   cd ~/.pi/agent && bash setup.sh
-#
-# Optional legacy Ollama web_search/web_fetch tools:
-#   INSTALL_OLLAMA_WEB_SEARCH=1 bash setup.sh
-
+# Pi-config bootstrap — run once after cloning
 set -euo pipefail
 
-echo "=== Pi Agent Configuration Setup ==="
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+echo "==> Bootstrapping Pi-config from ${SCRIPT_DIR}"
 
-# 1. Install extension dependencies
-echo ""
-echo "[1/3] Installing extension dependencies..."
-cd "$(dirname "$0")/extensions"
-npm install
-cd ..
-
-# 2. Prompt for auth.json if missing
-AUTH_FILE="$(dirname "$0")/auth.json"
-if [ ! -f "$AUTH_FILE" ]; then
-    echo ""
-    echo "[2/3] Creating auth.json..."
-    echo "WARNING: auth.json contains API keys! Never commit it."
-    echo ""
-    echo "Paste your auth.json content (or press Enter to skip):"
-    echo "  Example:"
-    echo '  { "providers": { "deepseek": { "apiKey": "sk-..." } } }'
-    echo ""
-    read -r -p "Paste JSON here (or press Enter): " AUTH_CONTENT
-    if [ -n "$AUTH_CONTENT" ]; then
-        echo "$AUTH_CONTENT" > "$AUTH_FILE"
-        echo "auth.json created."
-    else
-        echo "Skipped. Create auth.json manually later."
-    fi
-else
-    echo "[2/3] auth.json already exists — skipping."
+# --- npm dependencies ---
+if [ -f "${SCRIPT_DIR}/agent/npm/package.json" ]; then
+  echo "==> Installing Pi npm packages (gentle-engram, pi-mcp-adapter)..."
+  (cd "${SCRIPT_DIR}/agent/npm" && npm install --no-audit --no-fund)
 fi
 
-# 3. Web search note / optional legacy package
-echo ""
-echo "[3/3] Web search setup..."
-echo "  Default browser_web_search is bundled; no Ollama/Llama install required."
-if [ "${INSTALL_OLLAMA_WEB_SEARCH:-}" = "1" ]; then
-    echo "  Installing optional legacy Ollama web_search/web_fetch package..."
-    if command -v pi &> /dev/null; then
-        pi install npm:@ollama/pi-web-search 2>/dev/null || echo "  (pi not running — install manually: pi install npm:@ollama/pi-web-search)"
-    else
-        echo "  (pi not found in PATH — run 'pi install npm:@ollama/pi-web-search' after starting pi)"
-    fi
+if [ -f "${SCRIPT_DIR}/agent/extensions/package.json" ]; then
+  echo "==> Installing Pi extension dependencies..."
+  (cd "${SCRIPT_DIR}/agent/extensions" && npm install --no-audit --no-fund)
+fi
+
+# --- Engram binary ---
+ENGRAM_BIN="${SCRIPT_DIR}/agent/bin/engram.exe"
+ENGARM_LINUX="${SCRIPT_DIR}/agent/bin/engram"
+
+if [ -f "${ENGRAM_BIN}" ]; then
+  echo "==> Engram binary found at ${ENGRAM_BIN}"
+elif [ -f "${ENGARM_LINUX}" ]; then
+  echo "==> Engram binary found at ${ENGARM_LINUX}"
 else
-    echo "  Skipping optional legacy Ollama web_search/web_fetch package."
-    echo "  To install it later: pi install npm:@ollama/pi-web-search"
+  echo "==> WARNING: Engram binary not found in agent/bin/"
+  echo "    Download from: https://github.com/Gentleman-Programming/engram/releases"
 fi
 
 echo ""
-echo "=== Setup complete! ==="
-echo "Start Pi with: pi"
-echo "Then run: /think medium"
-echo ""
+echo "==> Pi-config bootstrap complete."
+echo "    Restart Pi and verify with: mem_context"
