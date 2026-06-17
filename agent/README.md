@@ -458,7 +458,7 @@ Browser tools are available as regular Pi tools: `browser_navigate`, `browser_cl
 After making changes on any machine, commit and push:
 
 ```bash
-cd ~/.pi/agent
+cd ~/.pi
 git add -A
 git commit -m "Update Pi config: <description>"
 git push
@@ -467,17 +467,17 @@ git push
 On other machines, pull to sync:
 
 ```bash
-cd ~/.pi/agent
+cd ~/.pi
 git pull
-cd ~/.pi/agent/extensions
-npm install
+bash ~/.pi/agent/setup.sh  # re-runs npm install if package.json changed
 ```
 
 ## Cross-Platform Notes
 
 ### Windows
 - Paths use `%USERPROFILE%\.pi\agent\`
-- Binary tools: `rg.exe` and `fd.exe` go in `%USERPROFILE%\.pi\agent\bin\`
+- Binary tools (`engram.exe`, `rg.exe`, `fd.exe`) are bundled in `%USERPROFILE%\.pi\agent\bin\`
+- ENGRAM_BIN is set automatically by `agent/setup.ps1`
 - Git installed via [Git for Windows](https://git-scm.com/)
 - Playwright MCP auto-detects Windows paths
 
