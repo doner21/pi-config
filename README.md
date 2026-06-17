@@ -18,8 +18,8 @@ mv ~/.pi ~/.pi.backup.$(date +%Y%m%d) 2>/dev/null
 # Clone into ~/.pi
 git clone https://github.com/doner21/pi-config.git ~/.pi
 
-# Install extension dependencies
-cd ~/.pi/agent/extensions && npm install
+# Run the bootstrap script (handles npm install + Engram setup)
+bash ~/.pi/agent/setup.sh
 
 # Add your API keys (NOT in this repo — see below)
 ```
@@ -32,8 +32,8 @@ Rename-Item "$env:USERPROFILE\.pi" ".pi.backup.$(Get-Date -Format yyyyMMdd)" -Er
 
 # Clone
 git clone https://github.com/doner21/pi-config.git "$env:USERPROFILE\.pi"
-Set-Location "$env:USERPROFILE\.pi\agent\extensions"
-npm install
+Set-Location "$env:USERPROFILE\.pi"
+.\agent\setup.ps1
 ```
 
 ---
@@ -91,6 +91,18 @@ Test with:
 /think medium
 /subagents list
 /memory list
+mem_context
+```
+
+If `mem_context` reports Engram is unavailable, the ENGRAM_BIN env var may not be set.
+Run `agent/setup.sh` (or `.ps1`) to configure it, or set it manually:
+
+```bash
+export ENGRAM_BIN="$HOME/.pi/agent/bin/engram"
+```
+
+```powershell
+$env:ENGRAM_BIN = "$env:USERPROFILE\.pi\agent\bin\engram.exe"
 ```
 
 ---
@@ -100,6 +112,7 @@ Test with:
 | Directory | Contents |
 |-----------|----------|
 | `agent/` | Core Pi config — extensions, skills, agents, settings, nenflow runs, models |
+| `agent/bin/` | Bundled binaries: engram (memory), rg (ripgrep), fd (file finder) |
 | `agent/extensions/` | TypeScript extensions (subagent, graphify, playwright-mcp, thinking, todos, etc.) |
 | `agent/skills/` | 40+ skills (nenflow-v3, spec-driven-ecology, supabase, docx, pdf, pptx, xlsx, canvas-design, etc.) |
 | `agent/agents/` | Subagent definitions (pev-executor, pev-planner, pev-verifier, researcher, coder, reviewer, etc.) |
@@ -121,6 +134,20 @@ Test with:
 | `/verbosity [level]` | Set response verbosity |
 | `/todos` | Persistent task list |
 
+### Engram Memory Tools (built-in)
+
+| Tool | What it does |
+|------|-------------|
+| `mem_context` | Show all memories for the current project |
+| `mem_search "query"` | Search memories across all projects |
+| `mem_save` | Save a decision, bugfix, discovery, or pattern |
+| `mem_session_summary` | Save session goals, findings, next steps |
+| `mem_get_observation <id>` | Read a specific memory in full |
+| `mem_timeline <id>` | Show context around a memory |
+| `mem_stats` | Memory storage statistics |
+| `mem_doctor` | Diagnose Engram connection issues |
+| `mem_current_project` | Show which project Engram detected |
+
 ---
 
 ## Automated Setup Scripts
@@ -138,9 +165,10 @@ powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.pi\agent\setup.ps1"
 ```
 
 These will:
-1. Install extension npm dependencies
-2. Prompt for your `auth.json` API keys
-3. Leave browser-backed web search ready via the bundled extension
+1. Install extension npm dependencies (`gentle-engram`, `pi-mcp-adapter`, etc.)
+2. Configure the `ENGRAM_BIN` environment variable (persists to user profile on Windows)
+3. Append `ENGRAM_BIN` to `~/.bashrc` / `~/.zshrc` on Linux/macOS
+4. Leave browser-backed web search ready via the bundled extension
 
 They do not install the legacy Ollama web-search package by default. Install `npm:@ollama/pi-web-search` manually only if you need the older `web_search` / `web_fetch` tools.
 
@@ -169,12 +197,13 @@ After cloning, your `~/.pi` should look like:
 │   ├── README.md          ← Full feature documentation
 │   ├── settings.json
 │   ├── models.json
+│   ├── bin/               ← Bundled binaries (engram, rg, fd)
 │   ├── extensions/        ← TypeScript extensions
 │   ├── skills/            ← 40+ skills
 │   ├── agents/            ← Subagent definitions
 │   ├── nenflow-v3/        ← Workflow engine
-│   ├── setup.sh
-│   └── setup.ps1
+│   ├── setup.sh           ← Bootstrap script
+│   └── setup.ps1          ← Bootstrap script (PowerShell)
 ├── extensions/            ← Root-level extensions
 └── graphify-brain/        ← Global project memory
     ├── brain-meta.json
