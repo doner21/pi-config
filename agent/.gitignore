@@ -1,39 +1,78 @@
-# Secrets
+# piNen agent directory gitignore
+# Runtime and private state that must never be committed
+
+# Auth / secrets
 auth.json
+mcp.json
+gmail-config.json
+railway-token.json
+spotify-mcp/.env*
+spotify-mcp/spotify-config.json
 
-# Session history
+# Session / state
 sessions/
+handoffs/
+scheduler.json
+verbosity-state.json
+mcp-cache.json
+trust.json
+.nenflow_context_health.json
 
-# Binary tools
+# NenFlow runs
+nenflow-v3/runs/
+
+# Orchestration runs
+orchestration/runs/
+orchestrate-runs/
+orchestration-runs/
+orchestration-builder/runs/
+global-graphify-maintenance/runs/
+
+# Graphify brain (personal project memory)
+graphify-brain/
+graphify-out/
+
+# Binaries
 bin/
 
 # Dependencies
-extensions/node_modules/
 node_modules/
+*/node_modules/
 
-# Runtime state
-verbosity-state.json
-*.disabled
+# Core patch state
+core-patch/patch-manifest.json
+core-patch/backups/
 
-# Health check
-.nenflow_context_health.json
-
-# Lock files
-*.lock
-
-# Temporary search results
+# Diagnostics / temporary
+diagnostics/
+*-diagnostics*.json
+*-diagnostics*.tmp-*
+engram-health-trace.jsonl
 tmp_search*.json
+crash-wall.md
+*handoff*.md
+*intake*.md
+!extensions/**/intake.md
+*report*.md
+new-mock-process-last-run.json
 
-# Backups
-backups/
+# Telegram runtime
+telegram-pi/secret.token
+telegram-pi/state.json
+telegram-pi/heartbeat.json
+telegram-pi/daemon-state.json
+telegram-pi/logs/
+telegram-pi/config.json
 
-# Test bundles
-graphify-test-bundle.js
+# Graphify autonomy and backup state
+graphify-autonomy/
+git-backup/config.json
+git-backup/state.json
+git-backup/run-log.jsonl
+git-backup/locks/
+git-backup/tmp/
 
-# Misspelled old directory
-neflow-v3/
-
-# OS
-.DS_Store
-Thumbs.db
-nul
+# Disabled extensions
+extensions/*.disabled
+extensions/.nenflow_context_health.json
+extensions/nul

@@ -1,1 +1,0 @@
-See ATT_1_RESEARCH.md

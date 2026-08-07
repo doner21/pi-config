@@ -1,2 +1,0 @@
-var p=require("path"),fs=require("fs");var d=process.env.USERPROFILE+"/.pi/agent/nenflow-v3/runs/RUN_20260603-094920";var f=p.join(d,"ATT_2_PLAN.md");var c=fs.readFileSync(p.join(d,"ATT_0_INTAKE.md"),"utf8");fs.writeFileSync(f,"# Test
-"+c.substring(0,100),"utf8");console.log("ok, wrote "+c.length+" chars");

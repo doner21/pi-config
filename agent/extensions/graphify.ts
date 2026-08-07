@@ -67,6 +67,25 @@ function positionalArgs(args: string[]): string[] {
   return out;
 }
 
+type GraphifyGateMode = "off" | "soft" | "strict";
+
+function graphifyAutonomyConfigPath(): string {
+  return path.join(os.homedir(), ".pi", "agent", "graphify-autonomy", "config.json");
+}
+
+function readGraphifyGateMode(): GraphifyGateMode {
+  try {
+    const raw = fs.readFileSync(graphifyAutonomyConfigPath(), "utf8");
+    const parsed = JSON.parse(raw) as { gateMode?: unknown };
+    if (parsed.gateMode === "off" || parsed.gateMode === "soft" || parsed.gateMode === "strict") {
+      return parsed.gateMode;
+    }
+  } catch {
+    /* Default to advisory if config is absent/corrupt. */
+  }
+  return "soft";
+}
+
 function projectDirForSlug(projectSlug: string): string {
   return path.join(BRAIN_DIR, projectSlug);
 }
@@ -681,7 +700,7 @@ function openInObsidian(): boolean {
         : process.platform === "darwin"
           ? `open "${uri}"`
           : `xdg-open "${uri}"`;
-    execSync(cmd, { stdio: "ignore", timeout: 5000 });
+    execSync(cmd, { stdio: "ignore", timeout: 5000, windowsHide: true });
     return true;
   } catch {
     return false;
@@ -872,6 +891,9 @@ export default function (pi: ExtensionAPI) {
         return undefined;
       }
     }
+
+    const gateMode = readGraphifyGateMode();
+    if (gateMode === "off" || gateMode === "soft") return undefined;
 
     // Already consulted this session — pass through
     if (graphifyConsulted) return undefined;
@@ -1754,7 +1776,7 @@ function detectCommunitiesTS(graph: Record<string, unknown>): { communities: Map
 function detectCommunitiesPython(graphPath: string): { communities: Map<number, string[]>; modularity: number } | null {
   try {
     const cmd = `graphify cluster "${graphPath}"`;
-    const stdout = execSync(cmd, { encoding: "utf-8", timeout: 30000, stdio: ["pipe", "pipe", "pipe"] });
+    const stdout = execSync(cmd, { encoding: "utf-8", timeout: 30000, stdio: ["pipe", "pipe", "pipe"], windowsHide: true });
     const result = JSON.parse(stdout);
     const communities = new Map<number, string[]>();
     if (result.communities && Array.isArray(result.communities)) {
@@ -3253,7 +3275,7 @@ async function handleWikiNotes(ctx: ExtensionCommandContext): Promise<void> {
         : process.platform === "darwin"
           ? `open "${notesInVault}"`
           : `xdg-open "${notesInVault}"`;
-    execSync(cmd, { stdio: "ignore", timeout: 5000 });
+    execSync(cmd, { stdio: "ignore", timeout: 5000, windowsHide: true });
   } catch {
     // fallback
   }

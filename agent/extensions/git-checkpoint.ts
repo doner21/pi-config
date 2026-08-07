@@ -1,31 +1,19 @@
 /**
- * Git Checkpoint Extension for Pi Code
+ * Legacy git-checkpoint extension — intentionally retired.
  *
- * Automatically creates a git commit before any LLM-issued `write` or `edit`
- * tool call, providing a rollback point before destructive file operations.
+ * The previous implementation created an empty/local working-branch commit before
+ * every edit/write, omitted untracked files (`git add -u`), never pushed remotely,
+ * and could spawn a visible Git-for-Windows console chain. It was rollback noise,
+ * not a verified backup.
  *
- * The commit uses --allow-empty so it always succeeds even if nothing changed.
- * Git failures are logged as warnings and never block the agent from working.
+ * Safe automated backups now live in `extensions/git-backup/` and use isolated
+ * refs, secret/size/path gates, dedicated remote backup branches, and independent
+ * remote-tip verification. Keep this no-op file as migration documentation and to
+ * prevent accidental reintroduction of the old behavior.
  */
 
-import { execSync } from "node:child_process";
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
-// ─── Extension Entry Point ────────────────────────────────────────────────────
-
-export default function gitCheckpointExtension(pi: ExtensionAPI) {
-  pi.on("tool_call", async (event: any, ctx: any) => {
-    if (event.toolName !== "write" && event.toolName !== "edit") return;
-
-    const cwd = ctx.cwd;
-
-    try {
-      execSync("git add -u", { cwd, stdio: "pipe" });
-      execSync('git commit -m "checkpoint: pre-op auto-commit [pi]" --allow-empty', { cwd, stdio: "pipe" });
-    } catch (e) {
-      console.warn("[git-checkpoint] git commit skipped:", (e as Error).message?.split("\n")[0]);
-    }
-
-    return undefined; // always allow the tool through — never block
-  });
+export default function retiredGitCheckpoint(_pi: ExtensionAPI): void {
+  // Intentionally empty.
 }

@@ -1,0 +1,10 @@
+{
+  "_comment": "Copy to gmail-config.json, replace placeholders, and keep that real file private.",
+  "defaultAccount": "personal",
+  "accounts": {
+    "personal": {
+      "email": "you@example.com",
+      "appPassword": "<GMAIL_APP_PASSWORD>"
+    }
+  }
+}

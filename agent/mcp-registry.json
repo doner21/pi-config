@@ -1,18 +1,8 @@
 [
   {
-    "id": "godaddy-mcp",
-    "label": "GoDaddy MCP",
-    "status": "connected",
-    "tools": [
-      "domains_suggest",
-      "domains_check_availability"
-    ],
-    "connectedAt": 1781655969543
-  },
-  {
     "id": "playwright-mcp",
     "label": "Playwright MCP",
-    "status": "connected",
+    "status": "disconnected",
     "tools": [
       "browser_close",
       "browser_resize",
@@ -36,12 +26,22 @@
       "browser_tabs",
       "browser_wait_for"
     ],
-    "connectedAt": 1781655969906
+    "connectedAt": 1786046284304
+  },
+  {
+    "id": "godaddy-mcp",
+    "label": "GoDaddy MCP",
+    "status": "connected",
+    "tools": [
+      "domains_suggest",
+      "domains_check_availability"
+    ],
+    "connectedAt": 1786123927054
   },
   {
     "id": "railway-mcp",
     "label": "Railway MCP",
-    "status": "connected",
+    "status": "disconnected",
     "tools": [
       "add_reference_variable",
       "create_bucket",
@@ -76,6 +76,6 @@
       "update_volume",
       "whoami"
     ],
-    "connectedAt": 1781655970008
+    "connectedAt": 1786123927414
   }
 ]

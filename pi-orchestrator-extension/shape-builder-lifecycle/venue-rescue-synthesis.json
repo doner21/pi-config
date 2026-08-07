@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "targetName": "venue-rescue-synthesis",
+  "lifecycleStatus": "implemented_verified",
+  "usable": false,
+  "reloadRequired": true,
+  "nextRequiredGate": "agent_reload",
+  "extensionRoot": "C:\\Users\\doner\\.pi\\pi-orchestrator-extension",
+  "lifecycleStatePath": "C:\\Users\\doner\\.pi\\pi-orchestrator-extension\\shape-builder-lifecycle\\venue-rescue-synthesis.json",
+  "createdAt": "2026-06-28T17:55:58.695Z",
+  "updatedAt": "2026-06-28T17:57:00.718Z",
+  "generatedFiles": [
+    "src/shapes/venue-rescue-synthesis.ts",
+    "tests/test-venue-rescue-synthesis.cjs"
+  ],
+  "anchoredEdits": [
+    {
+      "path": "src/index.ts",
+      "anchor": "// shape-builder generated imports:end",
+      "action": "insert",
+      "content": "import { venueRescueSynthesisShapeShape } from \"./shapes/venue-rescue-synthesis\";"
+    },
+    {
+      "path": "src/index.ts",
+      "anchor": "// shape-builder generated registry entries:end",
+      "action": "insert",
+      "content": "  [\"venue-rescue-synthesis\", venueRescueSynthesisShapeShape],"
+    },
+    {
+      "path": "src/index.ts",
+      "anchor": "// shape-builder generated paradigm names:end",
+      "action": "insert",
+      "content": "  \"venue-rescue-synthesis\","
+    },
+    {
+      "path": "package.json",
+      "anchor": "scripts.test.append",
+      "action": "insert",
+      "content": "node tests/test-venue-rescue-synthesis.cjs"
+    },
+    {
+      "path": "README.md",
+      "anchor": "<!-- shape-builder:generated-shapes:end -->",
+      "action": "insert",
+      "content": "- `venue-rescue-synthesis`: venue-rescue-synthesis runs cheap text research and a vision-based brand audit, then a specialist financial narrative, then a strong synthesis-and-critique that fuses everything into a rescue strategy with wild and practical options, then a design phase that builds a stylish interactive investor site, then an independent verification."
+    },
+    {
+      "path": "PARADIGMS.md",
+      "anchor": "<!-- shape-builder:generated-shapes:end -->",
+      "action": "insert",
+      "content": "- `venue-rescue-synthesis`: venue-rescue-synthesis runs cheap text research and a vision-based brand audit, then a specialist financial narrative, then a strong synthesis-and-critique that fuses everything into a rescue strategy with wild and practical options, then a design phase that builds a stylish interactive investor site, then an independent verification."
+    }
+  ],
+  "failures": [],
+  "history": [
+    {
+      "at": "2026-06-28T17:55:58.695Z",
+      "to": "proposed",
+      "actor": "shape-builder",
+      "evidence": {
+        "phase": "initial"
+      }
+    },
+    {
+      "at": "2026-06-28T17:56:16.547Z",
+      "from": "proposed",
+      "to": "implementation_reported",
+      "actor": "shape-builder",
+      "evidence": {
+        "implementationReport": {
+          "shapeSourceFile": "src/shapes/venue-rescue-synthesis.ts",
+          "testSourceFile": "tests/test-venue-rescue-synthesis.cjs",
+          "anchoredEdits": 6,
+          "staticCheckPassed": true,
+          "generatedTestPassed": true,
+          "generatedTestOutput": "PASS venue-rescue-synthesis: static rules, canary branch\n",
+          "npmTestPassed": true,
+          "npmTestOutput": "\n> pi-orchestrator-extension@0.1.0 test\n> node tests/test-natural-language-controls.cjs && node tests/test-role-concurrency.cjs && node tests/test-judgment-hardening.cjs && node tests/test-paradigm-creator.cjs && node tests/test-dual-plan-synthesis-execute-verify.cjs && node tests/test-shape-builder.cjs && node tests/test-win-console-spawn-root-cause.cjs && node tests/test-win-lifecycle-process-trace.cjs && node tests/test-venue-rescue-synthesis.cjs\n\nPASS role concurrency: 2 planners, 4 executors, 3 verifiers on DeepSeek V4 Flash fixture\nPASS 1a: false-FAIL regression (effects + summary-table reply → PASS)\nPASS 1b: false-PASS guard (verifier PASS + zero artifacts → FAIL with effect contradiction)\nPASS 2:  verify-only paradigm (verifier spawns only, per-check verdicts with citations)\nPASS 3:  retry targeting (attempt 2 re-runs only task-2)\nPASS 4:  pre-flight structured failure + partial report, zero work spawns\nPASS 5:  normalizer provenance (no synthesized failure criteria)\nPASS 6:  hardGates=strict fails fast pre-verifier on zero-effect implementation work\nPASS paradigm-creator: registry, static rules, helpers, propose-mode no-file-write\nPASS dual-plan-synthesis-execute-verify: registry, static rules, fixed routes\nPASS shape-builder: registry, static, lifecycle, rendering, verifier JSON, temp-root build, verifier-fail gate, persistence, continuation\nPASS win-console-spawn-root-cause: registry discovery, static rules, shape execution with fake Pi, verifier fail/pass gate\nPASS win-lifecycle-process-trace: registry discovery, static rules, verifier prompt evidence block, shape execution with fake Pi, verifier fail/pass gate, defaults, empty-verifier-fail-closed, unparseable-verifier-fail-closed, text-pass-fail-closed, wrapped-json-pass-fail-closed, unknown-json-fail-closed, inconclusive-json-fail-closed, evidence-block-integration, evidence-block-missing-regression\nPASS venue-rescue-synthesis: static rules, canary branch\n"
+        }
+      }
+    },
+    {
+      "at": "2026-06-28T17:57:00.718Z",
+      "from": "implementation_reported",
+      "to": "implemented_verified",
+      "actor": "shape-builder",
+      "evidence": {
+        "verification": {
+          "overall": "pass",
+          "implemented_verified": true,
+          "reloadRequired": true,
+          "targetName": "venue-rescue-synthesis",
+          "lifecycleStatePath": "C:\\Users\\doner\\.pi\\pi-orchestrator-extension\\shape-builder-lifecycle\\venue-rescue-synthesis.json",
+          "checks": [
+            {
+              "id": "files",
+              "status": "pass",
+              "citations": [
+                "src/shapes/venue-rescue-synthesis.ts:1 (10512 bytes, non-empty)",
+                "tests/test-venue-rescue-synthesis.cjs:1 (2977 bytes, non-empty)"
+              ]
+            },
+            {
+              "id": "registry",
+              "status": "pass",
+              "citations": [
+                "src/index.ts:38 import venueRescueSynthesisShapeShape",
+                "src/index.ts:107 [\"venue-rescue-synthesis\", venueRescueSynthesisShapeShape]"
+              ]
+            },
+            {
+              "id": "docs",
+              "status": "pass",
+              "citations": [
+                "README.md:296",
+                "PARADIGMS.md:304"
+              ]
+            },
+            {
+              "id": "tests",
+              "status": "pass",
+              "citations": [
+                "command: node tests/test-venue-rescue-synthesis.cjs exit 0",
+                "command: npm test exit 0"
+              ]
+            },
+            {
+              "id": "forbidden-behavior",
+              "status": "pass",
+              "citations": [
+                "grep: no forbidden calls found (agent_reload_runtime|agent_scheduler|executeCommand|sendUserMessage|orchestrate exit 1)"
+              ]
+            },
+            {
+              "id": "sibling-rule",
+              "status": "pass",
+              "citations": [
+                "grep: no sibling-shape imports (from \"./\" exit 1); imports only from non-sibling paths at lines 11,19"
+              ]
+            },
+            {
+              "id": "lifecycle",
+              "status": "pass",
+              "citations": [
+                "shape-builder-lifecycle/venue-rescue-synthesis.json:4 \"lifecycleStatus\": \"implementation_reported\""
+              ]
+            },
+            {
+              "id": "canary-template",
+              "status": "pass",
+              "citations": [
+                "src/shapes/venue-rescue-synthesis.ts:83 SHAPE_CANARY:venue-rescue-synthesis branch"
+              ]
+            }
+          ],
+          "commands": [
+            {
+              "command": "node tests/test-venue-rescue-synthesis.cjs",
+              "exitCode": 0,
+              "stdoutSnippet": "PASS venue-rescue-synthesis: static rules, canary branch"
+            },
+            {
+              "command": "npm test",
+              "exitCode": 0,
+              "stdoutSnippet": "PASS venue-rescue-synthesis: static rules, canary branch"
+            }
+          ],
+          "failReasons": []
+        }
+      }
+    }
+  ],
+  "implementationReport": {
+    "shapeSourceFile": "src/shapes/venue-rescue-synthesis.ts",
+    "testSourceFile": "tests/test-venue-rescue-synthesis.cjs",
+    "anchoredEdits": 6,
+    "staticCheckPassed": true,
+    "generatedTestPassed": true,
+    "generatedTestOutput": "PASS venue-rescue-synthesis: static rules, canary branch\n",
+    "npmTestPassed": true,
+    "npmTestOutput": "\n> pi-orchestrator-extension@0.1.0 test\n> node tests/test-natural-language-controls.cjs && node tests/test-role-concurrency.cjs && node tests/test-judgment-hardening.cjs && node tests/test-paradigm-creator.cjs && node tests/test-dual-plan-synthesis-execute-verify.cjs && node tests/test-shape-builder.cjs && node tests/test-win-console-spawn-root-cause.cjs && node tests/test-win-lifecycle-process-trace.cjs && node tests/test-venue-rescue-synthesis.cjs\n\nPASS role concurrency: 2 planners, 4 executors, 3 verifiers on DeepSeek V4 Flash fixture\nPASS 1a: false-FAIL regression (effects + summary-table reply → PASS)\nPASS 1b: false-PASS guard (verifier PASS + zero artifacts → FAIL with effect contradiction)\nPASS 2:  verify-only paradigm (verifier spawns only, per-check verdicts with citations)\nPASS 3:  retry targeting (attempt 2 re-runs only task-2)\nPASS 4:  pre-flight structured failure + partial report, zero work spawns\nPASS 5:  normalizer provenance (no synthesized failure criteria)\nPASS 6:  hardGates=strict fails fast pre-verifier on zero-effect implementation work\nPASS paradigm-creator: registry, static rules, helpers, propose-mode no-file-write\nPASS dual-plan-synthesis-execute-verify: registry, static rules, fixed routes\nPASS shape-builder: registry, static, lifecycle, rendering, verifier JSON, temp-root build, verifier-fail gate, persistence, continuation\nPASS win-console-spawn-root-cause: registry discovery, static rules, shape execution with fake Pi, verifier fail/pass gate\nPASS win-lifecycle-process-trace: registry discovery, static rules, verifier prompt evidence block, shape execution with fake Pi, verifier fail/pass gate, defaults, empty-verifier-fail-closed, unparseable-verifier-fail-closed, text-pass-fail-closed, wrapped-json-pass-fail-closed, unknown-json-fail-closed, inconclusive-json-fail-closed, evidence-block-integration, evidence-block-missing-regression\nPASS venue-rescue-synthesis: static rules, canary branch\n"
+  },
+  "verification": {
+    "overall": "pass",
+    "implemented_verified": true,
+    "reloadRequired": true,
+    "targetName": "venue-rescue-synthesis",
+    "lifecycleStatePath": "C:\\Users\\doner\\.pi\\pi-orchestrator-extension\\shape-builder-lifecycle\\venue-rescue-synthesis.json",
+    "checks": [
+      {
+        "id": "files",
+        "status": "pass",
+        "citations": [
+          "src/shapes/venue-rescue-synthesis.ts:1 (10512 bytes, non-empty)",
+          "tests/test-venue-rescue-synthesis.cjs:1 (2977 bytes, non-empty)"
+        ]
+      },
+      {
+        "id": "registry",
+        "status": "pass",
+        "citations": [
+          "src/index.ts:38 import venueRescueSynthesisShapeShape",
+          "src/index.ts:107 [\"venue-rescue-synthesis\", venueRescueSynthesisShapeShape]"
+        ]
+      },
+      {
+        "id": "docs",
+        "status": "pass",
+        "citations": [
+          "README.md:296",
+          "PARADIGMS.md:304"
+        ]
+      },
+      {
+        "id": "tests",
+        "status": "pass",
+        "citations": [
+          "command: node tests/test-venue-rescue-synthesis.cjs exit 0",
+          "command: npm test exit 0"
+        ]
+      },
+      {
+        "id": "forbidden-behavior",
+        "status": "pass",
+        "citations": [
+          "grep: no forbidden calls found (agent_reload_runtime|agent_scheduler|executeCommand|sendUserMessage|orchestrate exit 1)"
+        ]
+      },
+      {
+        "id": "sibling-rule",
+        "status": "pass",
+        "citations": [
+          "grep: no sibling-shape imports (from \"./\" exit 1); imports only from non-sibling paths at lines 11,19"
+        ]
+      },
+      {
+        "id": "lifecycle",
+        "status": "pass",
+        "citations": [
+          "shape-builder-lifecycle/venue-rescue-synthesis.json:4 \"lifecycleStatus\": \"implementation_reported\""
+        ]
+      },
+      {
+        "id": "canary-template",
+        "status": "pass",
+        "citations": [
+          "src/shapes/venue-rescue-synthesis.ts:83 SHAPE_CANARY:venue-rescue-synthesis branch"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "node tests/test-venue-rescue-synthesis.cjs",
+        "exitCode": 0,
+        "stdoutSnippet": "PASS venue-rescue-synthesis: static rules, canary branch"
+      },
+      {
+        "command": "npm test",
+        "exitCode": 0,
+        "stdoutSnippet": "PASS venue-rescue-synthesis: static rules, canary branch"
+      }
+    ],
+    "failReasons": []
+  }
+}

@@ -1,4 +1,0 @@
-NAME                    ID              SIZE     MODIFIED    
-gemma4:31b              6316f0629137    19 GB    4 weeks ago    
-gemma4:31b-it-q4_K_M    6316f0629137    19 GB    4 weeks ago    
-gemma4:26b              5571076f3d70    17 GB    4 weeks ago    

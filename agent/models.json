@@ -1,5 +1,38 @@
 {
   "providers": {
+    "zai": {
+      "api": "openai-completions",
+      "authHeader": true,
+      "baseUrl": "https://api.z.ai/api/coding/paas/v4",
+      "apiKey": "$ZAI_API_KEY",
+      "models": [
+        {
+          "id": "glm-5.2",
+          "name": "GLM 5.2 (Z.ai Direct)",
+          "contextWindow": 1000000,
+          "maxTokens": 131072,
+          "input": ["text"],
+          "reasoning": true
+        }
+      ]
+    },
+    "ds4": {
+      "api": "openai-completions",
+      "apiKey": "not-needed",
+      "baseUrl": "http://127.0.0.1:8000/v1",
+      "models": [
+        {
+          "contextWindow": 204800,
+          "id": "deepseek-v4-flash",
+          "input": [
+            "text"
+          ],
+          "maxTokens": 16384,
+          "name": "DeepSeek V4 Flash (DS4 harness, VRAM-resident 200k, ~14 t/s)"
+        }
+      ],
+      "type": "openai"
+    },
     "llama-tq3-vulkan": {
       "api": "openai-completions",
       "apiKey": "ollama",
@@ -29,6 +62,22 @@
         }
       ],
       "type": "openai"
+    },
+    "openrouter": {
+      "api": "openai-completions",
+      "authHeader": true,
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "apiKey": "!powershell -Command \"[Environment]::GetEnvironmentVariable('OPENROUTER_API_KEY', 'User')\"",
+      "models": [
+        {
+          "id": "z-ai/glm-5.2",
+          "name": "GLM 5.2 (OpenRouter)",
+          "contextWindow": 1000000,
+          "maxTokens": 4096,
+          "input": ["text"],
+          "reasoning": true
+        }
+      ]
     },
     "ollama": {
       "api": "openai-completions",

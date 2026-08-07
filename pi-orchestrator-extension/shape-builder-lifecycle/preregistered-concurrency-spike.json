@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "targetName": "preregistered-concurrency-spike",
+  "lifecycleStatus": "implemented_verified",
+  "usable": false,
+  "reloadRequired": true,
+  "nextRequiredGate": "agent_reload",
+  "extensionRoot": "C:\\Users\\doner\\.pi\\pi-orchestrator-extension",
+  "lifecycleStatePath": "C:\\Users\\doner\\.pi\\pi-orchestrator-extension\\shape-builder-lifecycle\\preregistered-concurrency-spike.json",
+  "createdAt": "2026-06-30T19:40:41.307Z",
+  "updatedAt": "2026-06-30T19:41:47.846Z",
+  "generatedFiles": [
+    "src/shapes/preregistered-concurrency-spike.ts",
+    "tests/test-preregistered-concurrency-spike.cjs"
+  ],
+  "anchoredEdits": [
+    {
+      "path": "src/index.ts",
+      "anchor": "// shape-builder generated imports:end",
+      "action": "insert",
+      "content": "import { preregisteredConcurrencySpikeShapeShape } from \"./shapes/preregistered-concurrency-spike\";"
+    },
+    {
+      "path": "src/index.ts",
+      "anchor": "// shape-builder generated registry entries:end",
+      "action": "insert",
+      "content": "  [\"preregistered-concurrency-spike\", preregisteredConcurrencySpikeShapeShape],"
+    },
+    {
+      "path": "src/index.ts",
+      "anchor": "// shape-builder generated paradigm names:end",
+      "action": "insert",
+      "content": "  \"preregistered-concurrency-spike\","
+    },
+    {
+      "path": "package.json",
+      "anchor": "scripts.test.append",
+      "action": "insert",
+      "content": "node tests/test-preregistered-concurrency-spike.cjs"
+    },
+    {
+      "path": "README.md",
+      "anchor": "<!-- shape-builder:generated-shapes:end -->",
+      "action": "insert",
+      "content": "- `preregistered-concurrency-spike`: preregistered-concurrency-spike runs a falsifier-first concurrency/real-time spike against an EXTERNALLY frozen pre-registration. USAGE CONTRACT: before invoking this shape, the orchestrator must (1) author a pre-registration artifact containing metrics, pass/fail thresholds, and a pre-declared fallback, and (2) deterministically freeze it with sha256 (non-LLM). The frozen artifact path and reference hash are then passed inside the task. The shape implements strictly to the frozen spec, measures raw evidence, independently re-verifies hash integrity (refusing to PASS if the pre-registration was touched or the gate tuned), and emits PASS or the pre-declared fallback. The deterministic freeze stays orchestrator-held because the generated-shape phase model spawns an LLM subagent per phase and has no non-LLM phase primitive; the shape encodes the post-freeze discipline and enforces non-tampering as a first-class verify phase."
+    },
+    {
+      "path": "PARADIGMS.md",
+      "anchor": "<!-- shape-builder:generated-shapes:end -->",
+      "action": "insert",
+      "content": "- `preregistered-concurrency-spike`: preregistered-concurrency-spike runs a falsifier-first concurrency/real-time spike against an EXTERNALLY frozen pre-registration. USAGE CONTRACT: before invoking this shape, the orchestrator must (1) author a pre-registration artifact containing metrics, pass/fail thresholds, and a pre-declared fallback, and (2) deterministically freeze it with sha256 (non-LLM). The frozen artifact path and reference hash are then passed inside the task. The shape implements strictly to the frozen spec, measures raw evidence, independently re-verifies hash integrity (refusing to PASS if the pre-registration was touched or the gate tuned), and emits PASS or the pre-declared fallback. The deterministic freeze stays orchestrator-held because the generated-shape phase model spawns an LLM subagent per phase and has no non-LLM phase primitive; the shape encodes the post-freeze discipline and enforces non-tampering as a first-class verify phase."
+    }
+  ],
+  "failures": [],
+  "history": [
+    {
+      "at": "2026-06-30T19:40:41.307Z",
+      "to": "proposed",
+      "actor": "shape-builder",
+      "evidence": {
+        "phase": "initial"
+      }
+    },
+    {
+      "at": "2026-06-30T19:41:01.864Z",
+      "from": "proposed",
+      "to": "implementation_reported",
+      "actor": "shape-builder",
+      "evidence": {
+        "implementationReport": {
+          "shapeSourceFile": "src/shapes/preregistered-concurrency-spike.ts",
+          "testSourceFile": "tests/test-preregistered-concurrency-spike.cjs",
+          "anchoredEdits": 6,
+          "staticCheckPassed": true,
+          "generatedTestPassed": true,
+          "generatedTestOutput": "PASS preregistered-concurrency-spike: static rules, canary branch\n",
+          "npmTestPassed": true,
+          "npmTestOutput": "\n> pi-orchestrator-extension@0.1.0 test\n> node tests/test-natural-language-controls.cjs && node tests/test-role-concurrency.cjs && node tests/test-judgment-hardening.cjs && node tests/test-paradigm-creator.cjs && node tests/test-dual-plan-synthesis-execute-verify.cjs && node tests/test-shape-builder.cjs && node tests/test-win-console-spawn-root-cause.cjs && node tests/test-win-lifecycle-process-trace.cjs && node tests/test-venue-rescue-synthesis.cjs && node tests/test-preregistered-concurrency-spike.cjs\n\nPASS role concurrency: 2 planners, 4 executors, 3 verifiers on DeepSeek V4 Flash fixture\nPASS 1a: false-FAIL regression (effects + summary-table reply → PASS)\nPASS 1b: false-PASS guard (verifier PASS + zero artifacts → FAIL with effect contradiction)\nPASS 2:  verify-only paradigm (verifier spawns only, per-check verdicts with citations)\nPASS 3:  retry targeting (attempt 2 re-runs only task-2)\nPASS 4:  pre-flight structured failure + partial report, zero work spawns\nPASS 5:  normalizer provenance (no synthesized failure criteria)\nPASS 6:  hardGates=strict fails fast pre-verifier on zero-effect implementation work\nPASS paradigm-creator: registry, static rules, helpers, propose-mode no-file-write\nPASS dual-plan-synthesis-execute-verify: registry, static rules, fixed routes\nPASS shape-builder: registry, static, lifecycle, rendering, verifier JSON, temp-root build, verifier-fail gate, persistence, continuation\nPASS win-console-spawn-root-cause: registry discovery, static rules, shape execution with fake Pi, verifier fail/pass gate\nPASS win-lifecycle-process-trace: registry discovery, static rules, verifier prompt evidence block, shape execution with fake Pi, verifier fail/pass gate, defaults, empty-verifier-fail-closed, unparseable-verifier-fail-closed, text-pass-fail-closed, wrapped-json-pass-fail-closed, unknown-json-fail-closed, inconclusive-json-fail-closed, evidence-block-integration, evidence-block-m\n\n_(npm test output truncated: 75 additional characters omitted.)_"
+        }
+      }
+    },
+    {
+      "at": "2026-06-30T19:41:47.846Z",
+      "from": "implementation_reported",
+      "to": "implemented_verified",
+      "actor": "shape-builder",
+      "evidence": {
+        "verification": {
+          "overall": "pass",
+          "implemented_verified": true,
+          "reloadRequired": true,
+          "targetName": "preregistered-concurrency-spike",
+          "lifecycleStatePath": "C:\\Users\\doner\\.pi\\pi-orchestrator-extension\\shape-builder-lifecycle\\preregistered-concurrency-spike.json",
+          "checks": [
+            {
+              "id": "files",
+              "status": "pass",
+              "citations": [
+                "src/shapes/preregistered-concurrency-spike.ts:1 (11655 bytes)",
+                "tests/test-preregistered-concurrency-spike.cjs:1 (3031 bytes)"
+              ]
+            },
+            {
+              "id": "registry",
+              "status": "pass",
+              "citations": [
+                "src/index.ts:39 import preregisteredConcurrencySpikeShapeShape",
+                "src/index.ts:110 [\"preregistered-concurrency-spike\", preregisteredConcurrencySpikeShapeShape]"
+              ]
+            },
+            {
+              "id": "docs",
+              "status": "pass",
+              "citations": [
+                "README.md:297",
+                "PARADIGMS.md:305"
+              ]
+            },
+            {
+              "id": "tests",
+              "status": "pass",
+              "citations": [
+                "command: node tests/test-preregistered-concurrency-spike.cjs exit 0 PASS",
+                "command: npm test exit 0 PASS"
+              ]
+            },
+            {
+              "id": "forbidden-behavior",
+              "status": "pass",
+              "citations": [
+                "grep: no forbidden calls found in src/shapes/preregistered-concurrency-spike.ts"
+              ]
+            },
+            {
+              "id": "sibling-rule",
+              "status": "pass",
+              "citations": [
+                "grep: no sibling-shape imports (no from './' matches)"
+              ]
+            },
+            {
+              "id": "lifecycle",
+              "status": "pass",
+              "citations": [
+                "shape-builder-lifecycle/preregistered-concurrency-spike.json:4 \"lifecycleStatus\": \"implementation_reported\""
+              ]
+            },
+            {
+              "id": "canary-template",
+              "status": "pass",
+              "citations": [
+                "src/shapes/preregistered-concurrency-spike.ts:69 SHAPE_CANARY:preregistered-concurrency-spike"
+              ]
+            }
+          ],
+          "commands": [
+            {
+              "command": "node tests/test-preregistered-concurrency-spike.cjs",
+              "exitCode": 0,
+              "stdoutSnippet": "PASS preregistered-concurrency-spike: static rules, canary branch"
+            },
+            {
+              "command": "npm test",
+              "exitCode": 0,
+              "stdoutSnippet": "PASS preregistered-concurrency-spike: static rules, canary branch"
+            }
+          ],
+          "failReasons": []
+        }
+      }
+    }
+  ],
+  "implementationReport": {
+    "shapeSourceFile": "src/shapes/preregistered-concurrency-spike.ts",
+    "testSourceFile": "tests/test-preregistered-concurrency-spike.cjs",
+    "anchoredEdits": 6,
+    "staticCheckPassed": true,
+    "generatedTestPassed": true,
+    "generatedTestOutput": "PASS preregistered-concurrency-spike: static rules, canary branch\n",
+    "npmTestPassed": true,
+    "npmTestOutput": "\n> pi-orchestrator-extension@0.1.0 test\n> node tests/test-natural-language-controls.cjs && node tests/test-role-concurrency.cjs && node tests/test-judgment-hardening.cjs && node tests/test-paradigm-creator.cjs && node tests/test-dual-plan-synthesis-execute-verify.cjs && node tests/test-shape-builder.cjs && node tests/test-win-console-spawn-root-cause.cjs && node tests/test-win-lifecycle-process-trace.cjs && node tests/test-venue-rescue-synthesis.cjs && node tests/test-preregistered-concurrency-spike.cjs\n\nPASS role concurrency: 2 planners, 4 executors, 3 verifiers on DeepSeek V4 Flash fixture\nPASS 1a: false-FAIL regression (effects + summary-table reply → PASS)\nPASS 1b: false-PASS guard (verifier PASS + zero artifacts → FAIL with effect contradiction)\nPASS 2:  verify-only paradigm (verifier spawns only, per-check verdicts with citations)\nPASS 3:  retry targeting (attempt 2 re-runs only task-2)\nPASS 4:  pre-flight structured failure + partial report, zero work spawns\nPASS 5:  normalizer provenance (no synthesized failure criteria)\nPASS 6:  hardGates=strict fails fast pre-verifier on zero-effect implementation work\nPASS paradigm-creator: registry, static rules, helpers, propose-mode no-file-write\nPASS dual-plan-synthesis-execute-verify: registry, static rules, fixed routes\nPASS shape-builder: registry, static, lifecycle, rendering, verifier JSON, temp-root build, verifier-fail gate, persistence, continuation\nPASS win-console-spawn-root-cause: registry discovery, static rules, shape execution with fake Pi, verifier fail/pass gate\nPASS win-lifecycle-process-trace: registry discovery, static rules, verifier prompt evidence block, shape execution with fake Pi, verifier fail/pass gate, defaults, empty-verifier-fail-closed, unparseable-verifier-fail-closed, text-pass-fail-closed, wrapped-json-pass-fail-closed, unknown-json-fail-closed, inconclusive-json-fail-closed, evidence-block-integration, evidence-block-m\n\n_(npm test output truncated: 75 additional characters omitted.)_"
+  },
+  "verification": {
+    "overall": "pass",
+    "implemented_verified": true,
+    "reloadRequired": true,
+    "targetName": "preregistered-concurrency-spike",
+    "lifecycleStatePath": "C:\\Users\\doner\\.pi\\pi-orchestrator-extension\\shape-builder-lifecycle\\preregistered-concurrency-spike.json",
+    "checks": [
+      {
+        "id": "files",
+        "status": "pass",
+        "citations": [
+          "src/shapes/preregistered-concurrency-spike.ts:1 (11655 bytes)",
+          "tests/test-preregistered-concurrency-spike.cjs:1 (3031 bytes)"
+        ]
+      },
+      {
+        "id": "registry",
+        "status": "pass",
+        "citations": [
+          "src/index.ts:39 import preregisteredConcurrencySpikeShapeShape",
+          "src/index.ts:110 [\"preregistered-concurrency-spike\", preregisteredConcurrencySpikeShapeShape]"
+        ]
+      },
+      {
+        "id": "docs",
+        "status": "pass",
+        "citations": [
+          "README.md:297",
+          "PARADIGMS.md:305"
+        ]
+      },
+      {
+        "id": "tests",
+        "status": "pass",
+        "citations": [
+          "command: node tests/test-preregistered-concurrency-spike.cjs exit 0 PASS",
+          "command: npm test exit 0 PASS"
+        ]
+      },
+      {
+        "id": "forbidden-behavior",
+        "status": "pass",
+        "citations": [
+          "grep: no forbidden calls found in src/shapes/preregistered-concurrency-spike.ts"
+        ]
+      },
+      {
+        "id": "sibling-rule",
+        "status": "pass",
+        "citations": [
+          "grep: no sibling-shape imports (no from './' matches)"
+        ]
+      },
+      {
+        "id": "lifecycle",
+        "status": "pass",
+        "citations": [
+          "shape-builder-lifecycle/preregistered-concurrency-spike.json:4 \"lifecycleStatus\": \"implementation_reported\""
+        ]
+      },
+      {
+        "id": "canary-template",
+        "status": "pass",
+        "citations": [
+          "src/shapes/preregistered-concurrency-spike.ts:69 SHAPE_CANARY:preregistered-concurrency-spike"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "node tests/test-preregistered-concurrency-spike.cjs",
+        "exitCode": 0,
+        "stdoutSnippet": "PASS preregistered-concurrency-spike: static rules, canary branch"
+      },
+      {
+        "command": "npm test",
+        "exitCode": 0,
+        "stdoutSnippet": "PASS preregistered-concurrency-spike: static rules, canary branch"
+      }
+    ],
+    "failReasons": []
+  }
+}

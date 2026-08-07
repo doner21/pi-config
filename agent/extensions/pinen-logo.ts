@@ -49,13 +49,22 @@ export function renderHeader(width: number): string[] {
 	];
 }
 
+const WIDGET_KEY = "pinen-logo";
+
 function install(ctx: ExtensionContext): void {
 	if (ctx.mode !== "tui") return;
 
-	ctx.ui.setHeader((_tui, _theme) => ({
-		render: renderHeader,
-		invalidate() {},
-	}));
+	// Keep the exact same logo renderer, but mount it as an above-editor
+	// widget so it sits directly above the text input on first load.
+	ctx.ui.setHeader(undefined);
+	ctx.ui.setWidget(
+		WIDGET_KEY,
+		(_tui, _theme) => ({
+			render: renderHeader,
+			invalidate() {},
+		}),
+		{ placement: "aboveEditor" },
+	);
 }
 
 export default function piNenLogoExtension(pi: ExtensionAPI): void {

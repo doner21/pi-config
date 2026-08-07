@@ -1,7 +1,0 @@
-minimax-m2.5:cloud preserved_exact= True
-glm-5.1:cloud preserved_exact= True
-api preserved_exact= True
-apiKey preserved_exact= True
-baseUrl preserved_exact= True
-compat preserved_exact= True
-type preserved_exact= True

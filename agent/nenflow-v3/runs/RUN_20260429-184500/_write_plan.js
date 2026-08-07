@@ -1,1 +1,0 @@
-const fs=require("fs");const b64=process.argv[1];fs.writeFileSync(process.argv[2],Buffer.from(b64,"base64").toString("utf8"));console.log("OK "+fs.statSync(process.argv[2]).size+" bytes")
