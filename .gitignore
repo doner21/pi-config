@@ -33,8 +33,14 @@ agent/.nenflow_context_health.json
 # Temporary search results
 agent/tmp_search*.json
 
-# Backups
+# Backups and generated patch/runtime diagnostics
 agent/backups/
+agent/core-patch/backups/
+agent/core-patch/patch-manifest.json
+agent/agent-new-session-diagnostics.json
+agent/agent-reload-diagnostics.json
+agent/.agent-new-session-diagnostics.tmp-*
+agent/.agent-reload-diagnostics.tmp-*
 
 # Test bundles
 agent/graphify-test-bundle.js
